@@ -19,7 +19,7 @@ URI=$6
 $DRUSH rr
 
 # Flush drush cache to identify new commands such as rr.
-$DRUSH cc drush
+$DRUSH cr
 
 # Enable the maintenance page.
 $DRUSH vset maintenance_mode 1
@@ -31,13 +31,13 @@ $DRUSH en cd_v2
 $DRUSH updb -y
 
 # Flush the caches.
-$DRUSH cc all
+$DRUSH cr
 
 # Revert the features to make sure that the permissions are set.
 $DRUSH fra --force
 
 # Flush the caches againnnnnnnnn.
-$DRUSH cc all
+$DRUSH cr
 
 # Remove the maintenance page.
 $DRUSH vset maintenance_mode 0

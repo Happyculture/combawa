@@ -20,7 +20,7 @@ URI=$6
 #$DRUSH sqlc < "$DIR/../reference_dump.sql"
 
 # Flush drush cache to identify new commands such as rr.
-$DRUSH cc drush
+$DRUSH cr
 
 # Rebuild the structure since data come from another server structure.
 $DRUSH rr
@@ -32,13 +32,13 @@ $DRUSH dis apc
 $DRUSH updb -y
 
 # Flush the caches.
-$DRUSH cc all
+$DRUSH cr
 
 # Revert the features to make sure that the permissions are set.
 $DRUSH fra
 
 # Flush the caches againnnnnnnnn.
-$DRUSH cc all
+$DRUSH cr
 
 # Fix permissions.
 chmod u+w ../www/sites/default
