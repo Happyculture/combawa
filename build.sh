@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Return error codes if they happen.
+set -e
+
 ########## DEFAULT VARIABLES ##############
 # Default environment is prod.
 ENV="prod";
@@ -231,7 +234,7 @@ elif [ $BUILD_MODE == "update" ]; then
   echo "Start the update..."
   $WEBROOT/../scripts/update.sh
   if [[ $? != 0 ]]; then
-    echo "The install.sh generated an error. Check the logs."
+    echo "The update.sh generated an error. Check the logs."
     exit $?
   fi
 fi
