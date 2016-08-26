@@ -150,6 +150,9 @@ echo "[Generate a backup] $BACKUP_BASE"
 echo "[Environment URI] $URI"
 echo "------"
 
+echo "Composer install"
+composer install
+
 # Run the potential actions to do pre deployment.
 $SCRIPTS_PATH/predeploy_actions.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
 
