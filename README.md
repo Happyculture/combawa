@@ -26,5 +26,7 @@ Pour pouvoir jouer le script de build, créer :
 * Un fichier predeploy_actions.sh qui joue des actions particulières avant de construire le site
 * Un fichier postdeploy_actions.sh qui joue des actions particulières après avoir construit le site
 
+Des fichiers d'exemple sont disponibles dans le dossier scripts.
+
 @TODO:
 * Voir pour utiliser getopt pour récupérer les paramètres du script (http://www.bahmanm.com/blogs/command-line-options-how-to-parse-in-bash-using-getopt)
