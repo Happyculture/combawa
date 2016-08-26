@@ -224,9 +224,17 @@ fi
 if [ $BUILD_MODE == "install" ]; then
   echo "Start the installation..."
   $WEBROOT/../scripts/install.sh
+  if [[ $? != 0 ]]; then
+    echo "The install.sh generated an error. Check the logs."
+    exit $?
+  fi
 elif [ $BUILD_MODE == "update" ]; then
   echo "Start the update..."
   $WEBROOT/../scripts/update.sh
+  if [[ $? != 0 ]]; then
+    echo "The install.sh generated an error. Check the logs."
+    exit $?
+  fi
 fi
 
 # Run the potential actions to do post deployment.
