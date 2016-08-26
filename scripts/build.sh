@@ -61,8 +61,8 @@ currentscriptpath () {
 }
 
 # Working directory.
-RESULT=$(currentscriptpath)
-WEBROOT="$RESULT/../www"
+SCRIPTS_PATH=$(currentscriptpath)
+WEBROOT="$SCRIPTS_PATH/../www"
 
 # Set the arguments value.
 while [[ $1 ]]
@@ -115,19 +115,22 @@ do
 done
 
 # Check that we have what we need to build.
-if [ ! -f "$WEBROOT/../scripts/predeploy_actions.sh" ]; then
+if [ ! -f "$SCRIPTS_PATH/../composer.json" ]; then
+  echo "Your repository is missing a composer.json file."
+  exit 1
+if [ ! -f "$SCRIPTS_PATH/predeploy_actions.sh" ]; then
   echo "The predeploy_actions.sh file is not readable and can not be processed."
   exit 1
-elif [ ! -f "$WEBROOT/../scripts/postdeploy_actions.sh" ]; then
+elif [ ! -f "$SCRIPTS_PATH/postdeploy_actions.sh" ]; then
   echo "The postdeploy_actions.sh file is not readable and can not be processed."
   exit 1
 elif [ $BUILD_MODE == "install" ]; then
-  if [ ! -f "$WEBROOT/../scripts/install.sh" ]; then
+  if [ ! -f "$SCRIPTS_PATH/install.sh" ]; then
     echo "The install.sh file is not readable and can not be processed."
     exit 1
   fi
 elif [ $BUILD_MODE == "update" ]; then
-  if [ ! -f "$WEBROOT/../scripts/update.sh" ]; then
+  if [ ! -f "$SCRIPTS_PATH/update.sh" ]; then
     echo "The update.sh file is not readable and can not be processed."
     exit 1
   fi
@@ -148,32 +151,32 @@ echo "[Environment URI] $URI"
 echo "------"
 
 # Run the potential actions to do pre deployment.
-$WEBROOT/../scripts/predeploy_actions.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
+$SCRIPTS_PATH/predeploy_actions.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
 
 if [ $BACKUP_BASE == 1 ] ; then
-# TODO:
-# - Limit the backups existing in the dump dir to 10.
-# --
-# Store a security backup in case the update doesn't go right.
-DUMP_NAME="update-backup-script-$(date +%Y%m%d%H%M%S).sql";
-DUMP_PATH="$WEBROOT/../dumps/$DUMP_NAME"
-mkdir -p "$WEBROOT/../dumps/"
-$DRUSH sql-dump > $DUMP_PATH;
-tar -czf "$DUMP_PATH.tar.gz" $DUMP_PATH;
-rm $DUMP_PATH;
+  # TODO:
+  # - Limit the backups existing in the dump dir to 10.
+  # --
+  # Store a security backup in case the update doesn't go right.
+  DUMP_NAME="update-backup-script-$(date +%Y%m%d%H%M%S).sql";
+  DUMP_PATH="$WEBROOT/../dumps/$DUMP_NAME"
+  mkdir -p "$WEBROOT/../dumps/"
+  $DRUSH sql-dump > $DUMP_PATH;
+  tar -czf "$DUMP_PATH.tar.gz" $DUMP_PATH;
+  rm $DUMP_PATH;
 fi
 
 # Run the build content.
 if [ $BUILD_MODE == "install" ]; then
   echo "Start the installation..."
-  $WEBROOT/../scripts/install.sh
+  $SCRIPTS_PATH/install.sh
   if [[ $? != 0 ]]; then
     echo "The install.sh generated an error. Check the logs."
     exit $?
   fi
 elif [ $BUILD_MODE == "update" ]; then
   echo "Start the update..."
-  $WEBROOT/../scripts/update.sh
+  $SCRIPTS_PATH/update.sh
   if [[ $? != 0 ]]; then
     echo "The update.sh generated an error. Check the logs."
     exit $?
@@ -181,10 +184,9 @@ elif [ $BUILD_MODE == "update" ]; then
 fi
 
 # Run the potential actions to do post deployment.
-$WEBROOT/../scripts/postdeploy_actions.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
+$SCRIPTS_PATH/postdeploy_actions.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
 
 # Send a notification to inform that the build is done.
 if hash notify-send 2>/dev/null; then
   notify-send  "The build is completed."
 fi
-
