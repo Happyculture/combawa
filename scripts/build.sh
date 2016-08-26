@@ -151,6 +151,7 @@ echo "[Environment URI] $URI"
 echo "------"
 
 echo "Composer install"
+cd $SCRIPTS_PATH/../
 composer install
 
 # Run the potential actions to do pre deployment.
