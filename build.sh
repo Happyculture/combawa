@@ -62,12 +62,12 @@ currentscriptpath () {
 predeploy_actions() {
   case $1 in
     dev)
-      $DRUSH sql-drop -y;
-      $DRUSH sqlc < "$WEBROOT/../reference_dump.sql";
+      # $DRUSH sql-drop -y;
+      # $DRUSH sqlc < "$WEBROOT/../reference_dump.sql";
       ;;
     recette|preprod)
-      $DRUSH sql-drop -y;
-      $DRUSH sqlc < "$WEBROOT/../reference_dump.sql";
+      # $DRUSH sql-drop -y;
+      # $DRUSH sqlc < "$WEBROOT/../reference_dump.sql";
       ;;
     prod)
       ;;
@@ -82,40 +82,39 @@ predeploy_actions() {
 postdeploy_actions() {
   case $1 in
     dev)
-      # Compile CSS for development
-      (
-        cd $WEBROOT/sites/all/themes/cd_th2/;
-        compass compile --force
-      )
+      # Examples:
+      # Compile CSS for development.
+      # (
+      #   cd $WEBROOT/sites/all/themes/custom_theme/;
+      #   compass compile --force -e production
+      # )
+
       # Turn off the aggregation to avoid to turn crazy.
-      $DRUSH vset preprocess_css 0;
-      $DRUSH vset preprocess_js 0;
+      # $DRUSH vset preprocess_css 0;
+      # $DRUSH vset preprocess_js 0;
       # Enable UIs.
-      $DRUSH en -y devel field_ui diff views_ui;
+      # $DRUSH en -y devel field_ui diff views_ui;
       # Fetch missing images from the remote server.
-      $DRUSH en -y stage_file_proxy
-      $DRUSH vset stage_file_proxy_origin "https://www.causedirect.org"
+      # $DRUSH en -y stage_file_proxy
+      # $DRUSH vset stage_file_proxy_origin "https://www.example.org"
       # Connect.
-      $DRUSH uli
+      # $DRUSH uli
       ;;
     recette|preprod)
-      # Compile CSS for development
-      (
-        cd $WEBROOT/sites/all/themes/cd_th2/;
-        compass compile --force -e production
-      )
-      $DRUSH dis -y devel field_ui diff views_ui
+      # Examples:
+      # Compile CSS for development.
+      # (
+      #   cd $WEBROOT/sites/all/themes/custom_theme/;
+      #   compass compile --force -e production
+      # )
+
+      # Disable dev modules.
+      # $DRUSH dis -y devel field_ui diff views_ui
       # Fetch missing images from the remote server.
-      $DRUSH en -y stage_file_proxy
-      $DRUSH vset stage_file_proxy_origin "https://www.causedirect.org"
+      # $DRUSH en -y stage_file_proxy
+      # $DRUSH vset stage_file_proxy_origin "https://www.example.org"
       ;;
     prod)
-      # Compile CSS for development
-      (
-        cd $WEBROOT/sites/all/themes/cd_th2/;
-        compass compile --force -e production
-      )
-      $DRUSH dis -y devel field_ui diff views_ui
       ;;
     *)
       echo "Unknown environment: $2. Please check your name."
