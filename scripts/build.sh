@@ -118,7 +118,7 @@ done
 if [ ! -f "$SCRIPTS_PATH/../composer.json" ]; then
   echo "Your repository is missing a composer.json file."
   exit 1
-if [ ! -f "$SCRIPTS_PATH/predeploy_actions.sh" ]; then
+elif [ ! -f "$SCRIPTS_PATH/predeploy_actions.sh" ]; then
   echo "The predeploy_actions.sh file is not readable and can not be processed."
   exit 1
 elif [ ! -f "$SCRIPTS_PATH/postdeploy_actions.sh" ]; then
