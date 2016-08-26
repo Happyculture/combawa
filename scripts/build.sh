@@ -62,7 +62,7 @@ currentscriptpath () {
 
 # Working directory.
 SCRIPTS_PATH=$(currentscriptpath)
-WEBROOT="$SCRIPTS_PATH/../www"
+WEBROOT="$SCRIPTS_PATH/../web"
 
 # Set the arguments value.
 while [[ $1 ]]
@@ -172,14 +172,14 @@ fi
 # Run the build content.
 if [ $BUILD_MODE == "install" ]; then
   echo "Start the installation..."
-  $SCRIPTS_PATH/install.sh
+  $SCRIPTS_PATH/install.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
   if [[ $? != 0 ]]; then
     echo "The install.sh generated an error. Check the logs."
     exit $?
   fi
 elif [ $BUILD_MODE == "update" ]; then
   echo "Start the update..."
-  $SCRIPTS_PATH/update.sh
+  $SCRIPTS_PATH/update.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
   if [[ $? != 0 ]]; then
     echo "The update.sh generated an error. Check the logs."
     exit $?

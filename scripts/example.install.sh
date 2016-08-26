@@ -1,23 +1,19 @@
 #!/bin/bash
 set -xe
 
-# Helper to let you run the install script from anywhere.
-currentscriptpath () {
-local fullpath=`echo "$(readlink -f $0)"`
-local fullpath_length=`echo ${#fullpath}`
-local scriptname="$(basename $0)"
-local scriptname_length=`echo ${#scriptname}`
-local result_length=`echo $fullpath_length - $scriptname_length - 1 | bc`
-local result=`echo $fullpath | head -c $result_length`
-echo $result
-}
-
-# Working directory.
-RESULT=$(currentscriptpath)
-DIR="$RESULT/../www"
-
-# Make drush a variable to use the one shipped with the repository.
-DRUSH="$DIR/../drush/drush -y --root=$DIR"
+# Available variables are:
+# $DRUSH: Executable to Drush with -y --root arguments specified.
+# $WEBROOT: Path of the repo root path.
+# $BUILD_MODE: Action to do, either install or update.
+# $ENV: Environnement on which the build is done.
+# $BACKUP_BASE: Flag if the backup of the database must be generated.
+# $URI: URI of the site you build.
+DRUSH=$1
+WEBROOT=$2
+BUILD_MODE=$3
+ENV=$4
+BACKUP_BASE=$5
+URI=$6
 
 # Install the site.
 #$DRUSH sql-drop -y
