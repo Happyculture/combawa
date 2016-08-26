@@ -15,7 +15,6 @@ URI="https://example.org/"
 
 ########## FUNCTION ##############
 # Working directory.
-# /!\ This script needs the bc package installed on the server.
 # Helper to let you run the install script from anywhere.
 currentscriptpath () {
   SOURCE="${BASH_SOURCE[0]}"
