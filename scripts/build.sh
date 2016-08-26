@@ -114,6 +114,9 @@ do
   fi
 done
 
+# Make drush a variable to use the one shipped with the repository.
+DRUSH="drush -y --root=$WEBROOT --uri=$URI"
+
 # Check that we have what we need to build.
 if [ ! -f "$SCRIPTS_PATH/../composer.json" ]; then
   echo "Your repository is missing a composer.json file."
@@ -124,7 +127,18 @@ elif [ ! -f "$SCRIPTS_PATH/predeploy_actions.sh" ]; then
 elif [ ! -f "$SCRIPTS_PATH/postdeploy_actions.sh" ]; then
   echo "The postdeploy_actions.sh file is not readable and can not be processed."
   exit 1
-elif [ $BUILD_MODE == "install" ]; then
+fi
+
+# Stop the build if the DB connection is not set.
+set +e
+$DRUSH sql-connect
+if [[ $? != 0 ]]; then
+  echo "DB connection impossible."
+  echo "Please check that your MySQL connection is correcty set."
+  exit 1
+fi
+set -e
+if [ $BUILD_MODE == "install" ]; then
   if [ ! -f "$SCRIPTS_PATH/install.sh" ]; then
     echo "The install.sh file is not readable and can not be processed."
     exit 1
@@ -138,9 +152,6 @@ else
   echo "Unknown build mode."
   exit 1
 fi
-
-# Make drush a variable to use the one shipped with the repository.
-DRUSH="drush -y --root=$WEBROOT --uri=$URI"
 
 # Show the build config.
 echo "------"
