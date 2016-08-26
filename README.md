@@ -18,7 +18,13 @@ Modes connus :
     install
     update
 
-Vous pouvez jouer des actions spécifiques par environnement avant et après le build. Voir les fonctions postdeploy_actions() et predeploy_actions().
+Installation
+
+Pour pouvoir jouer le script de build, créer :
+* Un fichier install.sh qui liste les actions à jouer de l'installation du site
+* Un fichier update.sh qui liste les actions à jouer de la mise à jour du site
+* Un fichier predeploy_actions.sh qui joue des actions particulières avant de construire le site
+* Un fichier postdeploy_actions.sh qui joue des actions particulières après avoir construit le site
 
 @TODO:
 * Voir pour utiliser getopt pour récupérer les paramètres du script (http://www.bahmanm.com/blogs/command-line-options-how-to-parse-in-bash-using-getopt)
