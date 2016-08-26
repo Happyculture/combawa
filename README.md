@@ -21,6 +21,4 @@ Modes connus :
 Vous pouvez jouer des actions spécifiques par environnement avant et après le build. Voir les fonctions postdeploy_actions() et predeploy_actions().
 
 @TODO:
-
-* Ajouter une commande --help pour voir comment s'utilisent les paramètres.
 * Voir pour utiliser getopt pour récupérer les paramètres du script (http://www.bahmanm.com/blogs/command-line-options-how-to-parse-in-bash-using-getopt)
