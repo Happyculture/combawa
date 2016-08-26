@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Return error codes if they happen.
-set -e
+set -xe
 
 ########## DEFAULT VARIABLES ##############
 # Default environment is prod.
@@ -60,71 +60,6 @@ currentscriptpath () {
   echo $DIR
 }
 
-# Actions to run before the main and shared deployment actions.
-# It can be useful to backup, import databases or doing something similar.
-predeploy_actions() {
-  case $1 in
-    dev)
-      # $DRUSH sql-drop -y;
-      # $DRUSH sqlc < "$WEBROOT/../reference_dump.sql";
-      ;;
-    recette|preprod)
-      # $DRUSH sql-drop -y;
-      # $DRUSH sqlc < "$WEBROOT/../reference_dump.sql";
-      ;;
-    prod)
-      ;;
-    *)
-      echo "Unknown environment: $2. Please check your name."
-      exit 1;
-  esac
-}
-
-# Action to run after the main and shared deployment actions.
-# It can be useful to enable specific modules for instance.
-postdeploy_actions() {
-  case $1 in
-    dev)
-      # Examples:
-      # Compile CSS for development.
-      # (
-      #   cd $WEBROOT/sites/all/themes/custom_theme/;
-      #   compass compile --force -e production
-      # )
-
-      # Turn off the aggregation to avoid to turn crazy.
-      # $DRUSH vset preprocess_css 0;
-      # $DRUSH vset preprocess_js 0;
-      # Enable UIs.
-      # $DRUSH en -y devel field_ui diff views_ui;
-      # Fetch missing images from the remote server.
-      # $DRUSH en -y stage_file_proxy
-      # $DRUSH vset stage_file_proxy_origin "https://www.example.org"
-      # Connect.
-      # $DRUSH uli
-      ;;
-    recette|preprod)
-      # Examples:
-      # Compile CSS for development.
-      # (
-      #   cd $WEBROOT/sites/all/themes/custom_theme/;
-      #   compass compile --force -e production
-      # )
-
-      # Disable dev modules.
-      # $DRUSH dis -y devel field_ui diff views_ui
-      # Fetch missing images from the remote server.
-      # $DRUSH en -y stage_file_proxy
-      # $DRUSH vset stage_file_proxy_origin "https://www.example.org"
-      ;;
-    prod)
-      ;;
-    *)
-      echo "Unknown environment: $2. Please check your name."
-      exit 1;
-  esac
-}
-
 # Working directory.
 RESULT=$(currentscriptpath)
 WEBROOT="$RESULT/../www"
@@ -180,7 +115,13 @@ do
 done
 
 # Check that we have what we need to build.
-if [ $BUILD_MODE == "install" ]; then
+if [ ! -f "$WEBROOT/../scripts/predeploy_actions.sh" ]; then
+  echo "The predeploy_actions.sh file is not readable and can not be processed."
+  exit 1
+elif [ ! -f "$WEBROOT/../scripts/postdeploy_actions.sh" ]; then
+  echo "The postdeploy_actions.sh file is not readable and can not be processed."
+  exit 1
+elif [ $BUILD_MODE == "install" ]; then
   if [ ! -f "$WEBROOT/../scripts/install.sh" ]; then
     echo "The install.sh file is not readable and can not be processed."
     exit 1
@@ -207,7 +148,7 @@ echo "[Environment URI] $URI"
 echo "------"
 
 # Run the potential actions to do pre deployment.
-predeploy_actions $ENV
+$WEBROOT/../scripts/predeploy_actions.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
 
 if [ $BACKUP_BASE == 1 ] ; then
 # TODO:
@@ -240,7 +181,7 @@ elif [ $BUILD_MODE == "update" ]; then
 fi
 
 # Run the potential actions to do post deployment.
-postdeploy_actions $ENV
+$WEBROOT/../scripts/postdeploy_actions.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
 
 # Send a notification to inform that the build is done.
 if hash notify-send 2>/dev/null; then
