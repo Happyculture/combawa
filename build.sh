@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Return error codes if they happen.
-set -xe
+set -e
 
 ########## DEFAULT VARIABLES ##############
 # Default environment is prod.
