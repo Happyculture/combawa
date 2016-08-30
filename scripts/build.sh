@@ -129,15 +129,8 @@ elif [ ! -f "$SCRIPTS_PATH/postdeploy_actions.sh" ]; then
   exit 1
 fi
 
-# Stop the build if the DB connection is not set.
-set +e
-$DRUSH sql-connect
-if [[ $? != 0 ]]; then
-  echo "DB connection impossible."
-  echo "Please check that your MySQL connection is correcty set."
-  exit 1
-fi
-set -e
+# Preliminary verification to avoid running actions
+# if the requiprements are not met.
 if [ $BUILD_MODE == "install" ]; then
   if [ ! -f "$SCRIPTS_PATH/install.sh" ]; then
     echo "The install.sh file is not readable and can not be processed."
@@ -164,6 +157,16 @@ echo "------"
 echo "Composer install"
 cd $SCRIPTS_PATH/../
 composer install
+
+# Stop the build if the DB connection is not set.
+set +e
+$DRUSH sql-connect
+if [[ $? != 0 ]]; then
+  echo "DB connection impossible."
+  echo "Please check that your MySQL connection is correcty set."
+  exit 1
+fi
+set -e
 
 # Run the potential actions to do pre deployment.
 $SCRIPTS_PATH/predeploy_actions.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
