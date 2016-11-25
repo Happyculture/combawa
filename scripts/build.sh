@@ -181,7 +181,7 @@ fi
 set -e
 
 # Run the potential actions to do pre deployment.
-$SCRIPTS_PATH/predeploy_actions.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
+source $SCRIPTS_PATH/predeploy_actions.sh
 
 if [ $BACKUP_BASE == 1 ] ; then
   # TODO:
@@ -199,14 +199,14 @@ fi
 # Run the build content.
 if [ $BUILD_MODE == "install" ]; then
   echo "Start the installation..."
-  $SCRIPTS_PATH/install.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
+  source $SCRIPTS_PATH/install.sh
   if [[ $? != 0 ]]; then
     echo "The install.sh generated an error. Check the logs."
     exit $?
   fi
 elif [ $BUILD_MODE == "update" ]; then
   echo "Start the update..."
-  $SCRIPTS_PATH/update.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
+  source $SCRIPTS_PATH/update.sh
   if [[ $? != 0 ]]; then
     echo "The update.sh generated an error. Check the logs."
     exit $?
@@ -214,7 +214,7 @@ elif [ $BUILD_MODE == "update" ]; then
 fi
 
 # Run the potential actions to do post deployment.
-$SCRIPTS_PATH/postdeploy_actions.sh "$DRUSH" $WEBROOT $BUILD_MODE $ENV $BACKUP_BASE $URI
+source $SCRIPTS_PATH/postdeploy_actions.sh
 
 # Send a notification to inform that the build is done.
 if hash notify-send 2>/dev/null; then

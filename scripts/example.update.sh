@@ -8,12 +8,7 @@ set -xe
 # $ENV: Environnement on which the build is done.
 # $BACKUP_BASE: Flag if the backup of the database must be generated.
 # $URI: URI of the site you build.
-DRUSH=$1
-WEBROOT=$2
-BUILD_MODE=$3
-ENV=$4
-BACKUP_BASE=$5
-URI=$6
+# $FETCH_DB_DUMP: Flag to retrieve a DB dump from the production server.
 
 # Rebuild the structure since data come from another server structure.
 $DRUSH rr
