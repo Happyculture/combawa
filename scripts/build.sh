@@ -16,6 +16,9 @@ BACKUP_BASE=1;
 # Default URI.
 URI="https://example.org/"
 
+# Default action to retrieve a DB dump from the production.
+FETCH_DB_DUMP=0
+
 ########## FUNCTION ##############
 # Help function.
 usage() {
@@ -23,8 +26,8 @@ usage() {
   normal=$(tput sgr0)
 
   echo 'Usage:'
-  echo 'Long version: ./build.sh --env dev --mode install --backup 1 --uri http://hc.fun'
-  echo 'Short version: ./build.sh -e dev -m install -b 1 -u http://hc.fun'
+  echo 'Long version: ./build.sh --env dev --mode install --backup 1 --uri http://hc.fun --fetch-db-dump'
+  echo 'Short version: ./build.sh -e dev -m install -b 1 -u http://hc.fun -f'
   echo ''
   echo -e "Available arguments are:"
   echo -e "${bold}\t--env, -e: Environment to build.${normal}"
@@ -41,6 +44,9 @@ usage() {
   echo ''
   echo -e "${bold}\t--uri, -u: Local URL of your project${normal}"
   echo -e '\t\tUsed when the final drush uli command is runned.'
+  echo ''
+  echo -e "${bold}\t--fetch-db-dump, -f: Fetch a fresh DB dump from the production site.${normal}"
+  echo -e '\t\tUsed when the reference dump should be updated.'
   exit
 }
 
@@ -104,6 +110,11 @@ do
         usage
         shift
         ;;
+      -f|--fetch-db-dump)
+        echo "[Retrieve DB from prod] Yes."
+        FETCH_DB_DUMP=1
+        shift
+        ;;
       --) # End of all options
         shift
         ;;
@@ -152,6 +163,7 @@ echo "[Environment built] $ENV"
 echo "[Build mode] $BUILD_MODE"
 echo "[Generate a backup] $BACKUP_BASE"
 echo "[Environment URI] $URI"
+echo "[Retrieve DB from prod] $FETCH_DB_DUMP"
 echo "------"
 
 echo "Composer install"
