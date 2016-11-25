@@ -19,6 +19,27 @@ URI="https://example.org/"
 # Default action to retrieve a DB dump from the production.
 FETCH_DB_DUMP=0
 
+# Map this to your ~/.ssh/config file.
+# /!\ Your user must have a direct SSH access allowed to the prod server.
+# /!\ You probably should have retrieved the Jenkins SSH keys to connect to the
+# prod server.
+#
+# Example of config entry.
+# Host ssh_hc_prod
+#   HostName happyculture.coop
+#   IdentityFile ~/.ssh/happyculture_bot
+#   Port 2222
+#   User happyculture
+#
+# More info: http://nerderati.com/2011/03/17/simplify-your-life-with-an-ssh-config-file/
+SSH_CONFIG_NAME="ssh_hc_prod"
+
+# Path on the prod server where the dump is stored.
+PROD_DB_DUMP_PATH="/home/avise/sqldump/avise_prod_daily.sql.gz"
+
+# Name of the reference dump name in the repo.
+DUMP_FILE_NAME="reference_dump.sql"
+
 ########## FUNCTION ##############
 # Help function.
 usage() {
@@ -69,6 +90,7 @@ currentscriptpath () {
 # Working directory.
 SCRIPTS_PATH=$(currentscriptpath)
 WEBROOT="$SCRIPTS_PATH/../web"
+APP_ROOT="$WEBROOT/.."
 
 # Set the arguments value.
 while [[ $1 ]]
@@ -111,6 +133,12 @@ do
         shift
         ;;
       -f|--fetch-db-dump)
+        ssh -q $SSH_CONFIG_NAME exit
+        if [[ $? != 0 ]]; then
+          echo "Impossible to connect to the production server."
+          echo "Check your SSH config file. Should you connect through a VPN?"
+          exit 1
+        fi
         echo "[Retrieve DB from prod] Yes."
         FETCH_DB_DUMP=1
         shift
