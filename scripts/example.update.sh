@@ -19,11 +19,9 @@ $DRUSH cr
 # Enable the maintenance page.
 $DRUSH vset maintenance_mode 1
 
-# Enable the V2.5 module.
-$DRUSH en cd_v2
-
 # Run the updates.
 $DRUSH updb -y
+$DRUSH entup -y
 
 # Flush the caches.
 $DRUSH cr
@@ -37,5 +35,3 @@ $DRUSH cr
 # Remove the maintenance page.
 $DRUSH vset maintenance_mode 0
 
-# Fix permissions.
-chmod u+w ../www/sites/default
