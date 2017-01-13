@@ -10,14 +10,11 @@ set -xe
 # $URI: URI of the site you build.
 # $FETCH_DB_DUMP: Flag to retrieve a DB dump from the production server.
 
-# Rebuild the structure since data come from another server structure.
-$DRUSH rr
-
 # Flush drush cache to identify new commands such as rr.
 $DRUSH cr
 
 # Enable the maintenance page.
-$DRUSH vset maintenance_mode 1
+$DRUSH sset system.maintenance_mode 1
 
 # Run the updates.
 $DRUSH updb -y
@@ -34,5 +31,5 @@ $DRUSH fra --force
 $DRUSH cr
 
 # Remove the maintenance page.
-$DRUSH vset maintenance_mode 0
+$DRUSH sset system.maintenance_mode 0
 
