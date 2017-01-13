@@ -211,9 +211,6 @@ if [[ $? != 0 ]]; then
 fi
 set -e
 
-# Run the potential actions to do pre deployment.
-source $SCRIPTS_PATH/predeploy_actions.sh
-
 if [ $BACKUP_BASE == 1 ] ; then
   # TODO:
   # - Limit the backups existing in the dump dir to 10.
@@ -226,6 +223,9 @@ if [ $BACKUP_BASE == 1 ] ; then
   tar -czf "$DUMP_PATH.tar.gz" $DUMP_PATH;
   rm $DUMP_PATH;
 fi
+
+# Run the potential actions to do pre deployment.
+source $SCRIPTS_PATH/predeploy_actions.sh
 
 # Run the build content.
 if [ $BUILD_MODE == "install" ]; then
