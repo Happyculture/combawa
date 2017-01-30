@@ -219,9 +219,7 @@ if [ $BACKUP_BASE == 1 ] ; then
   DUMP_NAME="update-backup-script-$(date +%Y%m%d%H%M%S).sql";
   DUMP_PATH="$WEBROOT/../dumps/$DUMP_NAME"
   mkdir -p "$WEBROOT/../dumps/"
-  $DRUSH sql-dump > $DUMP_PATH;
-  tar -czf "$DUMP_PATH.tar.gz" $DUMP_PATH;
-  rm $DUMP_PATH;
+  $DRUSH sql-dump --result-file=$DUMP_PATH --gzip
 fi
 
 # Run the potential actions to do pre deployment.
