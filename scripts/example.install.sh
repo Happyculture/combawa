@@ -12,30 +12,7 @@ set -xe
 # $OFFLINE: Flag if we must avoid remote connections.
 
 # Install the site.
-#$DRUSH sql-drop -y
-#$DRUSH sqlc < "$DIR/../reference_dump.sql"
-
-# Flush drush cache to identify new commands such as rr.
-$DRUSH cr
-
-# Rebuild the structure since data come from another server structure.
-$DRUSH rr
-
-# Disable APC to avoid features revert issues.
-$DRUSH dis apc
-
-# Run the updates.
-$DRUSH updb -y
-
-# Flush the caches.
-$DRUSH cr
-
-# Revert the features to make sure that the permissions are set.
-$DRUSH fra
-
-# Flush the caches againnnnnnnnn.
-$DRUSH cr
+$DRUSH site-install PROFILE -y
 
 # Fix permissions.
 chmod u+w ../www/sites/default
-
