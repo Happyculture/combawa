@@ -25,11 +25,9 @@ $DRUSH cr
 
 # Revert the features to make sure that the permissions are set.
 $DRUSH features-import-all --bundle=$APP_BUNDLE
-$DRUSH fra --force
 
 # Flush the caches againnnnnnnnn.
 $DRUSH cr
 
 # Remove the maintenance page.
 $DRUSH sset system.maintenance_mode 0
-
