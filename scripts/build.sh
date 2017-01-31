@@ -212,7 +212,11 @@ echo "------"
 echo "Composer install"
 cd $SCRIPTS_PATH/../
 if [ $OFFLINE == 0 ] ; then
-  composer install
+  if [ "$ENV" == "production" ] ; then
+    composer install --optimize-autoloader --no-dev
+  else
+    composer install --optimize-autoloader
+  fi
 fi
 
 # Stop the build if the DB connection is not set.
