@@ -212,14 +212,13 @@ fi
 set -e
 
 if [ $BACKUP_BASE == 1 ] ; then
-  # TODO:
-  # - Limit the backups existing in the dump dir to 10.
-  # --
   # Store a security backup in case the update doesn't go right.
   DUMP_NAME="update-backup-script-$(date +%Y%m%d%H%M%S).sql";
   DUMP_PATH="$WEBROOT/../dumps/$DUMP_NAME"
   mkdir -p "$WEBROOT/../dumps/"
   $DRUSH sql-dump --result-file=$DUMP_PATH --gzip
+  # Remove older backups but keep the 10 youngest ones.
+  ls -tp "$WEBROOT/../dumps/*.sql.gz" | grep -v '/$' | tail -n +10 | tr '\n' '\0' | xargs -0 rm --
 fi
 
 # Run the potential actions to do pre deployment.
