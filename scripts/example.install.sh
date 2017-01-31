@@ -9,6 +9,7 @@ set -xe
 # $BACKUP_BASE: Flag if the backup of the database must be generated.
 # $URI: URI of the site you build.
 # $FETCH_DB_DUMP: Flag to retrieve a DB dump from the production server.
+# $OFFLINE: Flag if we must avoid remote connections.
 
 # Install the site.
 #$DRUSH sql-drop -y

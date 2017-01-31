@@ -43,6 +43,9 @@ PROD_DB_DUMP_PATH="/home/avise/sqldump/avise_prod_daily.sql.gz"
 # Name of the reference dump name in the repo.
 DUMP_FILE_NAME="reference_dump.sql"
 
+# Has to run offline.
+OFFLINE=0
+
 ########## FUNCTION ##############
 # Help function.
 usage() {
@@ -71,6 +74,10 @@ usage() {
   echo ''
   echo -e "${bold}\t--fetch-db-dump, -f: Fetch a fresh DB dump from the production site.${normal}"
   echo -e '\t\tUsed when the reference dump should be updated.'
+  echo ''
+  echo -e "${bold}\t--offline, -o: Run offline to avoid trying to make remote connections.${normal}"
+  echo -e '\t\tAllowed values are: 0: make remote connections, 1: avoid remote connections.'
+  echo -e '\t\tDefault value: 0'
   exit
 }
 
@@ -146,6 +153,10 @@ do
         FETCH_DB_DUMP=1
         shift
         ;;
+      -o|--offline)
+        OFFLINE="$2"
+        shift
+        ;;
       --) # End of all options
         shift
         ;;
@@ -195,11 +206,14 @@ echo "[Build mode] $BUILD_MODE"
 echo "[Generate a backup] $BACKUP_BASE"
 echo "[Environment URI] $URI"
 echo "[Retrieve DB from prod] $FETCH_DB_DUMP"
+echo "[Run offline] $OFFLINE"
 echo "------"
 
 echo "Composer install"
 cd $SCRIPTS_PATH/../
-composer install
+if [ $OFFLINE == 0 ] ; then
+  composer install
+fi
 
 # Stop the build if the DB connection is not set.
 set +e
