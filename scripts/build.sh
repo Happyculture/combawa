@@ -154,9 +154,6 @@ do
   fi
 done
 
-# Make drush a variable to use the one shipped with the repository.
-DRUSH="drush -y --root=$WEBROOT --uri=$URI"
-
 # Check that we have what we need to build.
 if [ ! -f "$SCRIPTS_PATH/../composer.json" ]; then
   echo "Your repository is missing a composer.json file."
@@ -205,6 +202,9 @@ if [ $OFFLINE == 0 ] ; then
     composer install --optimize-autoloader
   fi
 fi
+
+# Make drush a variable to use the one shipped with the repository.
+DRUSH="$APP_ROOT/vendor/bin/drush -y --root=$WEBROOT --uri=$URI"
 
 # Stop the build if the DB connection is not set.
 set +e
