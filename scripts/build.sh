@@ -5,46 +5,33 @@ set -e
 
 ########## DEFAULT VARIABLES ##############
 # Default environment is prod.
+# Override with -e or --env.
 ENV="prod";
 
 # Default build mode. Can be install or update.
+# Override with -m or --mode.
 BUILD_MODE="update";
 
+# Default URI.
+# Override with -u or --uri.
+URI=""
+
 # Backup base before build.
+# Override with -b or --backup.
 BACKUP_BASE=1;
 
-# Default URI.
-URI="https://example.org/"
-
 # Default action to retrieve a DB dump from the production.
+# Override with -f or --fetch-db-dump.
 FETCH_DB_DUMP=0
 
-# Features bundle to revert.
-APP_BUNDLE="hc"
-
-# Map this to your ~/.ssh/config file.
-# /!\ Your user must have a direct SSH access allowed to the prod server.
-# /!\ You probably should have retrieved the Jenkins SSH keys to connect to the
-# prod server.
-#
-# Example of config entry.
-# Host ssh_hc_prod
-#   HostName happyculture.coop
-#   IdentityFile ~/.ssh/happyculture_bot
-#   Port 2222
-#   User happyculture
-#
-# More info: http://nerderati.com/2011/03/17/simplify-your-life-with-an-ssh-config-file/
-SSH_CONFIG_NAME="ssh_hc_prod"
-
-# Path on the prod server where the dump is stored.
-PROD_DB_DUMP_PATH="/home/avise/sqldump/avise_prod_daily.sql.gz"
-
-# Name of the reference dump name in the repo.
-DUMP_FILE_NAME="reference_dump.sql"
-
 # Has to run offline.
+# Override with -o or --offline.
 OFFLINE=0
+
+# Override default settings per project.
+if [ -f "$SCRIPTS_PATH/settings.sh" ]; then
+  source $SCRIPTS_PATH/settings.sh
+fi
 
 ########## FUNCTION ##############
 # Help function.
