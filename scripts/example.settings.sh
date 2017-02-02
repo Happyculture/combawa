@@ -42,3 +42,10 @@ PROD_DB_DUMP_PATH="/home/avise/sqldump/avise_prod_daily.sql.gz"
 
 # Name of the reference dump name in the repo.
 DUMP_FILE_NAME="reference_dump.sql"
+
+##### Project executables.
+
+BUNDLE=/usr/local/rvm/wrappers/default/bundle
+if [ ! -f /usr/local/rvm/wrappers/default/bundle ]; then
+  BUNDLE=`which bundle`
+fi

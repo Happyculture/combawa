@@ -3,11 +3,6 @@
 # It can be useful to enable specific modules for instance.
 # Available variables are defined in settings.sh.
 
-BUNDLE=/usr/local/rvm/wrappers/default/bundle
-if [ ! -f /usr/local/rvm/wrappers/default/bundle ]; then
-  BUNDLE=`which bundle`
-fi
-
 # Return error codes if they happen.
 set -e
 
