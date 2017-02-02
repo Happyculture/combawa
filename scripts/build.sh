@@ -123,6 +123,10 @@ do
         ;;
       -u|--uri)
         URI="$2"
+        if [ ! $2 ]; then
+          echo "URI missing."
+          exit 1
+        fi
         shift
         ;;
       -h|--help)
@@ -207,7 +211,10 @@ if [ $OFFLINE == 0 ] ; then
 fi
 
 # Make drush a variable to use the one shipped with the repository.
-DRUSH="$APP_ROOT/vendor/bin/drush -y --root=$WEBROOT --uri=$URI"
+DRUSH="$APP_ROOT/vendor/bin/drush -y --root=$WEBROOT"
+if [ $URI ]; then
+  DRUSH="$DRUSH --uri=$URI"
+fi
 
 # Stop the build if the DB connection is not set.
 set +e
