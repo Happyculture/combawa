@@ -29,9 +29,11 @@ FETCH_DB_DUMP=0
 OFFLINE=0
 
 # Override default settings per project.
-if [ -f "$SCRIPTS_PATH/settings.sh" ]; then
-  source $SCRIPTS_PATH/settings.sh
+if [ ! -f "$SCRIPTS_PATH/settings.sh" ]; then
+  echo "settings.sh file not found. Copy and rename the example.settings.sh file."
+  exit 1
 fi
+source $SCRIPTS_PATH/settings.sh
 
 ########## FUNCTION ##############
 # Help function.
