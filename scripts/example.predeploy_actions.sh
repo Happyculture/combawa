@@ -1,6 +1,7 @@
 #!/bin/bash
 # Actions to run before the main and shared deployment actions.
 # It can be useful to backup, import databases or doing something similar.
+# Available variables are defined in settings.sh.
 
 # Return error codes if they happen.
 set -e
