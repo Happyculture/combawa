@@ -8,29 +8,37 @@ set -e
 if [ $FETCH_DB_DUMP == 1 ] ; then
   echo "Updating the reference dump."
   # Do the magic that connects to the server and retrieves the SQL dump.
-  # scp $SSH_NAME:$PROD_DB_DUMP_PATH "$APP_ROOT/$DUMP_FILE_NAME.gz"
-  # if [[ $? != 0 ]]; then
-  #   echo "Impossible to retrieve the dump file. Verify the file name."
-  #   exit 1
-  # fi
+  scp $SSH_NAME:$PROD_DB_DUMP_PATH "$APP_ROOT/$DUMP_FILE_NAME.gz"
+  if [[ $? != 0 ]]; then
+    echo "Impossible to retrieve the dump file. Verify the file name."
+    exit 1
+  fi
 fi
 
 case $ENV in
   dev)
-    # if [ -f "$APP_ROOT/$DUMP_FILE_NAME.gz" ]; then
-    #   $DRUSH sql-drop -y;
-    #   zcat "$APP_ROOT/$DUMP_FILE_NAME.gz" | $DRUSH sqlc
-    # else
-    #   echo "Database reference bump not found. Keeping the current database."
-    # fi
+    # In update mode, load the reference dump if it exists.
+    if [ $BUILD_MODE == "update" ]; then
+      if [ -f "$APP_ROOT/$DUMP_FILE_NAME.gz" ]; then
+        $DRUSH sql-drop -y;
+        zcat "$APP_ROOT/$DUMP_FILE_NAME.gz" | $DRUSH sqlc
+      else
+        echo "Database reference dump $APP_ROOT/$DUMP_FILE_NAME.gz not found."
+        exit 1;
+      fi
+    fi
     ;;
   recette|preprod)
-    # if [ -f "$APP_ROOT/$DUMP_FILE_NAME.gz" ]; then
-    #   $DRUSH sql-drop -y;
-    #   zcat "$APP_ROOT/$DUMP_FILE_NAME.gz" | $DRUSH sqlc
-    # else
-    #   echo "Database reference bump not found. Keeping the current database."
-    # fi
+    # In update mode, load the reference dump if it exists.
+    if [ $BUILD_MODE == "update" ]; then
+      if [ -f "$APP_ROOT/$DUMP_FILE_NAME.gz" ]; then
+        $DRUSH sql-drop -y;
+        zcat "$APP_ROOT/$DUMP_FILE_NAME.gz" | $DRUSH sqlc
+      else
+        echo "Database reference dump $APP_ROOT/$DUMP_FILE_NAME.gz not found."
+        exit 1;
+      fi
+    fi
     ;;
   prod)
     ;;
