@@ -20,7 +20,7 @@ case $ENV in
     $DRUSH vset preprocess_js 0;
 
     # Enable UIs.
-    $DRUSH en -y devel diff features_ui field_ui views_ui;
+    $DRUSH en -y dblog devel diff features_ui field_ui views_ui;
 
     # Fetch missing images from the remote server.
     if [ $OFFLINE == 0 ] ; then
@@ -39,6 +39,9 @@ case $ENV in
       $BUNDLE exec compass compile --force -e development
     )
 
+    # Enable extra modules.
+    $DRUSH en -y dblog
+
     # Fetch missing images from the remote server.
     if [ $OFFLINE == 0 ] ; then
       $DRUSH en -y stage_file_proxy
@@ -46,7 +49,7 @@ case $ENV in
     fi
     ;;
   prod)
-    # Compile CSS for development.
+    # Compile CSS for production.
     (
       cd $WEBROOT/sites/all/themes/custom_theme/
       if [ $OFFLINE == 0 ] ; then $BUNDLE install; fi # reads .bundle/config to find the vendor path.
