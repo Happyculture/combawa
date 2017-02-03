@@ -26,3 +26,4 @@ $DRUSH cr
 
 # Remove the maintenance page.
 $DRUSH sset system.maintenance_mode 0
+
