@@ -12,10 +12,6 @@ ENV="prod";
 # Override with -m or --mode.
 BUILD_MODE="update";
 
-# Default URI.
-# Override with -u or --uri.
-URI=""
-
 # Backup base before build.
 # Override with -b or --backup.
 BACKUP_BASE=1;
