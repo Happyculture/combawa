@@ -8,5 +8,3 @@ set -xe
 # Install the site.
 $DRUSH site-install PROFILE -y
 
-# Fix permissions.
-chmod u+w ../www/sites/default
