@@ -122,7 +122,7 @@ do
       -u|--uri)
         URI="$2"
         if [ ! $2 ]; then
-          echo "URI missing."
+          echo "URI parameter can not be empty."
           exit 1
         fi
         shift
@@ -143,6 +143,7 @@ do
         shift
         ;;
       -o|--offline)
+        echo "[Offline] The build is processed in offline mode."
         OFFLINE="$2"
         shift
         ;;
