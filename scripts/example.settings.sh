@@ -23,22 +23,25 @@ FETCH_DB_DUMP=0
 APP_BUNDLE="hc"
 
 # Map this to your ~/.ssh/config file.
-# /!\ Your user must have a direct SSH access allowed to the prod server.
-# /!\ You probably should have retrieved the Jenkins SSH keys to connect to the
-# prod server.
+# /!\ Your user must have a direct SSH access allowed to the server.
+# /!\ The production dumps are supposed to be retrieved by our Jenkins build
+# https://ci.happyculture.coop/job/Dumps/view/Dumps/
+#
+# If your dump isn't generated here. Add it.
+# Howto: https://projets.happyculture.coop/projects/infra/wiki/Dumps_prod
 #
 # Example of config entry.
-# Host ssh_hc_prod
-#   HostName happyculture.coop
-#   IdentityFile ~/.ssh/happyculture_bot
+# Host ssh_hc_ci
+#   HostName ci.happyculture.coop
 #   Port 2222
 #   User happyculture
+#   (Optional) IdentityFile ~/.ssh/id_rsa
 #
 # More info: http://nerderati.com/2011/03/17/simplify-your-life-with-an-ssh-config-file/
-SSH_CONFIG_NAME="ssh_hc_prod"
+SSH_CONFIG_NAME="ssh_hc_ci"
 
 # Path on the prod server where the dump is stored.
-PROD_DB_DUMP_PATH="/home/avise/sqldump/avise_prod_daily.sql.gz"
+PROD_DB_DUMP_PATH="/home/jenkins/dumps/project_prod_daily.sql.gz"
 
 # Name of the reference dump name in the repo.
 DUMP_FILE_NAME="reference_dump.sql"
