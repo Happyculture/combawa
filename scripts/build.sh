@@ -24,13 +24,6 @@ FETCH_DB_DUMP=0
 # Override with -o or --offline.
 OFFLINE=0
 
-# Override default settings per project.
-if [ ! -f "$SCRIPTS_PATH/settings.sh" ]; then
-  echo "settings.sh file not found. Copy and rename the example.settings.sh file."
-  exit 1
-fi
-source $SCRIPTS_PATH/settings.sh
-
 ########## FUNCTION ##############
 # Help function.
 usage() {
@@ -171,6 +164,13 @@ elif [ ! -f "$SCRIPTS_PATH/postdeploy_actions.sh" ]; then
   echo "The postdeploy_actions.sh file is not readable and can not be processed."
   exit 1
 fi
+
+# Override default settings per project.
+if [ ! -f "$SCRIPTS_PATH/settings.sh" ]; then
+  echo "settings.sh file not found. Copy and rename the example.settings.sh file."
+  exit 1
+fi
+source $SCRIPTS_PATH/settings.sh
 
 # Preliminary verification to avoid running actions
 # if the requiprements are not met.
