@@ -80,6 +80,13 @@ SCRIPTS_PATH=$(currentscriptpath)
 WEBROOT="$SCRIPTS_PATH/../web"
 APP_ROOT="$WEBROOT/.."
 
+# Override default settings per project.
+if [ ! -f "$SCRIPTS_PATH/settings.sh" ]; then
+  echo "settings.sh file not found. Copy and rename the example.settings.sh file."
+  exit 1
+fi
+source $SCRIPTS_PATH/settings.sh
+
 # Set the arguments value.
 while [[ $1 ]]
 do
@@ -164,13 +171,6 @@ elif [ ! -f "$SCRIPTS_PATH/postdeploy_actions.sh" ]; then
   echo "The postdeploy_actions.sh file is not readable and can not be processed."
   exit 1
 fi
-
-# Override default settings per project.
-if [ ! -f "$SCRIPTS_PATH/settings.sh" ]; then
-  echo "settings.sh file not found. Copy and rename the example.settings.sh file."
-  exit 1
-fi
-source $SCRIPTS_PATH/settings.sh
 
 # Preliminary verification to avoid running actions
 # if the requiprements are not met.
