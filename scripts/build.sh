@@ -232,7 +232,9 @@ if [ $BACKUP_BASE == 1 ] ; then
   mkdir -p "$WEBROOT/../dumps/"
   $DRUSH sql-dump --result-file=$DUMP_PATH --gzip
   # Remove older backups but keep the 10 youngest ones.
-  ls -tp "$WEBROOT/../dumps/*.sql.gz" | grep -v '/$' | tail -n +10 | tr '\n' '\0' | xargs -0 rm --
+  if [ "$(ls -l $WEBROOT/../dumps/*.sql.gz | wc -l)" -gt 10 ]; then
+    ls -tp $WEBROOT/../dumps/*.sql.gz | grep -v '/$' | tail -n +10 | tr '\n' '\0' | xargs -0 rm --
+  fi
 fi
 
 # Run the potential actions to do pre deployment.
