@@ -16,8 +16,8 @@ case $ENV in
     )
 
     # Turn off the aggregation to avoid to turn crazy.
-    $DRUSH vset preprocess_css 0;
-    $DRUSH vset preprocess_js 0;
+    $DRUSH cset system.performance css.preprocess 0;
+    $DRUSH cset system.performance js.preprocess 0;
 
     # Enable UIs.
     $DRUSH en -y dblog devel diff features_ui field_ui views_ui;
@@ -25,7 +25,7 @@ case $ENV in
     # Fetch missing images from the remote server.
     if [ $OFFLINE == 0 ] ; then
       $DRUSH en -y stage_file_proxy
-      $DRUSH vset stage_file_proxy_origin "https://www.example.org"
+      $DRUSH cset stage_file_proxy.settings origin "https://www.example.org"
     fi
 
     # Connect.
@@ -45,7 +45,7 @@ case $ENV in
     # Fetch missing images from the remote server.
     if [ $OFFLINE == 0 ] ; then
       $DRUSH en -y stage_file_proxy
-      $DRUSH vset stage_file_proxy_origin "https://www.example.org"
+      $DRUSH cset stage_file_proxy.settings origin "https://www.example.org"
     fi
     ;;
   prod)
