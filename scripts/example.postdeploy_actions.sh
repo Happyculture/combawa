@@ -72,7 +72,7 @@ case $ENV in
     )
 
     # Disable dev modules.
-    $DRUSH dis -y devel field_ui diff views_ui
+    $DRUSH pmu -y devel field_ui diff views_ui
     ;;
   *)
     echo "Unknown environment: $ENV. Please check your name."
