@@ -19,9 +19,6 @@ URI="https://example.org/"
 # Default action to retrieve a DB dump from the production.
 FETCH_DB_DUMP=0
 
-# Features bundle to revert.
-APP_BUNDLE="hc"
-
 # Map this to your ~/.ssh/config file.
 # /!\ Your user must have a direct SSH access allowed to the server.
 # /!\ The production dumps are supposed to be retrieved by our Jenkins build

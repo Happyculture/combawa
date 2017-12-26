@@ -20,7 +20,7 @@ case $ENV in
     $DRUSH cset system.performance js.preprocess 0;
 
     # Enable UIs.
-    $DRUSH en -y dblog devel diff features_ui field_ui views_ui;
+    $DRUSH en -y dblog devel diff field_ui views_ui;
 
     # Fetch missing images from the remote server.
     if [ $OFFLINE == 0 ] ; then
