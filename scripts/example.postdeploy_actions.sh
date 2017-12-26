@@ -28,6 +28,12 @@ case $ENV in
       $DRUSH cset stage_file_proxy.settings origin "https://www.example.org"
     fi
 
+    # Environment indicator.
+    $DRUSH en environment_indicator
+    $DRUSH config-set environment_indicator.indicator bg_color "#768706"
+    $DRUSH config-set environment_indicator.indicator fg_color "#FFFFFF"
+    $DRUSH config-set environment_indicator.indicator name "Dev"
+
     # Connect.
     $DRUSH uli
     ;;
@@ -47,6 +53,12 @@ case $ENV in
       $DRUSH en -y stage_file_proxy
       $DRUSH cset stage_file_proxy.settings origin "https://www.example.org"
     fi
+
+    # Environment indicator.
+    $DRUSH en environment_indicator
+    $DRUSH config-set environment_indicator.indicator bg_color "#a25509"
+    $DRUSH config-set environment_indicator.indicator fg_color "#FFFFFF"
+    $DRUSH config-set environment_indicator.indicator name "Recette"
     ;;
   prod)
     # Compile CSS for production.
