@@ -18,8 +18,8 @@ $DRUSH entup -y
 # Flush the caches.
 $DRUSH cr
 
-# Revert the features to make sure that the permissions are set.
-$DRUSH features-import-all --bundle=$APP_BUNDLE
+# Import the configuration
+$DRUSH cim -y
 
 # Flush the caches againnnnnnnnn.
 $DRUSH cr
