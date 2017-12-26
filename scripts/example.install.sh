@@ -6,5 +6,5 @@
 set -xe
 
 # Install the site.
-$DRUSH site-install PROFILE -y
+$DRUSH site-install PROFILE
 
