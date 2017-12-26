@@ -45,7 +45,4 @@ DUMP_FILE_NAME="reference_dump.sql"
 
 ##### Project executables.
 
-BUNDLE=/usr/local/rvm/wrappers/default/bundle
-if [ ! -f /usr/local/rvm/wrappers/default/bundle ]; then
-  BUNDLE=`which bundle`
-fi
+NPM=npm

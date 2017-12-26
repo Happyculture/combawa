@@ -6,13 +6,16 @@
 # Return error codes if they happen.
 set -e
 
+PROFILE=my_profile
+THEME=my_theme
+
 case $ENV in
   dev)
     # Compile CSS for development.
     (
-      cd $WEBROOT/sites/all/themes/custom_theme/
-      if [ $OFFLINE == 0 ] ; then $BUNDLE install; fi # reads .bundle/config to find the vendor path.
-      $BUNDLE exec compass compile --force -e development
+      cd $WEBROOT/themes/custom/$THEME
+      if [ $OFFLINE == 0 ] ; then $NPM install; fi
+      $NPM run build-dev
     )
 
     # Turn off the aggregation to avoid to turn crazy.
@@ -38,11 +41,11 @@ case $ENV in
     $DRUSH uli
     ;;
   recette|preprod)
-    # Compile CSS for development.
+    # Compile CSS for production.
     (
-      cd $WEBROOT/sites/all/themes/custom_theme/
-      if [ $OFFLINE == 0 ] ; then $BUNDLE install; fi # reads .bundle/config to find the vendor path.
-      $BUNDLE exec compass compile --force -e development
+      cd $WEBROOT/themes/custom/$THEME
+      if [ $OFFLINE == 0 ] ; then $NPM install; fi
+      $NPM run build
     )
 
     # Enable extra modules.
@@ -63,9 +66,9 @@ case $ENV in
   prod)
     # Compile CSS for production.
     (
-      cd $WEBROOT/sites/all/themes/custom_theme/
-      if [ $OFFLINE == 0 ] ; then $BUNDLE install; fi # reads .bundle/config to find the vendor path.
-      $BUNDLE exec compass compile --force -e production
+      cd $WEBROOT/themes/custom/$THEME
+      if [ $OFFLINE == 0 ] ; then $NPM install; fi
+      $NPM run build
     )
 
     # Disable dev modules.
