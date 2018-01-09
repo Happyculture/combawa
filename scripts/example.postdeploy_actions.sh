@@ -6,14 +6,11 @@
 # Return error codes if they happen.
 set -e
 
-PROFILE=my_profile
-THEME=my_theme
-
 case $ENV in
   dev)
     # Compile CSS for development.
     (
-      cd $WEBROOT/themes/custom/$THEME
+      cd $WEBROOT/themes/custom/$CUSTOM_THEME
       if [ $OFFLINE == 0 ] ; then $NPM install; fi
       $NPM run build-dev
     )
@@ -43,7 +40,7 @@ case $ENV in
   recette|preprod)
     # Compile CSS for production.
     (
-      cd $WEBROOT/themes/custom/$THEME
+      cd $WEBROOT/themes/custom/$CUSTOM_THEME
       if [ $OFFLINE == 0 ] ; then $NPM install; fi
       $NPM run build
     )
@@ -66,7 +63,7 @@ case $ENV in
   prod)
     # Compile CSS for production.
     (
-      cd $WEBROOT/themes/custom/$THEME
+      cd $WEBROOT/themes/custom/$CUSTOM_THEME
       if [ $OFFLINE == 0 ] ; then $NPM install; fi
       $NPM run build
     )

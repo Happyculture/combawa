@@ -4,6 +4,10 @@
 # All these settings can still be overridden by the command line options.
 # All variables defined here will be available in the other scripts.
 
+# Installation profile and custom theme.
+INSTALL_PROFILE="config_installer"
+CUSTOM_THEME="bartik"
+
 # Default environment is prod.
 ENV="prod";
 
