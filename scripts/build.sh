@@ -132,6 +132,7 @@ do
         shift
         ;;
       -f|--fetch-db-dump)
+	echo "Testing connection with remote SSH server from which the dump will be retrieved."
         ssh -q $SSH_CONFIG_NAME exit
         if [[ $? != 0 ]]; then
           echo "Impossible to connect to the production server."

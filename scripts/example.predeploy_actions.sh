@@ -9,7 +9,7 @@ set -e
 if [ $FETCH_DB_DUMP == 1 ] ; then
   echo "Updating the reference dump."
   # Do the magic that connects to the server and retrieves the SQL dump.
-  scp $SSH_NAME:$PROD_DB_DUMP_PATH "$APP_ROOT/$DUMP_FILE_NAME.gz"
+  scp $SSH_CONFIG_NAME:$PROD_DB_DUMP_PATH "$APP_ROOT/$DUMP_FILE_NAME.gz"
   if [[ $? != 0 ]]; then
     echo "Impossible to retrieve the dump file. Verify the file name."
     exit 1
