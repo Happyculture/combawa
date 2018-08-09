@@ -203,10 +203,14 @@ echo "------"
 echo "Composer install"
 cd $SCRIPTS_PATH/../
 if [ $OFFLINE == 0 ] ; then
-  if [ "$ENV" == "production" ] ; then
-    composer install --optimize-autoloader --no-dev
+  if [ "$ENV" == "prod" ] ; then
+    composer install --optimize-autoloader --no-dev --no-interaction
   else
-    composer install --optimize-autoloader
+    if [ "$ENV" == "dev" ] ; then
+      composer install --optimize-autoloader
+    else
+      composer install --optimize-autoloader --no-interaction
+    fi
   fi
 fi
 
