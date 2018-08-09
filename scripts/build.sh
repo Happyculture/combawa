@@ -203,15 +203,14 @@ echo "------"
 echo "Composer install"
 cd $SCRIPTS_PATH/../
 if [ $OFFLINE == 0 ] ; then
-  if [ "$ENV" == "prod" ] ; then
-    composer install --optimize-autoloader --no-dev --no-interaction
-  else
-    if [ "$ENV" == "dev" ] ; then
-      composer install --optimize-autoloader
-    else
-      composer install --optimize-autoloader --no-interaction
-    fi
+  COMPOSER_SETTINGS=""
+  if [ "$ENV" != "dev" ] ; then
+    COMPOSER_SETTINGS="$COMPOSER_SETTINGS --no-interaction"
   fi
+  if [ "$ENV" == "prod" ] ; then
+    COMPOSER_SETTINGS="$COMPOSER_SETTINGS --no-dev"
+  fi
+  composer install $COMPOSER_SETTINGS
 fi
 
 # Make drush a variable to use the one shipped with the repository.
