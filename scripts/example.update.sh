@@ -11,18 +11,20 @@ $DRUSH cr
 # Enable the maintenance page.
 $DRUSH sset system.maintenance_mode 1
 
-# Run the updates.
-$DRUSH updb -y
-$DRUSH entup -y
+# Run the DB updates.
+$DRUSH updb --no-post-updates
 
 # Flush the caches.
 $DRUSH cr
 
 # Import the configuration
-$DRUSH cim -y
+$DRUSH cim
 
 # Flush the caches againnnnnnnnn.
 $DRUSH cr
+
+# Run the post updates.
+$DRUSH updb
 
 # Remove the maintenance page.
 $DRUSH sset system.maintenance_mode 0
