@@ -22,14 +22,16 @@ currentscriptpath () {
 # Working directory.
 SCRIPTS_PATH=$(currentscriptpath)
 
-source $SCRIPTS_PATH/colors.sh
-source $SCRIPTS_PATH/functions.sh
-
 # App variables.
-WEBROOT="$SCRIPTS_PATH/../web"
-APP_ROOT="$WEBROOT/.."
-CONFIG_DIR="$SCRIPTS_PATH/../../../../config"
+APP_ROOT="$SCRIPTS_PATH/../../../.."
+WEBROOT="$APP_ROOT/web"
+CONFIG_DIR="$APP_ROOT/config"
+UTILS_DIR="$SCRIPTS_PATH/../utils"
 TEMPLATES_DIR="$SCRIPTS_PATH/../templates"
+
+source $UTILS_DIR/colors.sh
+source $UTILS_DIR/functions.sh
+
 
 echo -e ""
 echo -e "${LIGHT_PURPLE}"
@@ -56,7 +58,7 @@ echo -e "   l  \"~   j l j_L______"
 echo -e "    \,____{ __\"~ __ ,\_,\_"
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
 
-source $SCRIPTS_PATH/prerequisites.sh
+source $UTILS_DIR/prerequisites.sh
 
 # Set the arguments value.
 while [[ $1 ]]
