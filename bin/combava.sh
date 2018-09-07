@@ -31,17 +31,32 @@ WEBROOT="$SCRIPTS_PATH/../web"
 APP_ROOT="$WEBROOT/.."
 CONFIG_DIR="$SCRIPTS_PATH/../../../../config"
 
+echo -e ""
+echo -e "${LIGHT_PURPLE}"
+echo -e "                 .                 "
+echo -e "             /\ /l                 "
+echo -e "            ((.Y(!                 "
+echo -e "             \ |/          KUMBAYA, PLEASE TO SERVE!"
+echo -e "             /  6~6,       Let's build this project."
+echo -e "             \ _    +-.            "
+echo -e "              \`-=--^-'            "
+echo -e "               \ \                 "
+echo -e "              _/  \\"
+echo -e "             (  .  Y"
+echo -e "            /\"\ \`--^--v--."
+echo -e "           / _ \`--\"T~\/~\/"
+echo -e "          / \" ~\.  !"
+echo -e "    _    Y      Y./'"
+echo -e "   Y^|   |      |~~7"
+echo -e "   | l   |     / ./'"
+echo -e "   | \`L  | Y .^/~T"
+echo -e "   |  l  ! | |/| |          -Row"
+echo -e "   | .\`\/' | Y | !"
+echo -e "   l  \"~   j l j_L______"
+echo -e "    \,____{ __\"~ __ ,\_,\_"
+echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
+
 source $SCRIPTS_PATH/prerequisites.sh
-
-WEBROOT="$SCRIPTS_PATH/../web"
-APP_ROOT="$WEBROOT/.."
-
-# Override default settings per project.
-if [ ! -f "$SCRIPTS_PATH/settings.sh" ]; then
-  echo "settings.sh file not found. Copy and rename the example.settings.sh file."
-  exit 1
-fi
-source $SCRIPTS_PATH/settings.sh
 
 # Set the arguments value.
 while [[ $1 ]]

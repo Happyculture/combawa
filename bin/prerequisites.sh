@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# Override default settings per project.
+# Check config directory existance.
+echo -e ""
 echo -e "${BLUE}Verifying config directory setup.${NC}"
 echo -e ""
 if [ ! -d "$CONFIG_DIR" ]; then
