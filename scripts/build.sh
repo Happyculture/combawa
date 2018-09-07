@@ -195,7 +195,7 @@ echo "------"
 echo "[Environment built] $ENV"
 echo "[Build mode] $BUILD_MODE"
 echo "[Generate a backup] $BACKUP_BASE"
-echo "[Environment URI] $URI"
+echo "[Environment URI] $WEBSITE_URI"
 echo "[Retrieve DB from prod] $FETCH_DB_DUMP"
 echo "[Run offline] $OFFLINE"
 echo "------"
@@ -215,8 +215,8 @@ fi
 
 # Make drush a variable to use the one shipped with the repository.
 DRUSH="$APP_ROOT/vendor/bin/drush -y --root=$WEBROOT"
-if [ $URI ]; then
-  DRUSH="$DRUSH --uri=$URI"
+if [ $WEBSITE_URI ]; then
+  DRUSH="$DRUSH --uri=$WEBSITE_URI"
 fi
 
 # Stop the build if the DB connection is not set.
