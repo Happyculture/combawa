@@ -189,3 +189,33 @@ echo -e "${GREEN}Predeploy actions script... OK!${NC}"
 echo -e ""
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo -e ""
+
+# Check postdeploy actions script.
+echo -e ""
+echo -e "${BLUE}Verifying postdeploy action script.${NC}"
+if [ ! -f "$APP_SCRIPTS_DIR/postdeploy_actions.sh" ]; then
+  echo -e ""
+  echo -e "${ORANGE}There is no postdeploy actions script at the moment or its not readable.${NC}"
+  while true; do
+    echo ''
+    read -p "Would you like to start with a template? [y/N/exit] " yn
+    case $yn in
+        [Yy]* )
+          cp $TEMPLATES_DIR/postdeploy_actions.sh $APP_SCRIPTS_DIR/postdeploy_actions.sh
+          echo -e ""
+          echo -e "${LIGHT_GREEN}Postdeploy actions template added: $APP_SCRIPTS_DIR/postdeploy_actions.sh${NC}"
+          break;;
+        [Nn]* )
+          echo -e "${LIGHT_CYAN}No postdeploy actions script has been added. Please note that this file is required in order to be able to build a project.${NC}"
+          exit;;
+        "exit"|"q" ) exit;;
+        * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
+    esac
+  done
+fi
+echo -e ""
+echo -e "${GREEN}Postdeploy actions script... OK!${NC}"
+
+echo -e ""
+echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo -e ""

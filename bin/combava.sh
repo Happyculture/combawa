@@ -131,11 +131,6 @@ do
   fi
 done
 
-if [ ! -f "$SCRIPTS_PATH/postdeploy_actions.sh" ]; then
-  echo "The postdeploy_actions.sh file is not readable and can not be processed."
-  exit 1
-fi
-
 # Preliminary verification to avoid running actions
 # if the requiprements are not met.
 if [ $BUILD_MODE == "install" ]; then
