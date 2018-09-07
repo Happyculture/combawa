@@ -9,7 +9,7 @@ echo -e ""
 echo -e "${BLUE}Verifying config directory setup.${NC}"
 if [ ! -d "$CONFIG_DIR" ]; then
   echo -e ""
-  echo -e "${ORANGE}Your config directory does not exist yet.${NC}"
+  echo -e "${ORANGE}Your <app>/config directory does not exist yet.${NC}"
   while true; do
     echo ''
     read -p "Would you like to create it? [y/N/exit] " yn
@@ -36,9 +36,9 @@ echo -e ""
 
 # Load the config file.
 echo -e "${BLUE}Verifying environment config settings.${NC}"
-if [ ! -f "$CONFIG_DIR/env_config.cfg" ]; then
+if [ ! -f "$CONFIG_DIR/env_config.conf" ]; then
   echo -e ""
-  echo -e "${ORANGE}There is no config file for the environment.${NC}"
+  echo -e "${ORANGE}There is no <app>/config/env_config.conf config file for the environment.${NC}"
   while true; do
     echo ''
     read -p "Would you like to create it? [y/N] " yn
@@ -99,7 +99,7 @@ if [ ! -f "$CONFIG_DIR/env_config.cfg" ]; then
         # Export the config in a file.
         export BUILD_MODE ENV_NAME
         TEMPLATE=$(<$TEMPLATES_DIR/env_config.conf)
-        echo "$TEMPLATE" | envsubst > $CONFIG_DIR/env_config.cfg
+        echo "$TEMPLATE" | envsubst > $CONFIG_DIR/env_config.conf
 
         break;;
       [Nn]* )
@@ -116,11 +116,11 @@ fi
 
 echo -e ""
 echo "Loading config settings..." >&2
-source $CONFIG_DIR/env_config.cfg
-if [ -r $CONFIG_DIR/.env_config.cfg ]; then
+source $CONFIG_DIR/env_config.conf
+if [ -r $CONFIG_DIR/.env_config.conf ]; then
   echo -e ""
   echo -e "${ORANGE}An overriden settings file exists and is loaded.${NC}"
-  source $CONFIG_DIR/.env_config.cfg
+  source $CONFIG_DIR/.env_config.conf
 fi
 echo -e ""
 echo -e "${GREEN}Config settings... Loaded!${NC}"
