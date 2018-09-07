@@ -131,10 +131,7 @@ do
   fi
 done
 
-if [ ! -f "$SCRIPTS_PATH/predeploy_actions.sh" ]; then
-  echo "The predeploy_actions.sh file is not readable and can not be processed."
-  exit 1
-elif [ ! -f "$SCRIPTS_PATH/postdeploy_actions.sh" ]; then
+if [ ! -f "$SCRIPTS_PATH/postdeploy_actions.sh" ]; then
   echo "The postdeploy_actions.sh file is not readable and can not be processed."
   exit 1
 fi
