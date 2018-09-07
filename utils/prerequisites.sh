@@ -249,6 +249,36 @@ case $BUILD_MODE in
     echo -e ""
     echo -e "${GREEN}Install.sh check... OK!${NC}"
     ;;
+  "update" )
+    echo -e ""
+    echo -e "${BLUE}Verifying update.sh action script.${NC}"
+    if [ ! -f "$APP_SCRIPTS_DIR/update.sh" ]; then
+      echo -e ""
+      echo -e "${ORANGE}There is no <app>/scripts/update.sh script at the moment or its not readable.${NC}"
+      while true; do
+        echo ''
+        read -p "Would you like to start with a template? [y/N/exit] " yn
+        case $yn in
+            [Yy]* )
+              cp $TEMPLATES_DIR/update.sh $APP_SCRIPTS_DIR/update.sh
+              echo -e ""
+              echo -e "${LIGHT_GREEN}Update.sh template added: $APP_SCRIPTS_DIR/update.sh${NC}"
+              break;;
+            [Nn]* )
+              echo -e "${LIGHT_CYAN}No update.sh script has been added. Please note that this file is required in order to be able to build a project.${NC}"
+              exit;;
+            "exit"|"q" ) exit;;
+            * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
+        esac
+      done
+    fi
+    echo -e ""
+    echo -e "${GREEN}Update.sh check... OK!${NC}"
+    ;;
+    * )
+      echo -e "${RED}Build mode unknown.${NC}"
+      exit -1
+      ;;
 esac
 
 echo -e ""
