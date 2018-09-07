@@ -141,23 +141,6 @@ echo "[Retrieve DB from prod] $FETCH_DB_DUMP"
 echo "[Run offline] $OFFLINE"
 echo "------"
 
-
-# Make drush a variable to use the one shipped with the repository.
-DRUSH="$APP_ROOT/vendor/bin/drush -y --root=$WEBROOT"
-if [ $WEBSITE_URI ]; then
-  DRUSH="$DRUSH --uri=$WEBSITE_URI"
-fi
-
-# Stop the build if the DB connection is not set.
-set +e
-$DRUSH sql-connect
-if [[ $? != 0 ]]; then
-  echo "DB connection impossible."
-  echo "Please check that your MySQL connection is correcty set."
-  exit 1
-fi
-set -e
-
 if [ $BACKUP_BASE == 1 ] ; then
   # Store a security backup in case the update doesn't go right.
   DUMP_NAME="update-backup-script-$(date +%Y%m%d%H%M%S).sql";

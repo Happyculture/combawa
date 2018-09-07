@@ -284,3 +284,82 @@ esac
 echo -e ""
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo -e ""
+
+# Make drush a variable to use the one shipped with the repository.
+DRUSH="$APP_ROOT/vendor/bin/drush -y --root=$WEBROOT"
+if [ $WEBSITE_URI ]; then
+  DRUSH="$DRUSH --uri=$WEBSITE_URI"
+fi
+
+# Test DB connection.
+echo -e ""
+echo -e "${BLUE}Verifying database connectivity.${NC}"
+set +e
+$DRUSH sql-connect
+if [[ $? != 0 ]]; then  echo -e ""
+  echo -e "${ORANGE}The connection to the database is impossible.${NC}"
+  while true; do
+    echo ''
+    read -p "Would you like to start to try to create a new database? [y/N/exit] " yn
+    case $yn in
+        [Yy]* )
+          echo -e ""
+          echo -e "${ORANGE}OK, let's collect your DB credentials in order to create it."
+          echo -e "For the moment, only MySQL is supported.${NC}"
+          echo -e ""
+
+          read -p "What is your DB server name? [Default: localhost] " DB_SERVER_NAME
+          if [ -z $DB_SERVER_NAME ]; then
+            DB_SERVER_NAME="localhost"
+          fi
+
+          read -p "What is your DB username? [Default: root] " DB_SERVER_LOGIN
+          if [ -z $DB_SERVER_LOGIN ]; then
+            DB_SERVER_LOGIN="root"
+          fi
+          read -p "What is your DB password? [Default: none] " DB_SERVER_PWD
+          if [ -z $DB_SERVER_PWD ]; then
+            OUTPUT_DB_SERVER_PWD="none"
+            else
+            OUTPUT_DB_SERVER_PWD="The password that you correctly typed twice :)."
+          fi
+          echo ""
+          echo -e "${LIGHT_CYAN}[DB credentials]"
+          echo -e "DB Server: $DB_SERVER_NAME"
+          echo -e "DB Login: $DB_SERVER_LOGIN"
+          echo -e "DB Password: $OUTPUT_DB_SERVER_PWD${NC}"
+
+          while true; do
+            echo ''
+            read -p "Are those credentials correct? [y/N/exit] " yn
+            case $yn in
+                [Yy]* )
+                  #cp $TEMPLATES_DIR/update.sh $APP_SCRIPTS_DIR/update.sh
+                  echo -e ""
+                  echo -e "${LIGHT_GREEN}Update.sh template added: $APP_SCRIPTS_DIR/update.sh${NC}"
+                  break;;
+                [Nn]* )
+                  echo -e "${YELLOW}No database has been created. Please note that a DB is required in order to be able to build a project.${NC}"
+                  exit;;
+                "exit"|"q" ) exit;;
+                * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
+            esac
+          done
+          exit;;
+#          echo -e "${LIGHT_GREEN}Postdeploy actions template added: $APP_SCRIPTS_DIR/postdeploy_actions.sh${NC}"
+#          break;;
+        [Nn]* )
+          echo -e "${LIGHT_CYAN}No postdeploy actions script has been added. Please note that this file is required in order to be able to build a project.${NC}"
+          exit;;
+        "exit"|"q" ) exit;;
+        * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
+    esac
+  done
+fi
+set -e
+echo -e ""
+echo -e "${GREEN}DB connection... OK!${NC}"
+
+echo -e ""
+echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo -e ""
