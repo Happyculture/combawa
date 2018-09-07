@@ -30,6 +30,7 @@ source $SCRIPTS_PATH/app_settings.sh
 WEBROOT="$SCRIPTS_PATH/../web"
 APP_ROOT="$WEBROOT/.."
 CONFIG_DIR="$SCRIPTS_PATH/../../../../config"
+TEMPLATES_DIR="$SCRIPTS_PATH/../templates"
 
 echo -e ""
 echo -e "${LIGHT_PURPLE}"

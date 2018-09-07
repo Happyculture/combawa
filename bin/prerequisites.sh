@@ -30,11 +30,11 @@ echo -e ""
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo -e ""
 
-# Override default settings per project.
+# Load the config file.
 echo -e "${BLUE}Verifying environment config settings.${NC}"
-echo -e ""
-if [ ! -f "$CONFIG_DIR/config_$ENV.cfg" ]; then
-  echo -e "${ORANGE}There is no config file for the $ENV environment.${NC}"
+if [ ! -f "$CONFIG_DIR/env_config.cfg" ]; then
+  echo -e ""
+  echo -e "${ORANGE}There is no config file for the environment.${NC}"
   while true; do
     echo ''
     read -p "Would you like to create it? [y/N] " yn
@@ -92,9 +92,14 @@ if [ ! -f "$CONFIG_DIR/config_$ENV.cfg" ]; then
               ;;
             esac
         done
+        # Export the config in a file.
+        export BUILD_MODE ENV_NAME
+        TEMPLATE=$(<$TEMPLATES_DIR/env_config.conf)
+        echo "$TEMPLATE" | envsubst > $CONFIG_DIR/env_config.cfg
+
         break;;
       [Nn]* )
-        echo -e "${LIGHT_CYAN}Config directory not created.${NC}"
+        echo -e "${LIGHT_CYAN}Config file not created.${NC}"
         exit;;
       "" ) exit;;
       * )
@@ -103,9 +108,19 @@ if [ ! -f "$CONFIG_DIR/config_$ENV.cfg" ]; then
         ;;
     esac
   done
-  exit 1
-  else
-    echo -e "${GREEN}Config $ENV settings... OK!${NC}"
 fi
-source $CONFIG_DIR/config_$ENV.cfg
 
+echo -e ""
+echo "Loading config settings..." >&2
+source $CONFIG_DIR/env_config.cfg
+if [ -r $CONFIG_DIR/.env_config.cfg ]; then
+  echo -e ""
+  echo -e "${ORANGE}An overriden settings file exists and is loaded.${NC}"
+  source $CONFIG_DIR/.env_config.cfg
+fi
+echo -e ""
+echo -e "${GREEN}Config settings... Loaded!${NC}"
+
+echo -e ""
+echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo -e ""
