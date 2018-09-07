@@ -345,6 +345,7 @@ if [[ $? != 0 ]]; then
           read -p "Are those credentials correct? [y/N/exit] " yn
           case $yn in
             [Yy]* )
+              # @TODO: Write the credentials back into the settings.local.php.
               echo "DB_SERVER_NAME=\"$DB_SERVER_NAME\"" > /tmp/combaya-sql.conf
               echo "DB_SERVER_LOGIN=\"$DB_SERVER_LOGIN\"" >> /tmp/combaya-sql.conf
               echo "DB_SERVER_PWD=\"$DB_SERVER_PWD\"" >> /tmp/combaya-sql.conf
