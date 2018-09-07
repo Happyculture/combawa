@@ -129,6 +129,37 @@ echo -e ""
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo -e ""
 
+
+# Check config directory existance.
+echo -e ""
+echo -e "${BLUE}Verifying scripts directory setup.${NC}"
+if [ ! -d "$APP_SCRIPTS_DIR" ]; then
+  echo -e ""
+  echo -e "${ORANGE}Your <app>/scripts directory does not exist yet.${NC}"
+  while true; do
+    echo ''
+    read -p "Would you like to create it? [y/N/exit] " yn
+    case $yn in
+        [Yy]* )
+          mkdir $APP_SCRIPTS_DIR
+          echo -e ""
+          echo -e "${LIGHT_GREEN}Scripts directory $APP_SCRIPTS_DIR created.${NC}"
+          break;;
+        [Nn]* )
+          echo -e "${LIGHT_CYAN}Scripts directory not created.${NC}"
+          exit;;
+        "exit"|"q" ) exit;;
+        * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
+    esac
+  done
+fi
+echo -e ""
+echo -e "${GREEN}Scripts directory... OK!${NC}"
+
+echo -e ""
+echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo -e ""
+
 # Check predeploy action script.
 echo -e ""
 echo -e "${BLUE}Verifying predeploy action script.${NC}"
