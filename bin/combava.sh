@@ -19,19 +19,19 @@ currentscriptpath () {
   echo $DIR
 }
 
-# Working directory.
+# Binary variables.
 SCRIPTS_PATH=$(currentscriptpath)
+UTILS_DIR="$SCRIPTS_PATH/../utils"
+TEMPLATES_DIR="$SCRIPTS_PATH/../templates"
 
 # App variables.
 APP_ROOT="$SCRIPTS_PATH/../../../.."
 WEBROOT="$APP_ROOT/web"
 CONFIG_DIR="$APP_ROOT/config"
-UTILS_DIR="$SCRIPTS_PATH/../utils"
-TEMPLATES_DIR="$SCRIPTS_PATH/../templates"
+APP_SCRIPTS_DIR="$APP_ROOT/scripts"
 
 source $UTILS_DIR/colors.sh
 source $UTILS_DIR/functions.sh
-
 
 echo -e ""
 echo -e "${LIGHT_PURPLE}"

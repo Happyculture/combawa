@@ -132,20 +132,20 @@ echo -e ""
 # Check predeploy action script.
 echo -e ""
 echo -e "${BLUE}Verifying predeploy action script.${NC}"
-if [ ! -f "$SCRIPTS_PATH/predeploy_actions.sh" ]; then
+if [ ! -f "$APP_SCRIPTS_DIR/predeploy_actions.sh" ]; then
   echo -e ""
-  echo -e "${ORANGE}There is no predeploy actions script at the moment.${NC}"
+  echo -e "${ORANGE}There is no predeploy actions script at the moment or its not readable.${NC}"
   while true; do
     echo ''
     read -p "Would you like to start with a template? [y/N/exit] " yn
     case $yn in
         [Yy]* )
-          mkdir $CONFIG_DIR
+          cp $TEMPLATES_DIR/predeploy_actions.sh $APP_SCRIPTS_DIR/predeploy_actions.sh
           echo -e ""
-          echo -e "${LIGHT_GREEN}Config directory $CONFIG_DIR created.${NC}"
+          echo -e "${LIGHT_GREEN}Predeploy actions template added: $APP_SCRIPTS_DIR/predeploy_actions.sh${NC}"
           break;;
         [Nn]* )
-          echo -e "${LIGHT_CYAN}Config directory not created.${NC}"
+          echo -e "${LIGHT_CYAN}No predeploy actions script has been added. Please note that this file is required in order to be able to build a project.${NC}"
           exit;;
         "exit"|"q" ) exit;;
         * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
@@ -153,11 +153,7 @@ if [ ! -f "$SCRIPTS_PATH/predeploy_actions.sh" ]; then
   done
 fi
 echo -e ""
-echo -e "${GREEN}Config directory... OK!${NC}"
-if [ ! -f "$SCRIPTS_PATH/predeploy_actions.sh" ]; then
-  echo "The predeploy_actions.sh file is not readable and can not be processed."
-  exit 1
-fi
+echo -e "${GREEN}Predeploy actions script... OK!${NC}"
 
 echo -e ""
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
