@@ -130,14 +130,7 @@ do
   fi
 done
 
-# Check if composer is installed in the system.
-hash composer 2>/dev/null || { echo >&2 "Composer is required by this script. You can find it on https://getcomposer.org."; exit 1; }
-
-# Check that we have what we need to build.
-if [ ! -f "$SCRIPTS_PATH/../composer.json" ]; then
-  echo "Your repository is missing a composer.json file."
-  exit 1
-elif [ ! -f "$SCRIPTS_PATH/predeploy_actions.sh" ]; then
+if [ ! -f "$SCRIPTS_PATH/predeploy_actions.sh" ]; then
   echo "The predeploy_actions.sh file is not readable and can not be processed."
   exit 1
 elif [ ! -f "$SCRIPTS_PATH/postdeploy_actions.sh" ]; then
