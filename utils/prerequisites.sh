@@ -20,7 +20,7 @@ if [ ! -d "$CONFIG_DIR" ]; then
           echo -e "${LIGHT_GREEN}Config directory $CONFIG_DIR created.${NC}"
           break;;
         [Nn]* )
-          echo -e "${LIGHT_CYAN}Config directory not created.${NC}"
+          echo -e "${YELLOW}Config directory not created.${NC}"
           exit;;
         "exit"|"q" ) exit;;
         * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
@@ -103,7 +103,7 @@ if [ ! -f "$CONFIG_DIR/env_config.conf" ]; then
 
         break;;
       [Nn]* )
-        echo -e "${LIGHT_CYAN}Config file not created.${NC}"
+        echo -e "${YELLOW}Config file not created.${NC}"
         exit;;
       "exit"|"q" ) exit;;
       * )
@@ -146,7 +146,7 @@ if [ ! -d "$APP_SCRIPTS_DIR" ]; then
           echo -e "${LIGHT_GREEN}Scripts directory $APP_SCRIPTS_DIR created.${NC}"
           break;;
         [Nn]* )
-          echo -e "${LIGHT_CYAN}Scripts directory not created.${NC}"
+          echo -e "${YELLOW}Scripts directory not created.${NC}"
           exit;;
         "exit"|"q" ) exit;;
         * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
@@ -176,7 +176,7 @@ if [ ! -f "$APP_SCRIPTS_DIR/predeploy_actions.sh" ]; then
           echo -e "${LIGHT_GREEN}Predeploy actions template added: $APP_SCRIPTS_DIR/predeploy_actions.sh${NC}"
           break;;
         [Nn]* )
-          echo -e "${LIGHT_CYAN}No predeploy actions script has been added. Please note that this file is required in order to be able to build a project.${NC}"
+          echo -e "${YELLOW}No predeploy actions script has been added. Please note that this file is required in order to be able to build a project.${NC}"
           exit;;
         "exit"|"q" ) exit;;
         * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
@@ -206,7 +206,7 @@ if [ ! -f "$APP_SCRIPTS_DIR/postdeploy_actions.sh" ]; then
           echo -e "${LIGHT_GREEN}Postdeploy actions template added: $APP_SCRIPTS_DIR/postdeploy_actions.sh${NC}"
           break;;
         [Nn]* )
-          echo -e "${LIGHT_CYAN}No postdeploy actions script has been added. Please note that this file is required in order to be able to build a project.${NC}"
+          echo -e "${YELLOW}No postdeploy actions script has been added. Please note that this file is required in order to be able to build a project.${NC}"
           exit;;
         "exit"|"q" ) exit;;
         * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
@@ -239,7 +239,7 @@ case $BUILD_MODE in
               echo -e "${LIGHT_GREEN}Install.sh template added: $APP_SCRIPTS_DIR/install.sh${NC}"
               break;;
             [Nn]* )
-              echo -e "${LIGHT_CYAN}No install.sh script has been added. Please note that this file is required in order to be able to build a project.${NC}"
+              echo -e "${YELLOW}No install.sh script has been added. Please note that this file is required in order to be able to build a project.${NC}"
               exit;;
             "exit"|"q" ) exit;;
             * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
@@ -265,7 +265,7 @@ case $BUILD_MODE in
               echo -e "${LIGHT_GREEN}Update.sh template added: $APP_SCRIPTS_DIR/update.sh${NC}"
               break;;
             [Nn]* )
-              echo -e "${LIGHT_CYAN}No update.sh script has been added. Please note that this file is required in order to be able to build a project.${NC}"
+              echo -e "${YELLOW}No update.sh script has been added. Please note that this file is required in order to be able to build a project.${NC}"
               exit;;
             "exit"|"q" ) exit;;
             * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
