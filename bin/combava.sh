@@ -25,6 +25,7 @@ SCRIPTS_PATH=$(currentscriptpath)
 source $SCRIPTS_PATH/colors.sh
 source $SCRIPTS_PATH/functions.sh
 source $SCRIPTS_PATH/app_settings.sh
+source $SCRIPTS_PATH/prerequisites.sh
 
 WEBROOT="$SCRIPTS_PATH/../web"
 APP_ROOT="$WEBROOT/.."
