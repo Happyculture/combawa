@@ -1,5 +1,5 @@
 {
-    "name": "happyculture/combava",
+    "name": "happyculture/combawa",
     "description": "Projects builder",
-    "bin": ["bin/combava.sh"]
+    "bin": ["bin/combawa.sh"]
 }
