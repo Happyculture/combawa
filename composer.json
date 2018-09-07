@@ -1,5 +1,15 @@
 {
     "name": "happyculture/combawa",
     "description": "Projects builder",
-    "bin": ["bin/combawa.sh"]
+    "bin": ["bin/combawa.sh"],
+    "autoload": {
+        "psr-4": {
+            "happyculture\\": "src/"
+        }
+    },
+    "scripts": {
+        "post-update-cmd": [
+            "happyculture\\Combawa::prepareSettingsLocalPHP"
+        ]
+    }
 }
