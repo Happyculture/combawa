@@ -131,23 +131,6 @@ do
   fi
 done
 
-# Preliminary verification to avoid running actions
-# if the requiprements are not met.
-if [ $BUILD_MODE == "install" ]; then
-  if [ ! -f "$SCRIPTS_PATH/install.sh" ]; then
-    echo "The install.sh file is not readable and can not be processed."
-    exit 1
-  fi
-elif [ $BUILD_MODE == "update" ]; then
-  if [ ! -f "$SCRIPTS_PATH/update.sh" ]; then
-    echo "The update.sh file is not readable and can not be processed."
-    exit 1
-  fi
-else
-  echo "Unknown build mode."
-  exit 1
-fi
-
 # Show the build config.
 echo "------"
 echo "[Environment built] $ENV"

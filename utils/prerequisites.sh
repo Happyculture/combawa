@@ -219,3 +219,38 @@ echo -e "${GREEN}Postdeploy actions script... OK!${NC}"
 echo -e ""
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo -e ""
+
+# Preliminary verification to avoid running actions
+# if the requiprements are not met.
+case $BUILD_MODE in
+  "install" )
+    echo -e ""
+    echo -e "${BLUE}Verifying install.sh action script.${NC}"
+    if [ ! -f "$APP_SCRIPTS_DIR/install.sh" ]; then
+      echo -e ""
+      echo -e "${ORANGE}There is no <app>/scripts/install.sh script at the moment or its not readable.${NC}"
+      while true; do
+        echo ''
+        read -p "Would you like to start with a template? [y/N/exit] " yn
+        case $yn in
+            [Yy]* )
+              cp $TEMPLATES_DIR/install.sh $APP_SCRIPTS_DIR/install.sh
+              echo -e ""
+              echo -e "${LIGHT_GREEN}Install.sh template added: $APP_SCRIPTS_DIR/install.sh${NC}"
+              break;;
+            [Nn]* )
+              echo -e "${LIGHT_CYAN}No install.sh script has been added. Please note that this file is required in order to be able to build a project.${NC}"
+              exit;;
+            "exit"|"q" ) exit;;
+            * ) echo -e "${ORANGE}Please answer yes or no.${NC}";;
+        esac
+      done
+    fi
+    echo -e ""
+    echo -e "${GREEN}Install.sh check... OK!${NC}"
+    ;;
+esac
+
+echo -e ""
+echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo -e ""
