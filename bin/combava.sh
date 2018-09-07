@@ -19,6 +19,8 @@ currentscriptpath () {
 # Working directory.
 SCRIPTS_PATH=$(currentscriptpath)
 
+source $SCRIPTS_PATH/colors.sh
+
 # Return error codes if they happen.
 set -e
 
