@@ -141,18 +141,6 @@ echo "[Retrieve DB from prod] $FETCH_DB_DUMP"
 echo "[Run offline] $OFFLINE"
 echo "------"
 
-echo "Composer install"
-cd $SCRIPTS_PATH/../
-if [ $OFFLINE == 0 ] ; then
-  COMPOSER_SETTINGS=""
-  if [ "$ENV" != "dev" ] ; then
-    COMPOSER_SETTINGS="$COMPOSER_SETTINGS --no-interaction"
-  fi
-  if [ "$ENV" == "prod" ] ; then
-    COMPOSER_SETTINGS="$COMPOSER_SETTINGS --no-dev"
-  fi
-  composer install $COMPOSER_SETTINGS
-fi
 
 # Make drush a variable to use the one shipped with the repository.
 DRUSH="$APP_ROOT/vendor/bin/drush -y --root=$WEBROOT"
