@@ -1,13 +1,16 @@
 {
     "name": "happyculture/combawa",
     "description": "Projects builder",
-    "bin": ["bin/combawa.sh"],
+    "bin": ["bin/combawa.sh", "bin/db_mysql.sh"],
     "autoload": {
         "psr-4": {
             "happyculture\\": "src/"
         }
     },
     "scripts": {
+        "post-create-project-cmd": [
+            "db_mysql.sh"
+	],
         "post-update-cmd": [
             "happyculture\\Combawa::prepareSettingsLocalPHP"
         ]
