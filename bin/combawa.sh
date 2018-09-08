@@ -154,19 +154,19 @@ if [ $BACKUP_BASE == 1 ] ; then
 fi
 
 # Run the potential actions to do pre deployment.
-source $SCRIPTS_PATH/predeploy_actions.sh
+source $APP_SCRIPTS_DIR/predeploy_actions.sh
 
 # Run the build content.
 if [ $BUILD_MODE == "install" ]; then
   echo "Start the installation..."
-  source $SCRIPTS_PATH/install.sh
+  source $APP_SCRIPTS_DIR/install.sh
   if [[ $? != 0 ]]; then
     echo "The install.sh generated an error. Check the logs."
     exit $?
   fi
 elif [ $BUILD_MODE == "update" ]; then
   echo "Start the update..."
-  source $SCRIPTS_PATH/update.sh
+  source $APP_SCRIPTS_DIR/update.sh
   if [[ $? != 0 ]]; then
     echo "The update.sh generated an error. Check the logs."
     exit $?
@@ -174,7 +174,7 @@ elif [ $BUILD_MODE == "update" ]; then
 fi
 
 # Run the potential actions to do post deployment.
-source $SCRIPTS_PATH/postdeploy_actions.sh
+source $APP_SCRIPTS_DIR/postdeploy_actions.sh
 
 # Send a notification to inform that the build is done.
 if hash notify-send 2>/dev/null; then
