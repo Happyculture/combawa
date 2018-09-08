@@ -1,7 +1,7 @@
 {
     "name": "happyculture/combawa",
     "description": "Projects builder",
-    "bin": ["bin/combawa.sh", "bin/db_mysql.sh"],
+    "bin": ["bin/combawa.sh", "bin/db_mysql.sh", "bin/pre_flight.sh"],
     "autoload": {
         "psr-4": {
             "happyculture\\": "src/"
