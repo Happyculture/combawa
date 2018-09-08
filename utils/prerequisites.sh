@@ -338,7 +338,7 @@ if [[ $? != 0 ]]; then
         echo -e "DB Server: $DB_SERVER_NAME"
         echo -e "DB Login: $DB_SERVER_LOGIN"
         echo -e "DB Password: $OUTPUT_DB_SERVER_PWD"
-        echo -e "DB name: $DB_NAME${NC}"
+        echo -e "DB name (Do not use "-" in name): $DB_NAME${NC}"
 
         while true; do
           echo ''
