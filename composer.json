@@ -13,8 +13,7 @@
     },
     "scripts": {
         "post-create-project-cmd": [
-            "happyculture\\CombawaSetup::setupScript",
-            "DrupalProject\\composer\\SetupLocalDBHandler::saveLocalDBInfo"
+            "happyculture\\CombawaSetup::setupScript"
         ],
         "post-install-cmd": [
             "DrupalProject\\composer\\SetupLocalDBHandler::saveLocalDBInfo"
