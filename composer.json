@@ -10,10 +10,7 @@
     },
     "scripts": {
         "post-create-project-cmd": [
-            "db_mysql.sh"
-	],
-        "post-update-cmd": [
-            "happyculture\\Combawa::prepareSettingsLocalPHP"
+            "happyculture\\CombawaSetup::setupScript"
         ]
     }
 }
