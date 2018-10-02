@@ -349,11 +349,12 @@ echo -e "${BLUE}Verifying database connectivity.${NC}"
           read -p "Are those credentials correct? [y/N/exit] " yn
           case $yn in
             [Yy]* )
-              # @TODO: Write the credentials back into the settings.local.php.
-              echo "DB_SERVER_NAME=\"$DB_SERVER_NAME\"" > /tmp/combaya-sql.conf
-              echo "DB_SERVER_LOGIN=\"$DB_SERVER_LOGIN\"" >> /tmp/combaya-sql.conf
-              echo "DB_SERVER_PWD=\"$DB_SERVER_PWD\"" >> /tmp/combaya-sql.conf
-              echo "DB_NAME=\"$DB_NAME\"" >> /tmp/combaya-sql.conf
+              # @TODO: Use getenv to have something more reliable that a TMP
+              # file.
+              echo "DB_SERVER_NAME=\"$DB_SERVER_NAME\"" > /tmp/combawa-sql.conf
+              echo "DB_SERVER_LOGIN=\"$DB_SERVER_LOGIN\"" >> /tmp/combawa-sql.conf
+              echo "DB_SERVER_PWD=\"$DB_SERVER_PWD\"" >> /tmp/combawa-sql.conf
+              echo "DB_NAME=\"$DB_NAME\"" >> /tmp/combawa-sql.conf
 
               if [ -z "$DB_SERVER_PWD" ]; then
                 mysql -h $DB_SERVER_NAME -u $DB_SERVER_LOGIN <<MY_QUERY

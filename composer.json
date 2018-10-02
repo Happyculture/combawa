@@ -6,12 +6,21 @@
     "autoload": {
         "psr-4": {
             "happyculture\\": "src/"
-        }
+        },
+        "classmap": [
+            "scripts/composer/SetupLocalDBHandler.php"
+        ]
     },
     "scripts": {
         "post-create-project-cmd": [
-            "happyculture\\CombawaSetup::setupScript"
+            "happyculture\\CombawaSetup::setupScript",
+            "DrupalProject\\composer\\SetupLocalDBHandler::saveLocalDBInfo"
+        ],
+        "post-install-cmd": [
+            "DrupalProject\\composer\\SetupLocalDBHandler::saveLocalDBInfo"
+        ],
+        "post-update-cmd": [
+            "DrupalProject\\composer\\SetupLocalDBHandler::saveLocalDBInfo"
         ]
     }
 }
-
