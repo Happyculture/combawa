@@ -2,24 +2,5 @@
     "name": "happyculture/combawa",
     "description": "Projects builder",
     "bin": ["bin/combawa.sh"],
-    "type": "library",
-    "autoload": {
-        "psr-4": {
-            "happyculture\\": "src/"
-        },
-        "classmap": [
-            "scripts/composer/SetupLocalDBHandler.php"
-        ]
-    },
-    "scripts": {
-        "post-create-project-cmd": [
-            "happyculture\\CombawaSetup::setupScript"
-        ],
-        "post-install-cmd": [
-            "DrupalProject\\composer\\SetupLocalDBHandler::saveLocalDBInfo"
-        ],
-        "post-update-cmd": [
-            "DrupalProject\\composer\\SetupLocalDBHandler::saveLocalDBInfo"
-        ]
-    }
+    "type": "library"
 }
