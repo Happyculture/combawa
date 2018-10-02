@@ -285,15 +285,11 @@ echo -e ""
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo -e ""
 
-# @TODO: Load settings from conf file.
-
 # Make drush a variable to use the one shipped with the repository.
 DRUSH="$APP_ROOT/vendor/bin/drush -y --root=$WEBROOT"
 if [ $WEBSITE_URI ]; then
   DRUSH="$DRUSH --uri=$WEBSITE_URI"
 fi
-
-echo $DRUSH
 
 # Test DB connection.
 echo -e ""
@@ -391,11 +387,6 @@ MY_QUERY
   done
 }
 
-#$DRUSH sql-connect
-#if [[ $? != 0 ]]; then
-
-#fi
-#set -e
 echo -e ""
 echo -e "${GREEN}DB connection... OK!${NC}"
 
