@@ -43,6 +43,8 @@ class SetupLocalDBHandler {
 );
 DB_INFO;
         $data .= $db_connection_info;
+
+        $event->getIO()->write("Adding DB connection info to the generated settings.local.php file.");
       }
       file_put_contents($filename, $data);
 
