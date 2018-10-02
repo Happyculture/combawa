@@ -369,6 +369,8 @@ MY_QUERY
 
               echo -e ""
               echo -e "${LIGHT_GREEN}Database $DB_NAME successfully created.${NC}"
+              echo -e "${ORANGE}Storing the DB credentials in the local settings file.${NC}"
+              composer run-script setupDB
               break;;
             [Nn]* )
               echo -e "${YELLOW}No database has been created. Please note that a DB is required in order to be able to build a project.${NC}"
