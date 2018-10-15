@@ -1,0 +1,10 @@
+services:
+  combawa.generator.project:
+    class: \Drupal\Console\Combawa\Generator\ProjectGenerator
+    tags:
+      - { name: drupal.generator }
+  combawa.command.generate_project:
+    class: \Drupal\Console\Combawa\Command\GenerateProjectCommand
+    arguments: ['@console.extension_manager', '@combawa.generator.project', '@console.string_converter', '@console.validator', '@app.root']
+    tags:
+      - { name: drupal.command }

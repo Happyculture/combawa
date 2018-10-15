@@ -2,5 +2,12 @@
     "name": "happyculture/combawa",
     "description": "Projects builder",
     "bin": ["bin/combawa.sh"],
-    "type": "library"
+    "type": "drupal-console-library",
+    "autoload": {
+        "psr-4": {"Drupal\\Console\\Combawa\\": "src"}
+    },
+    "require-dev": {
+        "drupal/console": "~1.0"
+    }
+
 }
