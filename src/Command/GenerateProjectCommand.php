@@ -67,8 +67,8 @@ class GenerateProjectCommand extends Command {
   protected function configure()
   {
     $this
-      ->setName('kumquat:generate-project')
-      ->setAliases(['kgp'])
+      ->setName('combawa:generate-project')
+      ->setAliases(['cgp'])
       ->setDescription('Generate an install profile, a default theme and an admin theme.')
       ->addOption(
         'name',
