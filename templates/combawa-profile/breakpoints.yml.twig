@@ -1,0 +1,28 @@
+{{ machine_name }}.wide:
+  label: Wide
+  mediaQuery: '(min-width: 1140px)'
+  weight: 15
+  multipliers:
+    - 1x
+    - 2x
+{{ machine_name }}.desktop:
+  label: Desktop
+  mediaQuery: '(min-width: 980px)'
+  weight: 10
+  multipliers:
+    - 1x
+    - 2x
+{{ machine_name }}.tablet:
+  label: Tablet
+  mediaQuery: '(min-width: 768px)'
+  weight: 5
+  multipliers:
+    - 2x
+    - 1x
+{{ machine_name }}.mobile:
+  label: Mobile
+  mediaQuery: '(min-width: 0px)'
+  weight: 0
+  multipliers:
+    - 2x
+    - 1x
