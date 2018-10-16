@@ -73,9 +73,15 @@ class GenerateProjectCommand extends Command {
     if (!$this->confirmOperation()) {
       return 1;
     }
+    // @TODO: Replace validateModuleName / validateMachineName by a local
+    // method doing the same thing.
+    // We have to do this because the validator service isn't available
+    // until a Drupal can bootstrap.
+    // $name = $this->validator->validateModuleName($input->getOption('name'));
+    // $machine_name = $this->validator->validateMachineName($input->getOption('machine-name'));
 
-    $name = $this->validator->validateModuleName($input->getOption('name'));
-    $machine_name = $this->validator->validateMachineName($input->getOption('machine-name'));
+    $name = $input->getOption('name');
+    $machine_name = $input->getOption('machine-name');
 
     $this->generator->generate([
       'name' => $name,
@@ -89,12 +95,17 @@ class GenerateProjectCommand extends Command {
    * {@inheritdoc}
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
-    $validators = $this->validator;
+    // @TODO: Replace validateModuleName / validateMachineName by a local
+    // method doing the same thing.
+    // We have to do this because the validator service isn't available
+    // until a Drupal can bootstrap.
+    // $validators = $this->validator;
 
     try {
       // A profile is technically also a module, so we can use the same
       // validator to check the name.
-      $name = $input->getOption('name') ? $validators->validateModuleName($input->getOption('name')) : null;
+      // $name = $input->getOption('name') ? $validators->validateModuleName($input->getOption('name')) : null;
+      $name = $input->getOption('name') ? $input->getOption('name') : null;
     } catch (\Exception $error) {
       $this->getIo()->error($error->getMessage());
 
@@ -106,14 +117,18 @@ class GenerateProjectCommand extends Command {
         'What is the human readable name of the project?',
         '',
         function ($name) use ($validators) {
-          return $validators->validateModuleName($name);
+          return $name;
+          // @TODO: Update once a local version of validator is available.
+          // return $validators->validateModuleName($name);
         }
       );
       $input->setOption('name', $name);
     }
 
     try {
-      $machine_name = $input->getOption('machine-name') ? $validators->validateMachineName($input->getOption('machine-name')) : null;
+      // @TODO: Update once a local version of validator is available.
+      // $machine_name = $input->getOption('machine-name') ? $validators->validateMachineName($input->getOption('machine-name')) : null;
+      $machine_name = $input->getOption('machine-name') ? $input->getOption('machine-name') : null;
     } catch (\Exception $error) {
       $this->getIo()->error($error->getMessage());
 
@@ -125,7 +140,9 @@ class GenerateProjectCommand extends Command {
         'What is the machine name of the project?',
         $this->stringConverter->createMachineName($name),
         function ($machine_name) use ($validators) {
-          return $validators->validateMachineName($machine_name);
+          // @TODO: Update once a local version of validator is available.
+          // return $validators->validateMachineName($machine_name);
+          return $machine_name;
         }
       );
       $input->setOption('machine-name', $machine_name);
