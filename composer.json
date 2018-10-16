@@ -8,6 +8,8 @@
     },
     "require-dev": {
         "drupal/console": "~1.0"
+    },
+    "require": {
+        "drupal/console-extend-plugin": "^0.9.2"
     }
-
 }

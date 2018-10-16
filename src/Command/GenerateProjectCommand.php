@@ -18,11 +18,6 @@ class GenerateProjectCommand extends Command {
   use ConfirmationTrait;
 
   /**
-   * @var Manager
-   */
-  protected $extensionManager;
-
-  /**
    * @var ProjectGenerator
    */
   protected $generator;
@@ -33,31 +28,17 @@ class GenerateProjectCommand extends Command {
   protected $stringConverter;
 
   /**
-   * @var Validator
-   */
-  protected $validator;
-
-  /**
    * ProfileCommand constructor.
    *
-   * @param Manager          $extensionManager
    * @param ProjectGenerator $generator
    * @param StringConverter  $stringConverter
-   * @param Validator        $validator
-   * @param $appRoot
    */
   public function __construct(
-    Manager $extensionManager,
     ProjectGenerator $generator,
-    StringConverter $stringConverter,
-    Validator $validator,
-    $appRoot
+    StringConverter $stringConverter
   ) {
-    $this->extensionManager = $extensionManager;
     $this->generator = $generator;
     $this->stringConverter = $stringConverter;
-    $this->validator = $validator;
-    $this->appRoot = $appRoot;
     parent::__construct();
   }
 
