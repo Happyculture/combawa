@@ -22,17 +22,21 @@ class ProjectGenerator extends Generator {
    * {@inheritdoc}
    */
   public function generate(array $parameters) {
+    $this->generateProfile($parameters);
+    $this->generateAdminTheme($parameters);
+    $this->generateDefaultTheme($parameters);
+  }
+
+  /**
+   * @param $parameters
+   */
+  protected function generateProfile($parameters) {
     $profiles_dir = $parameters['profiles-dir'];
-    $themes_dir = $parameters['themes-dir'];
     $machine_name = $parameters['machine_name'];
 
-    // Check directories.
     $this->checkDir(($profiles_dir == '/' ? '' : $profiles_dir) . '/' . $machine_name);
-    $this->checkDir(($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_theme');
-    $this->checkDir(($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_admin_theme');
 
-    // Generate profile.
-    $profilePath = ($profiles_dir == '/' ? '' : $profiles_dir) . '/' . $machine_name . '_theme' . '/' . $machine_name . '_theme';
+    $profilePath = ($profiles_dir == '/' ? '' : $profiles_dir) . '/' . $machine_name . '/' . $machine_name;
     $profileParameters = [
       'profile' => $parameters['name'],
       'machine_name' => $machine_name,
@@ -56,18 +60,18 @@ class ProjectGenerator extends Generator {
       $profilePath . '.install',
       $profileParameters
     );
+  }
 
-    // Generate default theme.
-    $defaultThemePath = ($profiles_dir == '/' ? '' : $profiles_dir) . '/' . $machine_name . '_theme' . '/' . $machine_name . '_theme';
-    $defaultThemeParameters = [
-      'profile' => $parameters['name'],
-      'theme' => $parameters['name'],
-      'machine_name' => $machine_name . '_theme',
-    ];
-    // TODO continue
+  /**
+   * @param $parameters
+   */
+  protected function generateAdminTheme($parameters) {
+    $themes_dir = $parameters['themes-dir'];
+    $machine_name = $parameters['machine_name'];
 
-    // Generate admin theme.
-    $adminThemePath = ($profiles_dir == '/' ? '' : $profiles_dir) . '/' . $machine_name . '_admin_theme' . '/' . $machine_name . '_admin_theme';
+    $this->checkDir(($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_admin_theme');
+
+    $adminThemePath = ($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_admin_theme' . '/' . $machine_name . '_admin_theme';
     $adminThemeParameters = [
       'profile' => $parameters['name'],
       'theme' => $parameters['name'] . ' Admin',
@@ -91,6 +95,24 @@ class ProjectGenerator extends Generator {
       $adminThemePath . '.libraries.yml',
       $adminThemeParameters
     );
+  }
+
+  /**
+   * @param $parameters
+   */
+  protected function generateDefaultTheme($parameters) {
+    $themes_dir = $parameters['themes-dir'];
+    $machine_name = $parameters['machine_name'];
+
+    $this->checkDir(($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_theme');
+
+    $defaultThemePath = ($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_theme' . '/' . $machine_name . '_theme';
+    $defaultThemeParameters = [
+      'profile' => $parameters['name'],
+      'theme' => $parameters['name'],
+      'machine_name' => $machine_name . '_theme',
+    ];
+    // TODO continue
   }
 
   /**
