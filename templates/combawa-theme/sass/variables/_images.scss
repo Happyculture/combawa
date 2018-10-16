@@ -1,0 +1,6 @@
+
+// Path to various images directories.
+
+// @root is replaced by gulp during compilation to manage common stylesheets
+// and pattern ones that does not have the same starting point.
+$images-path: '@root/dist/images';

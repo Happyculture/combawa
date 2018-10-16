@@ -1,0 +1,6 @@
+// Import variables and mixins.
+@import "variables/**/*";
+@import "abstractions/**/*";
+
+// Import only specific rules.
+@import "components/_ckeditor";

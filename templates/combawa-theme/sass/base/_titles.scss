@@ -1,0 +1,10 @@
+@import "../variables/fonts";
+
+// Loop over all titles to set their default style according to $font-sizes.
+// @see variables/_fonts.scss
+@each $title in (h1 h2 h3 h4 h5 h6) {
+  #{$title} {
+    @extend %title-commons;
+    @include set-font-sizes($title);
+  }
+}

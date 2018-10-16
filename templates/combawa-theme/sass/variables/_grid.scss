@@ -1,0 +1,31 @@
+
+$nb-cols: (
+  mobile: 4,
+  tablet: 6,
+  desktop: 12,
+  wide: 12
+);
+$col-size: (
+  mobile: 1fr,
+  tablet: 1fr,
+  desktop: 1fr,
+  wide: 1fr
+);
+$gutter-size: (
+  mobile: 1.6875rem, // 27px
+  tablet: 2rem, // 32px
+  desktop: 2.125rem, // 34px
+  wide: 2.5rem // 40px
+);
+$external-gutter-size: (
+  mobile: 1.5rem, // 24px
+  tablet: 4rem, // 64px
+  desktop: 0.3125rem, // 5px
+  wide: 0.875rem // 14px
+);
+$grid-max-size: (
+  mobile: none,
+  tablet: none,
+  desktop: 60rem, // 960px
+  wide: 71.25rem // 1140px
+);

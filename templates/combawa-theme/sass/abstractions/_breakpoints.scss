@@ -1,0 +1,14 @@
+@import "../variables/breakpoints";
+
+@mixin breakpoint($point) {
+  $mq: map-get($breakpoints, $point);
+  @if $mq {
+    @media ($mq) { @content ; }
+  }
+  @else {
+    // If there is no media query for this point, directly outputs the content.
+    // Mainly used for the 'mobile' breakpoint so we can use the same loop to
+    // make mobile first rules.
+    @content;
+  }
+}

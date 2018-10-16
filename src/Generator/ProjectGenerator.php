@@ -4,6 +4,7 @@ namespace Drupal\Console\Combawa\Generator;
 
 use Drupal\Console\Core\Generator\Generator;
 use Drupal\Console\Core\Utils\TwigRenderer;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ProjectGenerator extends Generator {
 
@@ -121,7 +122,74 @@ class ProjectGenerator extends Generator {
       'theme' => $parameters['name'],
       'machine_name' => $machine_name . '_theme',
     ];
-    // TODO continue
+
+    $this->renderFile(
+      'combawa-theme/gitignore.twig',
+      dirname($defaultThemePath) . '/.gitignore',
+      $defaultThemeParameters
+    );
+
+    $this->renderFile(
+      'combawa-theme/gulpfile.js.twig',
+      dirname($defaultThemePath) . '/gulpfile.js',
+      $defaultThemeParameters
+    );
+
+    $this->renderFile(
+      'combawa-theme/info.yml.twig',
+      $defaultThemePath . '.info.yml',
+      $defaultThemeParameters
+    );
+
+    $this->renderFile(
+      'combawa-theme/libraries.yml.twig',
+      $defaultThemePath . '.libraries.yml',
+      $defaultThemeParameters
+    );
+
+    $this->renderFile(
+      'combawa-theme/theme.twig',
+      $defaultThemePath . '.theme',
+      $defaultThemeParameters
+    );
+
+    $this->renderFile(
+      'combawa-theme/package.json.twig',
+      dirname($defaultThemePath) . '/package.json',
+      $defaultThemeParameters
+    );
+
+    $this->renderFile(
+      'combawa-theme/readme.twig',
+      dirname($defaultThemePath) . '/README.md',
+      $defaultThemeParameters
+    );
+
+    // Assets.
+    $this->renderFile(
+      'combawa-theme/global.js.twig',
+      dirname($defaultThemePath) . '/assets-src/js/global.js',
+      $defaultThemeParameters
+    );
+
+    // Copy the entire sass directory as we don't need any variable replacement.
+    (new Filesystem())->mirror(self::TPL_DIR . '/combawa-theme/sass', dirname($defaultThemePath) . '/assets-src/sass');
+
+    // Copy the entire templates directory as we don't need any variable
+    // replacement.
+    (new Filesystem())->mirror(self::TPL_DIR . '/combawa-theme/templates', dirname($defaultThemePath) . '/templates');
+
+    // Gitkeeps.
+    $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/assets-src/fonts/.gitkeep');
+    $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/assets-src/images/.gitkeep');
+
+    $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/dist/css/.gitkeep');
+    $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/dist/fonts/.gitkeep');
+    $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/dist/images/.gitkeep');
+    $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/dist/js/.gitkeep');
+
+    // Safety.
+    $this->renderFile('combawa-theme/htaccess.deny.twig', dirname($defaultThemePath) . '/assets-src/.htaccess');
   }
 
   /**

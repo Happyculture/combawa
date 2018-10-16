@@ -1,0 +1,12 @@
+
+@mixin center-both-flex() {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+@mixin center-vertical-absolute() {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}

@@ -1,0 +1,24 @@
+@mixin color-bar($color) {
+
+  background: $color;
+  @include breakpoint(desktop) {
+    position: relative;
+
+    &::before,
+    &::after {
+      background: $color;
+      bottom: 0;
+      content: '';
+      position: absolute;
+      right: 100%;
+      top: 0;
+      width: 9600px;
+    }
+
+    &::after {
+      left: 100%;
+      width: 9600px;
+    }
+  }
+
+}

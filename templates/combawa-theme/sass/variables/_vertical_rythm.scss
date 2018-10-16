@@ -1,0 +1,17 @@
+
+$rythm-base: (
+  mobile: 1.125rem, // 18px
+  tablet: 1.875rem, // 30px
+  desktop: 2.25rem, // 36px
+  wide: 2.5rem // 40px
+);
+
+$rythm-multiplier: (
+  tiny: 0.5,
+  small: 0.75,
+  default: 1,
+  standard: 1,
+  medium: 1.75,
+  big: 2.5,
+  huge: 4
+);

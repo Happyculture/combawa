@@ -2,144 +2,136 @@
 
 /**
  * @file
- * Functions to support theming in the {{ machine_name }} theme.
+ * Functions to support theming in the {{ theme }} theme.
  */
 
 /**
- * Implements hook_preprocess_HOOK() for html.html.twig.
+ * Implements hook_preprocess_block().
  */
-function {{ machine_name }}_preprocess_html(array &$variables) {
-  /* Add class to html tag */
-  //$variables['html_attributes']->addClass('no-js');
+function {{ machine_name }}_preprocess_block(&$variables) {
+  // Add config ID to the blocks CSS classes for better targetting.
+  if (isset($variables['elements']['#id'])) {
+    $variables['attributes']['class'][] = 'block-' . strtr($variables['elements']['#id'], '_', '-');
+  }
+}
 
-  // Don't display the site name twice on the front page (and potentially others)
-  /*if (isset($variables['head_title_array']['title']) && isset($variables['head_title_array']['name']) && ($variables['head_title_array']['title'] == $variables['head_title_array']['name'])) {
-    $variables['head_title'] = $variables['head_title_array']['name'];
-  }*/
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function {{ machine_name }}_theme_suggestions_field_alter(array &$suggestions, array $variables) {
+  $field = $variables["element"];
+  $suggestions[] = 'field__' . $field["#entity_type"] . '__' . $field["#field_name"] . '__' . $field["#bundle"] . '__' . $field["#view_mode"];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function {{ machine_name }}_theme_suggestions_views_view_alter(array &$suggestions, array $variables) {
+  /** @var \Drupal\views\ViewExecutable $view */
+  $view = $variables['view'];
+  $suggestions[] = 'views_view__' . $view->id();
+  $suggestions[] = 'views_view__' . $view->id() . '__' . $view->current_display;
 }
 
 /**
  * Implements hook_page_attachments_alter().
  */
-function {{ machine_name }}_page_attachments_alter(array &$page) {
-  // Tell IE to use latest rendering engine (not to use compatibility mode).
-  /*$ie_edge = [
-    '#type' => 'html_tag',
-    '#tag' => 'meta',
-    '#attributes' => [
-    'http-equiv' => 'X-UA-Compatible',
-    'content' => 'IE=edge',
-    ],
+function {{ machine_name }}_page_attachments_alter(array &$attachments) {
+  $theme_path = drupal_get_path('theme', '{{ machine_name }}');
+
+  // Put the theme path in the settings to be used by JS.
+  $attachments['#attached']['drupalSettings']['theme'] = [
+    'path' => '/' . $theme_path,
   ];
-  $page['#attached']['html_head'][] = [$ie_edge, 'ie_edge'];*/
-}
 
-/**
- * Implements hook_preprocess_page() for page.html.twig.
- */
-function {{ machine_name }}_preprocess_page(array &$variables) {
+  // Add various favicons to the head.
+/*
+  $favicons_path = '/' . $theme_path . '/YOUR/PATH/HERE';
 
-}
+  // Apple touch icon.
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'link',
+      '#attributes' => [
+        'rel' => 'apple-touch-icon',
+        'sizes' => '180x180',
+        'href' => $favicons_path  . '/apple-touch-icon.png',
+      ],
+    ],
+    'apple-touch-icon'
+  ];
 
-/**
- * Implements hook_theme_suggestions_page_alter().
- */
-function {{ machine_name }}_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+  // PNG favicons.
+  foreach ([16, 32] as $size) {
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#tag' => 'link',
+        '#attributes' => [
+          'rel' => 'icon',
+          'type' => 'image/png',
+          'sizes' => $size . 'x' . $size,
+          'href' => $favicons_path  . '/favicon-' . $size . 'x' . $size . '.png',
+        ],
+      ],
+      'favicon-' . $size
+    ];
+  }
 
-}
+  // Safari pinned tab.
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'link',
+      '#attributes' => [
+        'rel' => 'mask-icon',
+        'color' => '#0072ba',
+        'href' => $favicons_path  . '/safari-pinned-tab.svg',
+      ],
+    ],
+    'mask-icon'
+  ];
 
-/**
- * Implements hook_theme_suggestions_node_alter().
- */
-function {{ machine_name }}_theme_suggestions_node_alter(array &$suggestions, array $variables) {
-  /*$node = $variables['elements']['#node'];
+  // MSIE metas.
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'meta',
+      '#attributes' => [
+        'name' => 'msapplication-TileColor',
+        'content' => '#f0b100',
+      ],
+    ],
+    'msapplication-TileColor'
+  ];
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'meta',
+      '#attributes' => [
+        'name' => 'msapplication-config',
+        'content' => $favicons_path  . '/browserconfig.xml',
+      ],
+    ],
+    'msapplication-config'
+  ];
 
-  if ($variables['elements']['#view_mode'] == "full") {
-
-  }*/
-}
-
-/**
- * Implements hook_preprocess_HOOK() for Block document templates.
- */
-function {{ machine_name }}_preprocess_block(array &$variables) {
-
-}
-
-/**
- * Implements hook_theme_suggestions_field_alter().
- */
-function {{ machine_name }}_theme_suggestions_field_alter(array &$suggestions, array $variables) {
-  /*$element = $variables['element'];
-  $suggestions[] = 'field__' . $element['#view_mode'];
-  $suggestions[] = 'field__' . $element['#view_mode'] . '__' . $element['#field_name'];*/
-}
-
-/**
- * Implements hook_theme_suggestions_field_alter().
- */
-function {{ machine_name }}_theme_suggestions_fieldset_alter(array &$suggestions, array $variables) {
-  /*$element = $variables['element'];
-  if (isset($element['#attributes']['class']) && in_array('form-composite', $element['#attributes']['class'])) {
-    $suggestions[] = 'fieldset__form_composite';
-  }*/
-}
-
-/**
- * Implements hook_preprocess_node().
- */
-function {{ machine_name }}_preprocess_node(array &$variables) {
-  // Default to turning off byline/submitted.
-  //$variables['display_submitted'] = FALSE;
-}
-
-/**
- * Implements hook_theme_suggestions_views_view_alter().
- */
-function {{ machine_name }}_theme_suggestions_views_view_alter(array &$suggestions, array $variables) {
-
-}
-
-/**
- * Implements hook_preprocess_form().
- */
-function {{ machine_name }}_preprocess_form(array &$variables) {
-  //$variables['attributes']['novalidate'] = 'novalidate';
-}
-
-/**
- * Implements hook_preprocess_select().
- */
-function {{ machine_name }}_preprocess_select(array &$variables) {
-  //$variables['attributes']['class'][] = 'select-chosen';
-}
-
-/**
- * Implements hook_preprocess_field().
- */
-function {{ machine_name }}_preprocess_field(array &$variables, $hook) {
-  /*switch ($variables['element']['#field_name']) {
-  }*/
-}
-
-/**
- * Implements hook_preprocess_details().
- */
-function {{ machine_name }}_preprocess_details(array &$variables) {
-  /*$variables['attributes']['class'][] = 'details';
-  $variables['summary_attributes']['class'] = 'summary';*/
-}
-
-/**
- * Implements hook_theme_suggestions_details_alter().
- */
-function {{ machine_name }}_theme_suggestions_details_alter(array &$suggestions, array $variables) {
-
-}
-
-/**
- * Implements hook_preprocess_menu_local_task().
- */
-function {{ machine_name }}_preprocess_menu_local_task(array &$variables) {
-  //$variables['element']['#link']['url']->setOption('attributes', ['class'=>'rounded']);
+  // Other metas.
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'link',
+      '#attributes' => [
+        'rel' => 'manifest',
+        'href' => $favicons_path  . '/site.webmanifest',
+      ],
+    ],
+    'manifest'
+  ];
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'link',
+      '#attributes' => [
+        'rel' => 'theme-color',
+        'content' => '#3c3c46',
+      ],
+    ],
+    'theme-color'
+  ];
+*/
 }

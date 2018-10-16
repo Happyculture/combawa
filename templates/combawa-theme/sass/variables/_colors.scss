@@ -1,0 +1,41 @@
+
+// Guideline colors.
+
+$honey-dark: #ffAA00;
+$honey: #ffc113;
+$honey-light: #ffd400;
+
+$carbon-dark: #1e1e28;
+$carbon: #3c3c46;
+$carbon-light: #6e6e78;
+
+$grey-dark: #a0a0a5;
+$grey: #c8c8cd;
+$grey-light: #e8e8eb;
+
+$paper-dark: #f5f5f5;
+$paper: #fafafa;
+$white: #ffffff;
+
+$purple-dark: #323787;
+$purple: #4146af;
+$purple-light: #e1e6ff;
+
+$green: #0f8246;
+$red: #d3001b;
+$black: #000000;
+
+// Usage.
+
+$headings-color: $carbon-dark;
+$text-color: $carbon;
+
+$link-color: $text-color;
+$link-decoration-color: $honey;
+$link-hover-color: $purple;
+$link-hover-decoration-color: $purple-light;
+
+$button-main-color: $white;
+$button-secondary-color: $purple-dark;
+$button-disabled-color: $carbon;
+$button-disabled-bg-color: $carbon-light;

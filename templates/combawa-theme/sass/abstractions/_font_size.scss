@@ -1,0 +1,26 @@
+@import "../variables/fonts";
+
+// Gets the font size for the given text type and device.
+@function get-font-size($type: text, $device: mobile) {
+  @return nth(map-get(map-get($font-sizes, $type), $device), 1);
+}
+
+// Gets the line height for the given text type and device.
+@function get-line-height($type: text, $device: mobile) {
+  @return nth(map-get(map-get($font-sizes, $type), $device), 2);
+}
+
+// Sets the font size and the line height for one component on one breakpoint.
+@mixin set-font-size($type: text, $device: mobile) {
+  font-size: get-font-size($type, $device);
+  line-height: get-line-height($type, $device);
+}
+
+// Sets the font size and the line height for one component on all breakpoints.
+@mixin set-font-sizes($type: text) {
+  @each $device in $major-breakpoints {
+    @include breakpoint($device) {
+      @include set-font-size($type, $device);
+    }
+  }
+}

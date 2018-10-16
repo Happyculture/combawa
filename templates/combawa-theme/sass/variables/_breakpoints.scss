@@ -1,0 +1,14 @@
+
+$major-breakpoints: (mobile tablet desktop wide);
+
+$breakpoints: (
+  // DO NOT include 'mobile' in this array to allow mobile first calls.
+  mobile-only: "max-width: 767px",
+  phablet: "min-width: 425px",
+  phablet-big: "min-width: 550px",
+  tablet-small: "min-width: 660px",
+  tablet: "min-width: 768px",
+  tablet-big: "min-width: 880px",
+  desktop: "min-width: 980px",
+  wide: "min-width: 1140px"
+);

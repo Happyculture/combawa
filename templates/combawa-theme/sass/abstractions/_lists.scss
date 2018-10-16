@@ -1,0 +1,25 @@
+
+%list--no-bullet {
+  list-style: none;
+  padding: 0;
+}
+
+%list--default {
+  @extend %list--no-bullet;
+
+  li::before {
+    content: "•";
+    color: currentColor;
+    display: inline;
+    margin-right: .5em;
+  }
+}
+
+%list--horizontal {
+  @extend %list--no-bullet;
+  display: flex;
+
+  li {
+    margin-right: .5rem;
+  }
+}

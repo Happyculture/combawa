@@ -1,0 +1,13 @@
+@import "font_size";
+@import "transition";
+
+%link {
+  @include transition(color);
+  color: $link-color;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: $link-hover-color;
+  }
+}

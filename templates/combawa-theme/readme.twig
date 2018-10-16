@@ -1,0 +1,34 @@
+# {{ theme }}
+
+## Organisation
+
+* **assets-src**: source files for all global assets
+  * **fonts**: font files extracted from font squirrel
+  * **images**: source images, all formats
+  * **js**: javascript files
+  * **sass**
+    * **abstractions**: mixins and helpers
+    * **base**: generic styles (layout, forms, links, headings, etc.)
+    * **components**: specific styles following the atomic design logic
+    * **variables**: global parameters
+* **dist**: compiled files from sources *[git ignored]* 
+* **node_modules**: npm dependencies *[git ignored]*
+* **templates**
+  * **layout**
+  * **patterns**: patterns for UI Patterns module (see below)
+
+## Compile assets
+
+First, you need to ensure your dependencies are properly installed by running
+`$ npm install`\
+Then, you can compile assets different ways:
+
+* continuously, for development: `npm run watch`
+* once, for development: `npm run build-dev`
+* once, for production: `npm run build`
+
+## Patterns
+
+You can use the UI Patterns module and store your patterns in the
+templates/patterns folder. JS and SCSS files contained in these patterns are
+going to be compiled by gulp at the same time than the global assets.

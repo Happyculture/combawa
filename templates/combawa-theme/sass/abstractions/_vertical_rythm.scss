@@ -1,0 +1,7 @@
+@import "../variables/vertical_rythm";
+
+// Functions.
+
+@function get-vertical-rythm($device: mobile, $size: default) {
+  @return map-get($rythm-base, $device) * map-get($rythm-multiplier, $size);
+}

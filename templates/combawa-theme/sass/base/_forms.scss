@@ -1,0 +1,192 @@
+
+//
+// Form types.
+//
+
+%narrow-form {
+  margin: auto;
+  max-width: 40rem;
+  padding: 0 1rem;
+
+  @include breakpoint(wide) {
+    padding: 0;
+  }
+}
+
+//
+// Field types.
+//
+
+%full-size-field {
+  max-width: 100%;
+  width: 100%;
+}
+
+input[type="date"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="month"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="text"],
+input[type="time"],
+input[type="url"],
+input[type="week"],
+textarea,
+select {
+  @extend %full-size-field;
+  background-color: white;
+  border-radius: 2px;
+  border: solid 1px $grey;
+  color: $carbon-light;
+  outline-color: $carbon-light;
+  padding: 0.7rem 0.9rem 0.6rem;
+  transition: border-left-width 50ms linear, border-color 50ms linear;
+  &:disabled {
+    background-color: $paper-dark;
+    color: $carbon;
+  }
+  &:focus,
+  &:active {
+    border-color: $purple;
+    border-left-width: 4px;
+    outline-color: $purple;
+    color: $carbon;
+  }
+  &:hover:not(:focus) {
+    border-color: $grey-dark;
+    border-left-width: 1px;
+  }
+}
+
+%button,
+input[type="submit"] {
+  @include button;
+  display: inline-block;
+}
+
+%checkbox,
+input[type="checkbox"] {
+  &:not(:checked),
+  &:checked {
+    position: absolute;
+    left: -9999px;
+
+    + label {
+      $size: 1.25em; // ~20px
+
+      color: $carbon;
+      cursor: pointer;
+      padding-left: 2em; // ~32px
+      position: relative;
+
+      &::before,
+      &::after {
+        border-radius: .25em; // ~4px
+        height: $size;
+        left: 0;
+        line-height: $size;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: $size;
+      }
+
+      &::before {
+        @include transition(border-width, faster);
+        background: $purple;
+        // Add 1px to prevent Safari to show a tiny dot in the checkbox.
+        border: calc(#{$size / 2} + 1px) solid $white;
+        content: "";
+      }
+
+      &::after {
+        @include transition(border-color, faster);
+        border: 1px solid $grey;
+        color: $white;
+        content: '✔';
+      }
+    }
+
+    &:disabled {
+      + label {
+        &::before {
+          background: $grey-dark;
+          border-color: $grey-light;
+        }
+
+        &::after {
+          color: $grey-light;
+        }
+      }
+    }
+  }
+
+  &:checked {
+    + label {
+      &::before { border-width: 0; }
+      &::after { border-color: $purple; }
+    }
+
+    &:disabled {
+      + label {
+        &::after {
+          border-color: $grey-dark;
+          color: $white;
+        }
+      }
+    }
+  }
+}
+
+%radio,
+input[type="radio"] {
+  @extend %checkbox;
+
+  &:not(:checked),
+  &:checked {
+    + label {
+      &::before,
+      &::after {
+        border-radius: 50%;
+      }
+
+      &::after { content: ""; }
+    }
+  }
+
+  &:checked {
+    + label {
+      &::before { border-width: .25em; }
+    }
+  }
+}
+
+option {
+  padding: 0.7rem 0.9rem 0.6rem;
+  &:hover {
+    background-color: $purple-light;
+    color: $purple;
+  }
+}
+
+//
+// Fields wrappers.
+//
+
+.form-actions {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+
+  > * {
+    margin-bottom: 1rem;
+  }
+
+  @include breakpoint(desktop) {
+    justify-content: flex-start;
+  }
+}

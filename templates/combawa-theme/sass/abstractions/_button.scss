@@ -1,0 +1,25 @@
+@import "transition";
+
+@mixin button() {
+  @include transition(all);
+  background: $button-main-color;
+  border: 1px solid $button-secondary-color;
+  border-radius: 5rem;
+  color: $button-secondary-color;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: bold;
+  padding: 1rem 3rem;
+
+  &:hover,
+  &:focus {
+    background: $button-secondary-color;
+    color: $button-main-color;
+  }
+
+  &[disabled] {
+    background: $button-disabled-bg-color;
+    color: $button-disabled-color;
+    cursor: default;
+  }
+}

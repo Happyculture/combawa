@@ -1,0 +1,34 @@
+
+// Specific style in ckeditor
+
+%ckeditor {
+  a:not(.no-default) {
+    @extend %underlined-link;
+  }
+
+  ul {
+    &:not(.horizontal-list) {
+      @extend %list--default;
+    }
+
+    &.horizontal-list {
+      @extend %list--horizontal;
+    }
+  }
+}
+
+//
+// CKEditor selectors.
+//
+
+.cke_editable {
+  @extend %ckeditor;
+  color: $text-color;
+}
+
+//
+// Drupal selectors.
+//
+
+.text-formatted.field--type-text-long { @extend %ckeditor; }
+.text-formatted.field--type-text-with-summary { @extend %ckeditor; }
