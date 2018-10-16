@@ -3,8 +3,20 @@
 namespace Drupal\Console\Combawa\Generator;
 
 use Drupal\Console\Core\Generator\Generator;
+use Drupal\Console\Core\Utils\TwigRenderer;
 
 class ProjectGenerator extends Generator {
+
+  const TPL_DIR = __DIR__ . '/../../templates';
+
+  /**
+   * @param $renderer
+   */
+  public function setRenderer(TwigRenderer $renderer)
+  {
+    $this->renderer = $renderer;
+    $this->renderer->addSkeletonDir(self::TPL_DIR);
+  }
 
   /**
    * {@inheritdoc}
