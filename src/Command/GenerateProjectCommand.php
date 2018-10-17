@@ -131,6 +131,15 @@ class GenerateProjectCommand extends Command {
     }
   }
 
+  /**
+   * Validates a module name.
+   *
+   * @param string $module
+   *   The module name.
+   * @return string
+   *   The module name.
+   * @throws \InvalidArgumentException
+   */
   protected function validateModuleName($module) {
     if (!empty($module)) {
       return $module;
@@ -140,6 +149,15 @@ class GenerateProjectCommand extends Command {
     }
   }
 
+  /**
+   * Validates a machine name.
+   *
+   * @param string $machine_name
+   *   The machine name.
+   * @return string
+   *   The machine name.
+   * @throws \InvalidArgumentException
+   */
   protected function validateMachineName($machine_name) {
     if (preg_match(self::REGEX_MACHINE_NAME, $machine_name)) {
       return $machine_name;

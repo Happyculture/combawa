@@ -11,7 +11,7 @@ class ProjectGenerator extends Generator {
   const TPL_DIR = __DIR__ . '/../../templates';
 
   /**
-   * @param $renderer
+   * {@inheritdoc}
    */
   public function setRenderer(TwigRenderer $renderer)
   {
@@ -20,7 +20,11 @@ class ProjectGenerator extends Generator {
   }
 
   /**
-   * {@inheritdoc}
+   * Generates all the stuff.
+   *
+   * Method called by the combawa:generate-project command.
+   *
+   * @param array $parameters
    */
   public function generate(array $parameters) {
     $this->generateProfile($parameters);
@@ -29,6 +33,8 @@ class ProjectGenerator extends Generator {
   }
 
   /**
+   * Generates an installation profile.
+   *
    * @param $parameters
    */
   protected function generateProfile($parameters) {
@@ -73,6 +79,8 @@ class ProjectGenerator extends Generator {
   }
 
   /**
+   * Generates an administration theme based on Adminimal.
+   *
    * @param $parameters
    */
   protected function generateAdminTheme($parameters) {
@@ -108,6 +116,8 @@ class ProjectGenerator extends Generator {
   }
 
   /**
+   * Generates a theme based on Classy.
+   *
    * @param $parameters
    */
   protected function generateDefaultTheme($parameters) {
@@ -193,6 +203,8 @@ class ProjectGenerator extends Generator {
   }
 
   /**
+   * Checks if a directory can be created or is writable.
+   *
    * @param $dir
    * @throws \RuntimeException
    */
