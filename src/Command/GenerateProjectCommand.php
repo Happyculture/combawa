@@ -105,7 +105,7 @@ class GenerateProjectCommand extends Command {
         'What is the human readable name of the project?',
         '',
         function ($name) {
-          return GenerateProjectCommand::validateModuleName($name);
+          return $this->validateModuleName($name);
         }
       );
       $input->setOption('name', $name);
@@ -124,14 +124,14 @@ class GenerateProjectCommand extends Command {
         'What is the machine name of the project?',
         $this->stringConverter->createMachineName($name),
         function ($machine_name) {
-          return GenerateProjectCommand::validateMachineName($machine_name);
+          return $this->validateMachineName($machine_name);
         }
       );
       $input->setOption('machine-name', $machine_name);
     }
   }
 
-  private static function validateModuleName($module) {
+  protected function validateModuleName($module) {
     if (!empty($module)) {
       return $module;
     }
@@ -140,7 +140,7 @@ class GenerateProjectCommand extends Command {
     }
   }
 
-  private static function validateMachineName($machine_name) {
+  protected function validateMachineName($machine_name) {
     if (preg_match(self::REGEX_MACHINE_NAME, $machine_name)) {
       return $machine_name;
     }
