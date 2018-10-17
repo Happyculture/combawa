@@ -55,7 +55,7 @@ class ProjectGenerator extends Generator {
    * @param $parameters
    */
   protected function generateProfile($parameters) {
-    $profiles_dir = $parameters['profiles-dir'];
+    $profiles_dir = $parameters['profiles_dir'];
     $machine_name = $parameters['machine_name'];
 
     $this->checkDir(($profiles_dir == '/' ? '' : $profiles_dir) . '/' . $machine_name);
@@ -101,7 +101,7 @@ class ProjectGenerator extends Generator {
    * @param $parameters
    */
   protected function generateAdminTheme($parameters) {
-    $themes_dir = $parameters['themes-dir'];
+    $themes_dir = $parameters['themes_dir'];
     $machine_name = $parameters['machine_name'];
 
     $this->checkDir(($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_admin_theme');
@@ -138,7 +138,7 @@ class ProjectGenerator extends Generator {
    * @param $parameters
    */
   protected function generateDefaultTheme($parameters) {
-    $themes_dir = $parameters['themes-dir'];
+    $themes_dir = $parameters['themes_dir'];
     $machine_name = $parameters['machine_name'];
 
     $this->checkDir(($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_theme');

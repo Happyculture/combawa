@@ -81,8 +81,8 @@ class GenerateProjectCommand extends Command {
     $this->generator->generate([
       'name' => $name,
       'machine_name' => $machine_name,
-      'profiles-dir' => 'profiles',
-      'themes-dir' => 'themes/custom'
+      'profiles_dir' => 'profiles',
+      'themes_dir' => 'themes/custom'
     ]);
   }
 
