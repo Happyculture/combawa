@@ -11,12 +11,29 @@ class ProjectGenerator extends Generator {
   const TPL_DIR = __DIR__ . '/../../templates';
 
   /**
+   * @var \Symfony\Component\Filesystem\Filesystem;
+   */
+  protected $fs;
+
+  /**
    * {@inheritdoc}
    */
   public function setRenderer(TwigRenderer $renderer)
   {
     $this->renderer = $renderer;
     $this->renderer->addSkeletonDir(self::TPL_DIR);
+  }
+
+  /**
+   * Gets an helper to manipulate files.
+   *
+   * @return \Symfony\Component\Filesystem\Filesystem
+   */
+  public function getFs() {
+    if (NULL === $this->fs) {
+      $this->fs = new Filesystem();
+    }
+    return $this->fs;
   }
 
   /**
@@ -183,11 +200,11 @@ class ProjectGenerator extends Generator {
     );
 
     // Copy the entire sass directory as we don't need any variable replacement.
-    (new Filesystem())->mirror(self::TPL_DIR . '/combawa-theme/sass', dirname($defaultThemePath) . '/assets-src/sass');
+    $this->getFs()->mirror(self::TPL_DIR . '/combawa-theme/sass', dirname($defaultThemePath) . '/assets-src/sass');
 
     // Copy the entire templates directory as we don't need any variable
     // replacement.
-    (new Filesystem())->mirror(self::TPL_DIR . '/combawa-theme/templates', dirname($defaultThemePath) . '/templates');
+    $this->getFs()->mirror(self::TPL_DIR . '/combawa-theme/templates', dirname($defaultThemePath) . '/templates');
 
     // Gitkeeps.
     $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/assets-src/fonts/.gitkeep');
