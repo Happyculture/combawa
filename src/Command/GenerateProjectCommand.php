@@ -30,17 +30,25 @@ class GenerateProjectCommand extends Command {
   protected $stringConverter;
 
   /**
+   * @var string The document root absolute path.
+   */
+  protected $appRoot;
+
+  /**
    * ProfileCommand constructor.
    *
    * @param ProjectGenerator $generator
    * @param StringConverter  $stringConverter
+   * @param string           $app_root
    */
   public function __construct(
     ProjectGenerator $generator,
-    StringConverter $stringConverter
+    StringConverter $stringConverter,
+    $app_root
   ) {
     $this->generator = $generator;
     $this->stringConverter = $stringConverter;
+    $this->appRoot = $app_root;
     parent::__construct();
   }
 
@@ -64,6 +72,18 @@ class GenerateProjectCommand extends Command {
         null,
         InputOption::VALUE_OPTIONAL,
         'The project (short) machine name (ex: hc).'
+      )
+      ->addOption(
+        'config-folder',
+        null,
+        InputOption::VALUE_OPTIONAL,
+        'The configuration storage folder, relative to the document root.'
+      )
+      ->addOption(
+        'generate-config',
+        null,
+        InputOption::VALUE_NONE,
+        'Whether you want the config to be changed to use the new profile and themes by default.'
       );
   }
 
@@ -77,10 +97,14 @@ class GenerateProjectCommand extends Command {
     }
     $name = $this->validateModuleName($input->getOption('name'));
     $machine_name = $this->validateMachineName($input->getOption('machine-name'));
+    $config_folder = $this->validatePath($input->getOption('config-folder'));
+    $generate_config = (bool) $input->getOption('generate-config');
 
     $this->generator->generate([
       'name' => $name,
       'machine_name' => $machine_name,
+      'config_folder' => $config_folder,
+      'generate_config' => $generate_config,
       'profiles_dir' => 'profiles',
       'themes_dir' => 'themes/custom'
     ]);
@@ -129,6 +153,41 @@ class GenerateProjectCommand extends Command {
       );
       $input->setOption('machine-name', $machine_name);
     }
+
+    try {
+      $config_folder = $input->getOption('config-folder') ? $this->validatePath($input->getOption('config-folder')) : null;
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$config_folder) {
+      $config_folder = $this->getIo()->ask(
+        'Where are the configuration files stored (relative to the document root)?',
+        '../config/sync',
+        function ($config_folder) {
+          return $this->validatePath($config_folder);
+        }
+      );
+      $input->setOption('config-folder', $config_folder);
+    }
+
+    try {
+      $generate_config = $input->getOption('generate-config') ? (bool) $input->getOption('generate-config') : null;
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$generate_config) {
+      $generate_config = $this->getIo()->confirm(
+        'Do you want the config to be changed so the new profile and themes are used by default?',
+        TRUE
+      );
+      $input->setOption('generate-config', $generate_config);
+    }
   }
 
   /**
@@ -167,6 +226,29 @@ class GenerateProjectCommand extends Command {
         sprintf(
           'Machine name "%s" is invalid, it must contain only lowercase letters, numbers and underscores.',
           $machine_name
+        )
+      );
+    }
+  }
+
+  /**
+   * Validates a path relative to the document root.
+   *
+   * @param string $path
+   *   The path to validate.
+   * @return string
+   *   The path.
+   */
+  protected function validatePath($path) {
+    $destination = $this->appRoot . '/' . $path;
+    if (is_dir($destination)) {
+      return $path;
+    }
+    else {
+      throw new \InvalidArgumentException(
+        sprintf(
+          '"%s" is not an existing path.',
+          $destination
         )
       );
     }

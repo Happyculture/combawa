@@ -5,6 +5,6 @@ services:
       - { name: drupal.generator, bootstrap: uninstall }
   combawa.generate_project:
     class: \Drupal\Console\Combawa\Command\GenerateProjectCommand
-    arguments: ['@combawa.generator.project', '@console.string_converter']
+    arguments: ['@combawa.generator.project', '@console.string_converter', '@app.root']
     tags:
             - { name: drupal.command, bootstrap: uninstall }

@@ -5,6 +5,7 @@ namespace Drupal\Console\Combawa\Generator;
 use Drupal\Console\Core\Generator\Generator;
 use Drupal\Console\Core\Utils\TwigRenderer;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Yaml\Yaml;
 
 class ProjectGenerator extends Generator {
 
@@ -47,6 +48,7 @@ class ProjectGenerator extends Generator {
     $this->generateProfile($parameters);
     $this->generateAdminTheme($parameters);
     $this->generateDefaultTheme($parameters);
+    $this->generateConfig($parameters);
   }
 
   /**
@@ -217,6 +219,63 @@ class ProjectGenerator extends Generator {
 
     // Safety.
     $this->renderFile('combawa-theme/htaccess.deny.twig', dirname($defaultThemePath) . '/assets-src/.htaccess');
+  }
+
+  /**
+   * Generates the configuration to enable the profile and themes by default.
+   *
+   * @param $parameters
+   */
+  protected function generateConfig($parameters) {
+    if (empty($parameters['generate_config'])) {
+      return;
+    }
+    $machine_name = $parameters['machine_name'];
+    $config_folder = $parameters['config_folder'];
+
+    // Enable profile and themes in the core.extension.yml file.
+    $config = $this->readConfig($config_folder . '/core.extension.yml');
+    $current_profile = $config['profile'];
+
+    $config['module'][$machine_name] = 1000;
+    unset($config['module'][$current_profile]);
+    asort($config['module']);
+
+    $config['theme'][$machine_name . '_theme'] = 0;
+    $config['theme'][$machine_name . '_admin_theme'] = 0;
+    unset($config['theme']['bartik']);
+
+    $config['profile'] = $machine_name;
+
+    $this->writeConfig($config_folder . '/core.extension.yml', $config);
+
+    // Set themes in the system.theme.yml file.
+    $config = $this->readConfig($config_folder . '/system.theme.yml');
+
+    $config['admin'] = $machine_name . '_admin_theme';
+    $config['default'] = $machine_name . '_theme';
+
+    $this->writeConfig($config_folder . '/system.theme.yml', $config);
+  }
+
+  /**
+   * Extracts a Yaml config file content.
+   *
+   * @param $filename
+   * @return array
+   */
+  protected function readConfig($filename) {
+    return Yaml::parse(file_get_contents($filename));
+  }
+
+  /**
+   * Encodes an array of data and write it in a Yaml file.
+   *
+   * @param $filename
+   * @param $data
+   */
+  protected function writeConfig($filename, $data) {
+    file_put_contents($filename, Yaml::dump($data));
   }
 
   /**
