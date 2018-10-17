@@ -103,7 +103,7 @@ class GenerateProjectCommand extends Command {
     if (!$name) {
       $name = $this->getIo()->ask(
         'What is the human readable name of the project?',
-        '',
+        'Happy Rocket',
         function ($name) {
           return $this->validateModuleName($name);
         }
