@@ -115,6 +115,7 @@ class ProjectGenerator extends Generator {
       'machine_name' => $machine_name . '_admin_theme',
     ];
 
+    // Base files.
     $this->renderFile(
       'combawa-admin-theme/info.yml.twig',
       $adminThemePath . '.info.yml',
@@ -132,6 +133,22 @@ class ProjectGenerator extends Generator {
       $adminThemePath . '.libraries.yml',
       $adminThemeParameters
     );
+
+    // Blocks configuration.
+    $config_folder = $parameters['config_folder'];
+    $dir = opendir(self::TPL_DIR . '/combawa-admin-theme/config/blocks');
+    while ($file = readdir($dir)) {
+      if ($file[0] === '.') {
+        continue;
+      }
+
+      $block_id = substr($file, 0, -1 * strlen('.yml.twig'));
+      $this->renderFile(
+        'combawa-admin-theme/config/blocks/' . $file,
+        $config_folder . '/block.block.' . $machine_name . '_admin_theme_' . $block_id . '.yml',
+        $adminThemeParameters
+      );
+    }
   }
 
   /**
