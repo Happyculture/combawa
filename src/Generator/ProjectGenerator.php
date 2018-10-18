@@ -236,6 +236,22 @@ class ProjectGenerator extends Generator {
 
     // Safety.
     $this->renderFile('combawa-theme/htaccess.deny.twig', dirname($defaultThemePath) . '/assets-src/.htaccess');
+
+    // Blocks configuration.
+    $config_folder = $parameters['config_folder'];
+    $dir = opendir(self::TPL_DIR . '/combawa-theme/config/blocks');
+    while ($file = readdir($dir)) {
+      if ($file[0] === '.') {
+        continue;
+      }
+
+      $block_id = substr($file, 0, -1 * strlen('.yml.twig'));
+      $this->renderFile(
+        'combawa-theme/config/blocks/' . $file,
+        $config_folder . '/block.block.' . $machine_name . '_theme_' . $block_id . '.yml',
+        $defaultThemeParameters
+      );
+    }
   }
 
   /**
