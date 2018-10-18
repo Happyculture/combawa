@@ -220,10 +220,12 @@ class ProjectGenerator extends Generator {
 
     // Copy the entire sass directory as we don't need any variable replacement.
     $this->getFs()->mirror(self::TPL_DIR . '/combawa-theme/sass', dirname($defaultThemePath) . '/assets-src/sass');
+    $this->trackGeneratedDirectory(dirname($defaultThemePath) . '/assets-src/sass');
 
     // Copy the entire templates directory as we don't need any variable
     // replacement.
     $this->getFs()->mirror(self::TPL_DIR . '/combawa-theme/templates', dirname($defaultThemePath) . '/templates');
+    $this->trackGeneratedDirectory(dirname($defaultThemePath) . '/templates');
 
     // Gitkeeps.
     $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/assets-src/fonts/.gitkeep');
@@ -267,7 +269,8 @@ class ProjectGenerator extends Generator {
     $config_folder = $parameters['config_folder'];
 
     // Enable profile and themes in the core.extension.yml file.
-    $config = $this->readConfig($config_folder . '/core.extension.yml');
+    $filename = $config_folder . '/core.extension.yml';
+    $config = $this->readConfig($filename);
     $current_profile = $config['profile'];
 
     $config['module'][$machine_name] = 1000;
@@ -280,15 +283,16 @@ class ProjectGenerator extends Generator {
 
     $config['profile'] = $machine_name;
 
-    $this->writeConfig($config_folder . '/core.extension.yml', $config);
+    $this->writeConfig($filename, $config);
 
     // Set themes in the system.theme.yml file.
-    $config = $this->readConfig($config_folder . '/system.theme.yml');
+    $filename = $config_folder . '/system.theme.yml';
+    $config = $this->readConfig($filename);
 
     $config['admin'] = $machine_name . '_admin_theme';
     $config['default'] = $machine_name . '_theme';
 
-    $this->writeConfig($config_folder . '/system.theme.yml', $config);
+    $this->writeConfig($filename, $config);
   }
 
   /**
@@ -308,7 +312,32 @@ class ProjectGenerator extends Generator {
    * @param $data
    */
   protected function writeConfig($filename, $data) {
+    $current_lines = count(file($filename));
     file_put_contents($filename, Yaml::dump($data));
+    $this->trackGeneratedFile($filename, $current_lines);
+  }
+
+  /**
+   * Track files generated without using a template.
+   *
+   * @param string $filename
+   * @param int $current_lines
+   */
+  protected function trackGeneratedFile($filename, $current_lines = 0) {
+    $this->fileQueue->addFile($filename);
+    $this->countCodeLines->addCountCodeLines(count(file($filename)) - $current_lines);
+  }
+
+  /**
+   * Track directories generated without using templates.
+   *
+   * @param string $dirname
+   */
+  protected function trackGeneratedDirectory($dirname) {
+    $iterator = new \RecursiveDirectoryIterator($dirname);
+    foreach (new \RecursiveIteratorIterator($iterator) as $file) {
+      $this->trackGeneratedFile($file->getPathname());
+    }
   }
 
   /**
