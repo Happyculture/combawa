@@ -70,13 +70,13 @@ class GenerateProjectCommand extends Command {
       ->addOption(
         'machine-name',
         null,
-        InputOption::VALUE_OPTIONAL,
+        InputOption::VALUE_REQUIRED,
         'The project (short) machine name (ex: hc).'
       )
       ->addOption(
         'config-folder',
         null,
-        InputOption::VALUE_OPTIONAL,
+        InputOption::VALUE_REQUIRED,
         'The configuration storage folder, relative to the document root.'
       )
       ->addOption(
