@@ -60,6 +60,12 @@ echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
 
 source $UTILS_DIR/prerequisites.sh
 
+# Build variables and their overrides.
+source $SCRIPTS_PATH/settings.sh
+if [ -f "$APP_ROOT/.env" ]; then
+  source $APP_ROOT/.env
+fi
+
 # Set the arguments value.
 while [[ $1 ]]
 do
