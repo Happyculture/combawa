@@ -95,6 +95,12 @@ class ProjectGenerator extends Generator {
       $profilePath . '.breakpoints.yml',
       $profileParameters
     );
+
+    $this->renderFile(
+      'combawa-profile/src/Helpers/StaticBlockBase.php.twig',
+      dirname($profilePath) . '/src/Helpers/StaticBlockBase.php',
+      $profileParameters
+    );
   }
 
   /**
