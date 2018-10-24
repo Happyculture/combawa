@@ -107,7 +107,7 @@ class GenerateProjectCommand extends Command {
     if (!$this->confirmOperation()) {
       return 1;
     }
-    $name = $this->validateModuleName($input->getOption('name'));
+    $name = $this->validateName($input->getOption('name'));
     $machine_name = $this->validateMachineName($input->getOption('machine-name'));
     $generate_build = (bool) $input->getOption('generate-build');
     $url = $this->validateUrl($input->getOption('url'));
@@ -133,7 +133,7 @@ class GenerateProjectCommand extends Command {
     try {
       // A profile is technically also a module, so we can use the same
       // validator to check the name.
-      $name = $input->getOption('name') ? $this->validateModuleName($input->getOption('name')) : null;
+      $name = $input->getOption('name') ? $this->validateName($input->getOption('name')) : null;
     } catch (\Exception $error) {
       $this->getIo()->error($error->getMessage());
 
@@ -145,7 +145,7 @@ class GenerateProjectCommand extends Command {
         'What is the human readable name of the project?',
         'Happy Rocket',
         function ($name) {
-          return $this->validateModuleName($name);
+          return $this->validateName($name);
         }
       );
       $input->setOption('name', $name);
@@ -250,12 +250,12 @@ class GenerateProjectCommand extends Command {
    *   The module name.
    * @throws \InvalidArgumentException
    */
-  protected function validateModuleName($module) {
+  protected function validateName($module) {
     if (!empty($module)) {
       return $module;
     }
     else {
-      throw new \InvalidArgumentException(sprintf('Module name "%s" is invalid.', $module));
+      throw new \InvalidArgumentException(sprintf('Name "%s" is invalid.', $module));
     }
   }
 
