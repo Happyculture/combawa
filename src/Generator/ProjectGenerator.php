@@ -49,6 +49,7 @@ class ProjectGenerator extends Generator {
     $this->generateAdminTheme($parameters);
     $this->generateDefaultTheme($parameters);
     $this->generateConfig($parameters);
+    $this->generateBuild($parameters);
   }
 
   /**
@@ -299,6 +300,37 @@ class ProjectGenerator extends Generator {
     $config['default'] = $machine_name . '_theme';
 
     $this->writeConfig($filename, $config);
+  }
+
+  /**
+   * Generates the build scripts.
+   *
+   * @param $parameters
+   */
+  protected function generateBuild($parameters) {
+    if (empty($parameters['generate_build'])) {
+      return;
+    }
+    $scripts_folder = '../scripts';
+
+    $buildParameters = [
+      'machine_name' => $parameters['machine_name'],
+      'production_url' => $parameters['url'],
+    ];
+
+    $dir = opendir(self::TPL_DIR . '/combawa-build');
+    while ($file = readdir($dir)) {
+      if ($file[0] === '.') {
+        continue;
+      }
+
+      $destination_file = substr($file, 0, -1 * strlen('.twig'));
+      $this->renderFile(
+        'combawa-build/' . $file,
+        $scripts_folder . '/' . $destination_file,
+        $buildParameters
+      );
+    }
   }
 
   /**

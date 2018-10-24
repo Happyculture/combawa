@@ -74,6 +74,18 @@ class GenerateProjectCommand extends Command {
         'The project (short) machine name (ex: hc).'
       )
       ->addOption(
+        'generate-build',
+        null,
+        InputOption::VALUE_NONE,
+        'Whether you want to generate the build files or not.'
+      )
+      ->addOption(
+        'url',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'The project production URL.'
+      )
+      ->addOption(
         'config-folder',
         null,
         InputOption::VALUE_REQUIRED,
@@ -97,12 +109,16 @@ class GenerateProjectCommand extends Command {
     }
     $name = $this->validateModuleName($input->getOption('name'));
     $machine_name = $this->validateMachineName($input->getOption('machine-name'));
+    $generate_build = (bool) $input->getOption('generate-build');
+    $url = $this->validateUrl($input->getOption('url'));
     $config_folder = $this->validatePath($input->getOption('config-folder'));
     $generate_config = (bool) $input->getOption('generate-config');
 
     $this->generator->generate([
       'name' => $name,
       'machine_name' => $machine_name,
+      'generate_build' => $generate_build,
+      'url' => $url,
       'config_folder' => $config_folder,
       'generate_config' => $generate_config,
       'profiles_dir' => 'profiles',
@@ -152,6 +168,41 @@ class GenerateProjectCommand extends Command {
         }
       );
       $input->setOption('machine-name', $machine_name);
+    }
+
+    try {
+      $generate_build = $input->getOption('generate-build') ? (bool) $input->getOption('generate-build') : null;
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$generate_build) {
+      $generate_build = $this->getIo()->confirm(
+        'Do you want to generate the build files (settings, install, update and pre/post deploy actions)?',
+        TRUE
+      );
+      $input->setOption('generate-build', $generate_build);
+    }
+
+    try {
+      $url = $input->getOption('url') ? $this->validateUrl($input->getOption('url')) : null;
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$url) {
+      $url = $this->getIo()->ask(
+        'What is the production URI of the project?',
+        'https://happyculture.coop',
+        function ($url) {
+          return $this->validateUrl($url);
+        }
+      );
+      $input->setOption('url', $url);
     }
 
     try {
@@ -252,6 +303,36 @@ class GenerateProjectCommand extends Command {
         )
       );
     }
+  }
+
+  /**
+   * Validates an url.
+   *
+   * @param string $url
+   *   The url to validate.
+   *
+   * @return string
+   *   The url.
+   */
+  protected function validateUrl($url) {
+    $parts = parse_url($url);
+    if ($parts === FALSE) {
+      throw new \InvalidArgumentException(
+        sprintf(
+          '"%s" is a malformed url.',
+          $url
+        )
+      );
+    }
+    elseif (empty($parts['scheme']) || empty($parts['host'])) {
+      throw new \InvalidArgumentException(
+        sprintf(
+          'Please specify a full URL with scheme and host instead of "%s".',
+          $url
+        )
+      );
+    }
+    return $url;
   }
 
 }
