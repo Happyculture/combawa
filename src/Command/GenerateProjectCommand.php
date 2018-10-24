@@ -77,7 +77,7 @@ class GenerateProjectCommand extends Command {
         'generate-build',
         null,
         InputOption::VALUE_NONE,
-        'Whether you want to generate the build files or not.'
+        'Generate the build files.'
       )
       ->addOption(
         'url',
@@ -95,7 +95,7 @@ class GenerateProjectCommand extends Command {
         'generate-config',
         null,
         InputOption::VALUE_NONE,
-        'Whether you want the config to be changed to use the new profile and themes by default.'
+        'Change the config to use the new profile and themes by default.'
       );
   }
 
