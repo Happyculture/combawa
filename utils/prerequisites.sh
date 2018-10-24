@@ -103,6 +103,7 @@ echo -e "${BLUE}Verifying database connectivity.${NC}"
 } &> /dev/null || { # catch
   echo -e ""
   echo -e "${ORANGE}The connection to the database is impossible.${NC}"
+  exit -2
 }
 
 echo -e ""
