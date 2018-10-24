@@ -26,8 +26,8 @@ echo -e "${BLUE}Verifying predeploy action script.${NC}"
 if [ ! -f "$APP_SCRIPTS_DIR/predeploy_actions.sh" ]; then
   echo -e ""
   echo -e "${YELLOW}There is no predeploy actions script at the moment or its not readable.${NC}"
-  echo -e "${ORANGE}You should run the following command to initialize it: 'drupal-console kumquat:generate-project'.${NC}"
-  exit -1;
+  echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
+  exit -1
 fi
 echo -e ""
 echo -e "${GREEN}Predeploy actions script... OK!${NC}"
@@ -42,8 +42,8 @@ echo -e "${BLUE}Verifying postdeploy action script.${NC}"
 if [ ! -f "$APP_SCRIPTS_DIR/postdeploy_actions.sh" ]; then
   echo -e ""
   echo -e "${YELLOW}There is no postdeploy actions script at the moment or its not readable.${NC}"
-  echo -e "${ORANGE}You should run the following command to initialize it: 'drupal-console kumquat:generate-project'.${NC}"
-  exit -1;
+  echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
+  exit -1
 fi
 echo -e ""
 echo -e "${GREEN}Postdeploy actions script... OK!${NC}"
@@ -61,8 +61,8 @@ case $BUILD_MODE in
     if [ ! -f "$APP_SCRIPTS_DIR/install.sh" ]; then
       echo -e ""
       echo -e "${YELLOW}There is no <app>/scripts/install.sh script at the moment or its not readable.${NC}"
-      echo -e "${ORANGE}You should run the following command to initialize it: 'drupal-console kumquat:generate-project'.${NC}"
-      exit -1;
+      echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
+      exit -1
     fi
     echo -e ""
     echo -e "${GREEN}Install.sh check... OK!${NC}"
@@ -73,8 +73,8 @@ case $BUILD_MODE in
     if [ ! -f "$APP_SCRIPTS_DIR/update.sh" ]; then
       echo -e ""
       echo -e "${YELLOW}There is no <app>/scripts/update.sh script at the moment or its not readable.${NC}"
-      echo -e "${ORANGE}You should run the following command to initialize it: 'drupal-console kumquat:generate-project'.${NC}"
-      exit -1;
+      echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
+      exit -1
     fi
     echo -e ""
     echo -e "${GREEN}Update.sh check... OK!${NC}"
