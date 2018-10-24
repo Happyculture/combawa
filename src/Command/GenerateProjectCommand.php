@@ -196,7 +196,7 @@ class GenerateProjectCommand extends Command {
 
     if (!$url) {
       $url = $this->getIo()->ask(
-        'What is the production URI of the project?',
+        'What is the production URL of the project?',
         'https://happyculture.coop',
         function ($url) {
           return $this->validateUrl($url);
