@@ -82,9 +82,9 @@ do
       -m|--mode)
         BUILD_MODE="$2"
         if [ $2 != "install" ] && [ $2 != "update" ] ; then
-	  echo "Invalid build mode."
-	  exit 1
-	fi;
+          echo "Invalid build mode."
+          exit 1
+        fi;
         echo "[Build mode] $2"
         shift
         ;;
@@ -105,7 +105,7 @@ do
         shift
         ;;
       -f|--fetch-db-dump)
-	echo "Testing connection with remote SSH server from which the dump will be retrieved."
+        echo "Testing connection with remote SSH server from which the dump will be retrieved."
         ssh -q $SSH_CONFIG_NAME exit
         if [[ $? != 0 ]]; then
           echo "Impossible to connect to the production server."
