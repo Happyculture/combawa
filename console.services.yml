@@ -7,4 +7,13 @@ services:
     class: \Drupal\Console\Combawa\Command\GenerateProjectCommand
     arguments: ['@combawa.generator.project', '@console.string_converter', '@app.root']
     tags:
-            - { name: drupal.command, bootstrap: uninstall }
+      - { name: drupal.command, bootstrap: uninstall }
+  combawa.generator.environment:
+    class: \Drupal\Console\Combawa\Generator\EnvironmentGenerator
+    tags:
+      - { name: drupal.generator, bootstrap: uninstall }
+  combawa.generate_environment:
+    class: \Drupal\Console\Combawa\Command\GenerateEnvironmentCommand
+    arguments: ['@combawa.generator.environment', '@app.root']
+    tags:
+      - { name: drupal.command, bootstrap: uninstall }

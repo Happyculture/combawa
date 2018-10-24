@@ -1,0 +1,13 @@
+<?php
+
+// Environment variables are defined in the .env file at the project root.
+$databases['default']['default'] = [
+  'host' => getenv('MYSQL_HOSTNAME'),
+  'port' => getenv('MYSQL_PORT'),
+  'database' => getenv('MYSQL_DATABASE'),
+  'password' => getenv('MYSQL_PASSWORD'),
+  'username' => getenv('MYSQL_USER'),
+  'prefix' => '',
+  'driver' => 'mysql',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+];
