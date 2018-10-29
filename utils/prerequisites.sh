@@ -54,7 +54,7 @@ echo -e ""
 
 # Preliminary verification to avoid running actions
 # if the requiprements are not met.
-case $BUILD_MODE in
+case $COMBAWA_BUILD_MODE in
   "install" )
     echo -e ""
     echo -e "${BLUE}Verifying install.sh action script.${NC}"
@@ -91,8 +91,8 @@ echo -e ""
 
 # Make drush a variable to use the one shipped with the repository.
 DRUSH="$APP_ROOT/vendor/bin/drush -y --root=$WEBROOT"
-if [ $WEBSITE_URI ]; then
-  DRUSH="$DRUSH --uri=$WEBSITE_URI"
+if [ $COMBAWA_WEBSITE_URI ]; then
+  DRUSH="$DRUSH --uri=$COMBAWA_WEBSITE_URI"
 fi
 
 # Test DB connection.

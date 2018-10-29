@@ -168,7 +168,7 @@ class GenerateEnvironmentCommand extends Command {
       $environment = $this->getIo()->choice(
         'Which kind of environment is it?',
         ['dev', 'preprod', 'prod'],
-        array_key_exists('ENV', $envVars) ? $envVars['ENV'] : 'prod'
+        array_key_exists('COMBAWA_ENV', $envVars) ? $envVars['COMBAWA_ENV'] : 'prod'
       );
       $input->setOption('environment', $environment);
     }
@@ -186,7 +186,7 @@ class GenerateEnvironmentCommand extends Command {
       if (!$environment_url) {
         $environment_url = $this->getIo()->ask(
           'What is the URL of the project for the ' . $environment . ' environment?',
-          array_key_exists('WEBSITE_URI', $envVars) ? $envVars['WEBSITE_URI'] : 'https://' . $environment . '.happyculture.coop',
+          array_key_exists('COMBAWA_WEBSITE_URI', $envVars) ? $envVars['COMBAWA_WEBSITE_URI'] : 'https://' . $environment . '.happyculture.coop',
           function ($environment_url) {
             return $this->validateUrl($environment_url);
           }
@@ -205,7 +205,7 @@ class GenerateEnvironmentCommand extends Command {
       if (!$backup_db) {
         $backup_db = $this->getIo()->confirm(
           'Do you want the database to be backed up before each build?',
-          array_key_exists('BACKUP_BASE', $envVars) ? $envVars['BACKUP_BASE'] : TRUE
+          array_key_exists('COMBAWA_BACKUP_BASE', $envVars) ? $envVars['COMBAWA_BACKUP_BASE'] : TRUE
         );
         $input->setOption('backup-db', $backup_db);
       }
@@ -221,7 +221,7 @@ class GenerateEnvironmentCommand extends Command {
       if (!$fetch_dump) {
         $fetch_dump = $this->getIo()->confirm(
           'Do you want the database dump to be fetched from a remote server before each build?',
-          array_key_exists('FETCH_DB_DUMP', $envVars) ? $envVars['FETCH_DB_DUMP'] : TRUE
+          array_key_exists('COMBAWA_FETCH_DB_DUMP', $envVars) ? $envVars['COMBAWA_FETCH_DB_DUMP'] : TRUE
         );
         $input->setOption('fetch-dump', $fetch_dump);
       }
@@ -239,7 +239,7 @@ class GenerateEnvironmentCommand extends Command {
         if (!$ssh_config_name) {
           $ssh_config_name = $this->getIo()->ask(
             'What is the name for the dump remote server in your ~/.ssh/config file?',
-            array_key_exists('SSH_CONFIG_NAME', $envVars) ? $envVars['SSH_CONFIG_NAME'] : 'my_remote'
+            array_key_exists('COMBAWA_SSH_CONFIG_NAME', $envVars) ? $envVars['COMBAWA_SSH_CONFIG_NAME'] : 'my_remote'
           );
           $input->setOption('ssh-config-name', $ssh_config_name);
         }
@@ -255,7 +255,7 @@ class GenerateEnvironmentCommand extends Command {
         if (!$ssh_dump_path) {
           $ssh_dump_path = $this->getIo()->ask(
             'What is the full path of the dump file on the remote server?',
-            array_key_exists('PROD_DB_DUMP_PATH', $envVars) ? $envVars['PROD_DB_DUMP_PATH'] : '/home/dumps/my_dump.sql.gz'
+            array_key_exists('COMBAWA_PROD_DB_DUMP_PATH', $envVars) ? $envVars['COMBAWA_PROD_DB_DUMP_PATH'] : '/home/dumps/my_dump.sql.gz'
           );
           $input->setOption('ssh-dump-path', $ssh_dump_path);
         }
@@ -273,7 +273,7 @@ class GenerateEnvironmentCommand extends Command {
       if (!$dump_file_name) {
         $dump_file_name = $this->getIo()->ask(
           'What is the local name of the dump file to be loaded before the builds? Do not include the .gz extension.',
-          array_key_exists('DUMP_FILE_NAME', $envVars) ? $envVars['DUMP_FILE_NAME'] : 'reference_dump.sql'
+          array_key_exists('COMBAWA_DUMP_FILE_NAME', $envVars) ? $envVars['COMBAWA_DUMP_FILE_NAME'] : 'reference_dump.sql'
         );
         $input->setOption('dump-file-name', $dump_file_name);
       }
@@ -290,7 +290,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$db_host) {
       $db_host = $this->getIo()->ask(
         'What is the hostname of your database server?',
-        array_key_exists('MYSQL_HOST', $envVars) ? $envVars['MYSQL_HOST'] : 'localhost'
+        array_key_exists('COMBAWA_DB_HOST', $envVars) ? $envVars['COMBAWA_DB_HOST'] : 'localhost'
       );
       $input->setOption('db-host', $db_host);
     }
@@ -306,7 +306,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$db_port) {
       $db_port = $this->getIo()->ask(
         'What is the port of your database server?',
-        array_key_exists('MYSQL_PORT', $envVars) ? $envVars['MYSQL_PORT'] : '3306'
+        array_key_exists('COMBAWA_DB_PORT', $envVars) ? $envVars['COMBAWA_DB_PORT'] : '3306'
       );
       $input->setOption('db-port', $db_port);
     }
@@ -322,7 +322,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$db_name) {
       $db_name = $this->getIo()->ask(
         'What is the name of your database?',
-        array_key_exists('MYSQL_NAME', $envVars) ? $envVars['MYSQL_NAME'] : 'drupal8'
+        array_key_exists('COMBAWA_DB_NAME', $envVars) ? $envVars['COMBAWA_DB_NAME'] : 'drupal8'
       );
       $input->setOption('db-name', $db_name);
     }
@@ -338,7 +338,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$db_user) {
       $db_user = $this->getIo()->ask(
         'What is the user name of your database?',
-        array_key_exists('MYSQL_USER', $envVars) ? $envVars['MYSQL_USER'] : 'root'
+        array_key_exists('COMBAWA_DB_USER', $envVars) ? $envVars['COMBAWA_DB_USER'] : 'root'
       );
       $input->setOption('db-user', $db_user);
     }
@@ -354,7 +354,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$db_password) {
       $db_password = $this->getIo()->askEmpty(
         'What is the password of your database?',
-        array_key_exists('MYSQL_PASSWORD', $envVars) ? $envVars['MYSQL_PASSWORD'] : ''
+        array_key_exists('COMBAWA_DB_PASSWORD', $envVars) ? $envVars['COMBAWA_DB_PASSWORD'] : ''
       );
       $input->setOption('db-password', $db_password);
     }

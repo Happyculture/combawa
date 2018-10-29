@@ -6,23 +6,23 @@
 # All variables defined here will be available in the other scripts.
 
 # Default environment is prod.
-ENV=prod
+COMBAWA_ENV=prod
 
 # Default build mode. Can be install or update.
-BUILD_MODE=install
+COMBAWA_BUILD_MODE=install
 
 # Backup base before build.
-BACKUP_BASE=1
+COMBAWA_BACKUP_BASE=1
 
 # Default URI.
-WEBSITE_URI={{ production_url }}
+COMBAWA_WEBSITE_URI={{ production_url }}
 
 # Default dump fetching. Always disabled for production.
 # Run `drupal combawa:generate-environment` to set them locally.
-FETCH_DB_DUMP=0
-SSH_CONFIG_NAME=""
-PROD_DB_DUMP_PATH=""
-DUMP_FILE_NAME=""
+COMBAWA_FETCH_DB_DUMP=0
+COMBAWA_SSH_CONFIG_NAME=""
+COMBAWA_PROD_DB_DUMP_PATH=""
+COMBAWA_DUMP_FILE_NAME=""
 
 ##### Project executables.
 

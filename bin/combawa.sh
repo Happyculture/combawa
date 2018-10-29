@@ -77,7 +77,7 @@ do
       -e | --env)
         case $2 in
           dev|recette|preprod|prod)
-            ENV="$2"
+            COMBAWA_ENV="$2"
             ;;
           *)
             echo "Unknown environment: $2. Please check your name."
@@ -86,7 +86,7 @@ do
         shift
         ;;
       -m|--mode)
-        BUILD_MODE="$2"
+        COMBAWA_BUILD_MODE="$2"
         if [ $2 != "install" ] && [ $2 != "update" ] ; then
           echo "Invalid build mode."
           exit 1
@@ -95,7 +95,7 @@ do
         shift
         ;;
       -b|--backup)
-        BACKUP_BASE="$2"
+        COMBAWA_BACKUP_BASE="$2"
         shift
         ;;
       -u|--uri)
@@ -112,14 +112,14 @@ do
         ;;
       -f|--fetch-db-dump)
         echo "Testing connection with remote SSH server from which the dump will be retrieved."
-        ssh -q $SSH_CONFIG_NAME exit
+        ssh -q $COMBAWA_SSH_CONFIG_NAME exit
         if [[ $? != 0 ]]; then
           echo "Impossible to connect to the production server."
           echo "Check your SSH config file. Should you connect through a VPN?"
           exit 1
         fi
         echo "[Retrieve DB from prod] Yes."
-        FETCH_DB_DUMP=1
+        COMBAWA_FETCH_DB_DUMP=1
         shift
         ;;
       -o|--offline)
@@ -139,15 +139,15 @@ done
 
 # Show the build config.
 echo "------"
-echo "[Environment built] $ENV"
-echo "[Build mode] $BUILD_MODE"
-echo "[Generate a backup] $BACKUP_BASE"
-echo "[Environment URI] $WEBSITE_URI"
-echo "[Retrieve DB from prod] $FETCH_DB_DUMP"
+echo "[Environment built] $COMBAWA_ENV"
+echo "[Build mode] $COMBAWA_BUILD_MODE"
+echo "[Generate a backup] $COMBAWA_BACKUP_BASE"
+echo "[Environment URI] $COMBAWA_WEBSITE_URI"
+echo "[Retrieve DB from prod] $COMBAWA_FETCH_DB_DUMP"
 echo "[Run offline] $OFFLINE"
 echo "------"
 
-if [ $BACKUP_BASE == 1 ] ; then
+if [ $COMBAWA_BACKUP_BASE == 1 ] ; then
   # Store a security backup in case the update doesn't go right.
   DUMP_NAME="update-backup-script-$(date +%Y%m%d%H%M%S).sql";
   DUMP_PATH="$WEBROOT/../dumps/$DUMP_NAME"
@@ -163,14 +163,14 @@ fi
 source $APP_SCRIPTS_DIR/predeploy_actions.sh
 
 # Run the build content.
-if [ $BUILD_MODE == "install" ]; then
+if [ $COMBAWA_BUILD_MODE == "install" ]; then
   echo "Start the installation..."
   source $APP_SCRIPTS_DIR/install.sh
   if [[ $? != 0 ]]; then
     echo "The install.sh generated an error. Check the logs."
     exit $?
   fi
-elif [ $BUILD_MODE == "update" ]; then
+elif [ $COMBAWA_BUILD_MODE == "update" ]; then
   echo "Start the update..."
   source $APP_SCRIPTS_DIR/update.sh
   if [[ $? != 0 ]]; then

@@ -9,7 +9,7 @@ set -e
 PROFILE={{ machine_name }}
 THEME={{ machine_name }}_theme
 
-case $ENV in
+case $COMBAWA_ENV in
   dev)
     # Compile CSS for development.
     (
@@ -46,7 +46,7 @@ case $ENV in
     )
     ;;
   *)
-    echo "Unknown environment: $ENV. Please check your name."
+    echo "Unknown environment: $COMBAWA_ENV. Please check your name."
     exit 1;
 esac
 
