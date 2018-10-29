@@ -220,7 +220,7 @@ class GenerateEnvironmentCommand extends Command {
 
       if (!$fetch_dump) {
         $fetch_dump = $this->getIo()->confirm(
-          'Do you want the database dump to be fetched from a remote serveur before each build?',
+          'Do you want the database dump to be fetched from a remote server before each build?',
           array_key_exists('FETCH_DB_DUMP', $envVars) ? $envVars['FETCH_DB_DUMP'] : TRUE
         );
         $input->setOption('fetch-dump', $fetch_dump);
