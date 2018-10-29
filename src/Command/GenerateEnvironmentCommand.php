@@ -154,6 +154,8 @@ class GenerateEnvironmentCommand extends Command {
    * {@inheritdoc}
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
+    $envVars = getenv();
+
     try {
       $environment = $input->getOption('environment') ? $this->validateEnvironment($input->getOption('environment')) : null;
     } catch (\Exception $error) {
@@ -166,7 +168,7 @@ class GenerateEnvironmentCommand extends Command {
       $environment = $this->getIo()->choice(
         'Which kind of environment is it?',
         ['dev', 'preprod', 'prod'],
-        'prod'
+        array_key_exists('ENV', $envVars) ? $envVars['ENV'] : 'prod'
       );
       $input->setOption('environment', $environment);
     }
@@ -184,7 +186,7 @@ class GenerateEnvironmentCommand extends Command {
       if (!$environment_url) {
         $environment_url = $this->getIo()->ask(
           'What is the URL of the project for the ' . $environment . ' environment?',
-          'https://' . $environment . '.happyculture.coop',
+          array_key_exists('WEBSITE_URI', $envVars) ? $envVars['WEBSITE_URI'] : 'https://' . $environment . '.happyculture.coop',
           function ($environment_url) {
             return $this->validateUrl($environment_url);
           }
@@ -203,7 +205,7 @@ class GenerateEnvironmentCommand extends Command {
       if (!$backup_db) {
         $backup_db = $this->getIo()->confirm(
           'Do you want the database to be backed up before each build?',
-          TRUE
+          array_key_exists('BACKUP_BASE', $envVars) ? $envVars['BACKUP_BASE'] : TRUE
         );
         $input->setOption('backup-db', $backup_db);
       }
@@ -219,7 +221,7 @@ class GenerateEnvironmentCommand extends Command {
       if (!$fetch_dump) {
         $fetch_dump = $this->getIo()->confirm(
           'Do you want the database dump to be fetched from a remote serveur before each build?',
-          TRUE
+          array_key_exists('FETCH_DB_DUMP', $envVars) ? $envVars['FETCH_DB_DUMP'] : TRUE
         );
         $input->setOption('fetch-dump', $fetch_dump);
       }
@@ -237,7 +239,7 @@ class GenerateEnvironmentCommand extends Command {
         if (!$ssh_config_name) {
           $ssh_config_name = $this->getIo()->ask(
             'What is the name for the dump remote server in your ~/.ssh/config file?',
-            'my_remote'
+            array_key_exists('SSH_CONFIG_NAME', $envVars) ? $envVars['SSH_CONFIG_NAME'] : 'my_remote'
           );
           $input->setOption('ssh-config-name', $ssh_config_name);
         }
@@ -253,7 +255,7 @@ class GenerateEnvironmentCommand extends Command {
         if (!$ssh_dump_path) {
           $ssh_dump_path = $this->getIo()->ask(
             'What is the full path of the dump file on the remote server?',
-            '/home/dumps/my_dump.sql.gz'
+            array_key_exists('PROD_DB_DUMP_PATH', $envVars) ? $envVars['PROD_DB_DUMP_PATH'] : '/home/dumps/my_dump.sql.gz'
           );
           $input->setOption('ssh-dump-path', $ssh_dump_path);
         }
@@ -271,7 +273,7 @@ class GenerateEnvironmentCommand extends Command {
       if (!$dump_file_name) {
         $dump_file_name = $this->getIo()->ask(
           'What is the local name of the dump file to be loaded before the builds? Do not include the .gz extension.',
-          'reference_dump.sql'
+          array_key_exists('DUMP_FILE_NAME', $envVars) ? $envVars['DUMP_FILE_NAME'] : 'reference_dump.sql'
         );
         $input->setOption('dump-file-name', $dump_file_name);
       }
@@ -288,7 +290,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$db_host) {
       $db_host = $this->getIo()->ask(
         'What is the hostname of your database server?',
-        'localhost'
+        array_key_exists('MYSQL_HOST', $envVars) ? $envVars['MYSQL_HOST'] : 'localhost'
       );
       $input->setOption('db-host', $db_host);
     }
@@ -304,7 +306,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$db_port) {
       $db_port = $this->getIo()->ask(
         'What is the port of your database server?',
-        '3306'
+        array_key_exists('MYSQL_PORT', $envVars) ? $envVars['MYSQL_PORT'] : '3306'
       );
       $input->setOption('db-port', $db_port);
     }
@@ -320,7 +322,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$db_name) {
       $db_name = $this->getIo()->ask(
         'What is the name of your database?',
-        'drupal8'
+        array_key_exists('MYSQL_NAME', $envVars) ? $envVars['MYSQL_NAME'] : 'drupal8'
       );
       $input->setOption('db-name', $db_name);
     }
@@ -336,7 +338,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$db_user) {
       $db_user = $this->getIo()->ask(
         'What is the user name of your database?',
-        'root'
+        array_key_exists('MYSQL_USER', $envVars) ? $envVars['MYSQL_USER'] : 'root'
       );
       $input->setOption('db-user', $db_user);
     }
@@ -352,7 +354,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$db_password) {
       $db_password = $this->getIo()->askEmpty(
         'What is the password of your database?',
-        ''
+        array_key_exists('MYSQL_PASSWORD', $envVars) ? $envVars['MYSQL_PASSWORD'] : ''
       );
       $input->setOption('db-password', $db_password);
     }
