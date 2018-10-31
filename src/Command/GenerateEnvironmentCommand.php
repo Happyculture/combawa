@@ -148,13 +148,13 @@ class GenerateEnvironmentCommand extends Command {
         'environment_url' => $this->validateUrl($input->getOption('environment-url')),
         'backup_base' => (bool) $input->getOption('backup-db'),
         'fetch_dump' => (bool) $input->getOption('fetch-dump'),
+        'dump_file_name' => $input->getOption('dump-file-name'),
       ];
 
       if ($generateParams['fetch_dump']) {
         $generateParams += [
           'ssh_config_name' => $input->getOption('ssh-config-name'),
           'ssh_dump_path' => $input->getOption('ssh-dump-path'),
-          'dump_file_name' => $input->getOption('dump-file-name'),
         ];
       }
     }
