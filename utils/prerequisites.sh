@@ -4,22 +4,6 @@ echo -e ""
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo -e ""
 
-# Check settings.
-echo -e ""
-echo -e "${BLUE}Verifying settings.${NC}"
-if [ ! -f "$APP_SCRIPTS_DIR/settings.sh" ]; then
-  echo -e ""
-  echo -e "${YELLOW}There is no settings file at the moment or its not readable.${NC}"
-  echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
-  exit -1
-fi
-echo -e ""
-echo -e "${GREEN}Settings... OK!${NC}"
-
-echo -e ""
-echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-echo -e ""
-
 # Check predeploy action script.
 echo -e ""
 echo -e "${BLUE}Verifying predeploy action script.${NC}"
@@ -88,12 +72,6 @@ esac
 echo -e ""
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo -e ""
-
-# Make drush a variable to use the one shipped with the repository.
-DRUSH="$APP_ROOT/vendor/bin/drush -y --root=$WEBROOT"
-if [ $COMBAWA_WEBSITE_URI ]; then
-  DRUSH="$DRUSH --uri=$COMBAWA_WEBSITE_URI"
-fi
 
 # Test DB connection.
 echo -e ""

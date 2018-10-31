@@ -57,14 +57,28 @@ echo -e "   | .\`\/' | Y | !"
 echo -e "   l  \"~   j l j_L______"
 echo -e "    \,____{ __\"~ __ ,\_,\_"
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
+echo -e ""
 
-source $UTILS_DIR/prerequisites.sh
+# Check project settings are set.
+if [ ! -f "$APP_SCRIPTS_DIR/settings.sh" ]; then
+  echo -e "${RED}There is no settings file at the moment or its not readable.${NC}"
+  echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
+  exit -1
+fi
 
 # Build variables and their overrides.
-source $SCRIPTS_PATH/settings.sh
+source $APP_SCRIPTS_DIR/settings.sh
 if [ -f "$APP_ROOT/.env" ]; then
   source $APP_ROOT/.env
 fi
+
+# Make drush a variable to use the one shipped with the repository.
+DRUSH="$APP_ROOT/vendor/bin/drush -y --root=$WEBROOT"
+if [ $COMBAWA_WEBSITE_URI ]; then
+  DRUSH="$DRUSH --uri=$COMBAWA_WEBSITE_URI"
+fi
+
+source $UTILS_DIR/prerequisites.sh
 
 # Set the arguments value.
 while [[ $1 ]]
