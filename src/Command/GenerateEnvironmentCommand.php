@@ -133,21 +133,33 @@ class GenerateEnvironmentCommand extends Command {
       return 1;
     }
 
-    $this->generator->generate([
+    $generateParams = [
       'app_root' => $this->appRoot,
       'environment' => $this->validateEnvironment($input->getOption('environment')),
-      'environment_url' => $this->validateUrl($input->getOption('environment-url')),
-      'backup_base' => (bool) $input->getOption('backup-db'),
-      'fetch_dump' => (bool) $input->getOption('fetch-dump'),
-      'ssh_config_name' => $input->getOption('ssh-config-name'),
-      'ssh_dump_path' => $input->getOption('ssh-dump-path'),
-      'dump_file_name' => $input->getOption('dump-file-name'),
       'db_host' => $input->getOption('db-host'),
       'db_port' => $input->getOption('db-port'),
       'db_name' => $input->getOption('db-name'),
       'db_user' => $input->getOption('db-user'),
       'db_password' => $input->getOption('db-password'),
-    ]);
+    ];
+
+    if ($generateParams['environment'] != 'prod') {
+      $generateParams += [
+        'environment_url' => $this->validateUrl($input->getOption('environment-url')),
+        'backup_base' => (bool) $input->getOption('backup-db'),
+        'fetch_dump' => (bool) $input->getOption('fetch-dump'),
+      ];
+
+      if ($generateParams['fetch_dump']) {
+        $generateParams += [
+          'ssh_config_name' => $input->getOption('ssh-config-name'),
+          'ssh_dump_path' => $input->getOption('ssh-dump-path'),
+          'dump_file_name' => $input->getOption('dump-file-name'),
+        ];
+      }
+    }
+
+    $this->generator->generate($generateParams);
   }
 
   /**
