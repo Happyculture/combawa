@@ -159,6 +159,7 @@ class GenerateEnvironmentCommand extends Command {
       }
     }
 
+    $this->generator->setIo($this->getIo());
     $this->generator->generate($generateParams);
   }
 

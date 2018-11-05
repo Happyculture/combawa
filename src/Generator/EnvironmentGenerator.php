@@ -44,20 +44,32 @@ class EnvironmentGenerator extends Generator {
    * @param array $parameters
    */
   public function generate(array $parameters) {
+    $drupalRoot = $parameters['app_root'];
+
     $this->renderFile(
       'combawa-env/env.twig',
       '../.env',
       $parameters
     );
 
-    $this->renderFile(
-      'combawa-env/settings.local.php.twig',
-      'sites/default/settings.local.php',
-      $parameters
-    );
+    if (!$this->getFs()->exists($drupalRoot . '/sites/default/settings.local.php')) {
+      $this->renderFile(
+        'combawa-env/settings.local.php.twig',
+        'sites/default/settings.local.php',
+        $parameters
+      );
+    }
+    else {
+      $content = $this->renderer->render(
+        'combawa-env/settings.local.php.twig',
+        $parameters
+      );
+      $this->getIo()->writeln('File sites/default/settings.local.php already exist. Skipping generation.');
+      $this->getIo()->writeln('You can use the following code into your settings.local.php to use variables defined in the .env file.');
+      $this->getIo()->comment($content);
+    }
 
     // Uncomment settings.local.php inclusion in the settings.php file.
-    $drupalRoot = $parameters['app_root'];
     $filename = 'sites/default/settings.php';
     if ($this->getFs()->exists($drupalRoot . '/' . $filename)) {
       // Only uncomment the include line as we are sure to have a
