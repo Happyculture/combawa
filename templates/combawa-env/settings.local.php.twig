@@ -11,3 +11,7 @@ $databases['default']['default'] = [
   'driver' => 'mysql',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
 ];
+
+// Skip file system permissions hardening to prevent version control issues.
+$settings['skip_permissions_hardening'] = TRUE;
+
