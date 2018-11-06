@@ -3,6 +3,7 @@
     "description": "Projects builder",
     "bin": ["bin/combawa.sh"],
     "type": "drupal-console-library",
+    "licence": "GPL-3.0-or-later",
     "autoload": {
         "psr-4": {"Drupal\\Console\\Combawa\\": "src"}
     },
