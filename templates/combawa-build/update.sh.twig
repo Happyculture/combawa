@@ -16,8 +16,12 @@ $DRUSH cr
 $DRUSH updb --no-post-updates
 $DRUSH cr
 
-# Import the configuration
+# Import the configuration.
 $DRUSH cim
+$DRUSH cr
+
+# Run entity updates.
+$DRUSH entup
 $DRUSH cr
 
 # Run the post updates.
