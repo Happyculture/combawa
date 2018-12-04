@@ -11,3 +11,8 @@
     color: $link-hover-color;
   }
 }
+
+%underlined-link {
+  @extend %link;
+  text-decoration: underline;
+}
