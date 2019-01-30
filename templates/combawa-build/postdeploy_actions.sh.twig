@@ -14,7 +14,7 @@ case $COMBAWA_ENV in
     # Compile CSS for development.
     (
       cd $WEBROOT/themes/custom/$THEME
-      if [ $COMBAWA_OFFLINE == 0 ] ; then $NPM install; fi
+      if [ "$COMBAWA_OFFLINE" == "0" ] ; then $NPM install; fi
       $NPM run build-dev
     )
 
@@ -29,7 +29,7 @@ case $COMBAWA_ENV in
     # Compile CSS for production.
     (
       cd $WEBROOT/themes/custom/$THEME
-      if [ $COMBAWA_OFFLINE == 0 ] ; then $NPM install; fi
+      if [ "$COMBAWA_OFFLINE" == "0" ] ; then $NPM install; fi
       $NPM run build
     )
 
@@ -41,7 +41,7 @@ case $COMBAWA_ENV in
     # Compile CSS for production.
     (
       cd $WEBROOT/themes/custom/$THEME
-      if [ $COMBAWA_OFFLINE == 0 ] ; then $NPM install; fi
+      if [ "$COMBAWA_OFFLINE" == "0" ] ; then $NPM install; fi
       $NPM run build
     )
     ;;

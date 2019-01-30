@@ -161,7 +161,7 @@ echo "[Retrieve DB from prod] $COMBAWA_FETCH_DB_DUMP"
 echo "[Run offline] $COMBAWA_OFFLINE"
 echo "------"
 
-if [ $COMBAWA_BACKUP_BASE == 1 ] ; then
+if [ "$COMBAWA_BACKUP_BASE" == "1" ] ; then
   # Store a security backup in case the update doesn't go right.
   DUMP_NAME="update-backup-script-$(date +%Y%m%d%H%M%S).sql";
   DUMP_PATH="$WEBROOT/../dumps/$DUMP_NAME"
@@ -177,14 +177,14 @@ fi
 source $APP_SCRIPTS_DIR/predeploy_actions.sh
 
 # Run the build content.
-if [ $COMBAWA_BUILD_MODE == "install" ]; then
+if [ "$COMBAWA_BUILD_MODE" == "install" ]; then
   echo "Start the installation..."
   source $APP_SCRIPTS_DIR/install.sh
   if [[ $? != 0 ]]; then
     echo "The install.sh generated an error. Check the logs."
     exit $?
   fi
-elif [ $COMBAWA_BUILD_MODE == "update" ]; then
+elif [ "$COMBAWA_BUILD_MODE" == "update" ]; then
   echo "Start the update..."
   source $APP_SCRIPTS_DIR/update.sh
   if [[ $? != 0 ]]; then

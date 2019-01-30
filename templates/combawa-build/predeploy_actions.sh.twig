@@ -6,7 +6,7 @@
 # Return error codes if they happen.
 set -e
 
-if [ $COMBAWA_FETCH_DB_DUMP == 1 ] ; then
+if [ "$COMBAWA_FETCH_DB_DUMP" == "1" ] ; then
   echo "Updating the reference dump."
   # Do the magic that connects to the server and retrieves the SQL dump.
   scp $COMBAWA_SSH_CONFIG_NAME:$COMBAWA_PROD_DB_DUMP_PATH "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
@@ -19,7 +19,7 @@ fi
 case $COMBAWA_ENV in
   dev)
     # In update mode, load the reference dump if it exists.
-    if [ $COMBAWA_BUILD_MODE == "update" ]; then
+    if [ "$COMBAWA_BUILD_MODE" == "update" ]; then
       if [ -f "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
         $DRUSH sql-drop -y;
         zcat "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" | $DRUSH sqlc
@@ -31,7 +31,7 @@ case $COMBAWA_ENV in
     ;;
   recette|preprod)
     # In update mode, load the reference dump if it exists.
-    if [ $COMBAWA_BUILD_MODE == "update" ]; then
+    if [ "$COMBAWA_BUILD_MODE" == "update" ]; then
       if [ -f "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
         $DRUSH sql-drop -y;
         zcat "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" | $DRUSH sqlc
