@@ -141,6 +141,12 @@ class ProjectGenerator extends Generator {
       $adminThemeParameters
     );
 
+    $this->renderFile(
+      'combawa-admin-theme/base.css.twig',
+      dirname($adminThemePath) . '/css/' . $machine_name . '.css',
+      $adminThemeParameters
+    );
+
     // Blocks configuration.
     $config_folder = $parameters['config_folder'];
     $dir = opendir(self::TPL_DIR . '/combawa-admin-theme/config/blocks');
