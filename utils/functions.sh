@@ -28,9 +28,5 @@ usage() {
   echo ''
   echo -e "${bold}\t--fetch-db-dump, -f: Fetch a fresh DB dump from the production site.${normal}"
   echo -e '\t\tUsed when the reference dump should be updated.'
-  echo ''
-  echo -e "${bold}\t--offline, -o: Run offline to avoid trying to make remote connections.${normal}"
-  echo -e '\t\tAllowed values are: 0: make remote connections, 1: avoid remote connections.'
-  echo -e '\t\tDefault value: 0'
   exit
 }

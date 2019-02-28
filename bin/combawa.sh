@@ -136,11 +136,6 @@ do
         COMBAWA_FETCH_DB_DUMP=1
         shift
         ;;
-      -o|--offline)
-        echo "[Offline] The build is processed in offline mode."
-        COMBAWA_OFFLINE="$2"
-        shift
-        ;;
       --) # End of all options
         shift
         ;;
@@ -158,7 +153,6 @@ echo "[Build mode] $COMBAWA_BUILD_MODE"
 echo "[Generate a backup] $COMBAWA_BACKUP_BASE"
 echo "[Environment URI] $COMBAWA_WEBSITE_URI"
 echo "[Retrieve DB from prod] $COMBAWA_FETCH_DB_DUMP"
-echo "[Run offline] $COMBAWA_OFFLINE"
 echo "------"
 
 if [ "$COMBAWA_BACKUP_BASE" == "1" ] ; then
