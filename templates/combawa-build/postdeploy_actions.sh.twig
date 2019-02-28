@@ -11,13 +11,6 @@ THEME={{ machine_name }}_theme
 
 case $COMBAWA_ENV in
   dev)
-    # Compile CSS for development.
-    (
-      cd $WEBROOT/themes/custom/$THEME
-      if [ "$COMBAWA_OFFLINE" == "0" ] ; then $NPM install; fi
-      $NPM run build-dev
-    )
-
     # Rebuild search indexes.
 #    $DRUSH sapi-r
 #    $DRUSH sapi-i
@@ -26,24 +19,11 @@ case $COMBAWA_ENV in
     $DRUSH uli
     ;;
   recette|preprod)
-    # Compile CSS for production.
-    (
-      cd $WEBROOT/themes/custom/$THEME
-      if [ "$COMBAWA_OFFLINE" == "0" ] ; then $NPM install; fi
-      $NPM run build
-    )
-
     # Rebuild search indexes.
 #    $DRUSH sapi-r
 #    $DRUSH sapi-i
     ;;
   prod)
-    # Compile CSS for production.
-    (
-      cd $WEBROOT/themes/custom/$THEME
-      if [ "$COMBAWA_OFFLINE" == "0" ] ; then $NPM install; fi
-      $NPM run build
-    )
     ;;
   *)
     echo "Unknown environment: $COMBAWA_ENV. Please check your name."

@@ -80,9 +80,6 @@ fi
 
 source $UTILS_DIR/prerequisites.sh
 
-# Make npm a variable now we ensured it was available.
-NPM=`which npm`
-
 # Set the arguments value.
 while [[ $1 ]]
 do

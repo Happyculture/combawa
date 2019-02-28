@@ -81,19 +81,4 @@ echo -e "${GREEN}DB connection... OK!${NC}"
 
 echo -e ""
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-
-# Check NPM binary availability.
-echo -e ""
-echo -e "${BLUE}Verifying npm binary availability.${NC}"
-if hash npm 2>/dev/null; then
-  echo -e "${GREEN}npm binary availability... OK!${NC}"
-else
-  echo -e "${YELLOW}The npm binary is not available for the user running this deployment script.${NC}"
-  echo -e "${ORANGE}It is needed to compile the main theme assets.${NC}"
-  echo ""
-  exit -3
-fi
-
-echo -e ""
-echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo -e ""
