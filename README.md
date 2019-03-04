@@ -25,3 +25,7 @@ The project builder is a script that... builds the project each time it's needed
 According to the settings, either it is going to drop everything and start a fresh install using the given configuration, either it is going to load a reference database dump extracted from production then run all updates on it.
 
 You can build your project by running `composer build`.
+
+## Wrapper
+
+If you are using this script accross different projects, you should use the Combawa wrapper (https://github.com/Happyculture/combawa-wrapper) that works as the Drush wrapper. One global command to run the Combawa build without targetting the `vendor/bin/combawa` binary.
