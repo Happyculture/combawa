@@ -18,6 +18,20 @@ Used once per environment, this command creates a .env file and a settings.local
 To use it in interactive mode, just run `drupal combawa:generate-environment`.\
 All interactive options are also available in non-interactive mode if you need this to be run by your CI server for example. See the integrated help using `drupal help combawa:generate-environment`.
 
+You can also directly send the correct arguments values for your CD/CI tools: 
+```
+drupal combawa:generate-environment \
+    --environment=preprod \
+    --environment-url=https://mysite.url \
+    --dump-file-name=reference_dump.sql \
+    --db-host=localhost \
+    --db-port=3306 \
+    --db-name=db_name \
+    --db-user=db_user \
+    --db-password=db_password \
+    --no-interaction
+```
+
 ## Project builder
 
 The project builder is a script that... builds the project each time it's needed based on the current files (ie. it does not retrieve new code from the git repository). 
