@@ -18,7 +18,7 @@ Used once per environment, this command creates a .env file and a settings.local
 To use it in interactive mode, just run `drupal combawa:generate-environment`.\
 All interactive options are also available in non-interactive mode if you need this to be run by your CI server for example. See the integrated help using `drupal help combawa:generate-environment`.
 
-You can also directly send the correct arguments values for your CD/CI tools: 
+Eg:
 ```
 drupal combawa:generate-environment \
     --environment=preprod \
