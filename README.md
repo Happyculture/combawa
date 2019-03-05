@@ -1,3 +1,4 @@
+![Logo Combawa](logo_combawa.png)
 # Combawa
 
 Used in combination of happyculture/happy_rocket or any other drupal-project based composer template, combawa will help you to setup your project and be ready to start working. 
