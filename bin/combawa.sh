@@ -89,8 +89,10 @@ do
       -e | --env)
         case $2 in
           dev|recette|preprod|prod)
+            SOURCE_ENV = $COMBAWA_ENV
             COMBAWA_ENV="$2"
-            echo -e "${WHITE}Environment overriden to: ${ORANGE}$2${NC}"
+            echo -e "${YELLOW}Environment overriden:${NC}"
+            echo -e "From ${LIGHT_RED}$SOURCE_ENV${NC} to ${LIGHT_GREEN}$2${NC}"
             ;;
           *)
             echo "Unknown environment: $2. Please check your name."
@@ -99,26 +101,32 @@ do
         shift
         ;;
       -m|--mode)
+        SOURCE_BUILD_MODE=$COMBAWA_BUILD_MODE
         COMBAWA_BUILD_MODE="$2"
         if [ $2 != "install" ] && [ $2 != "update" ] && [ $2 != "pull" ] ; then
           echo "Invalid build mode."
           exit 1
         fi;
-        echo -e "${WHITE}Build mode overriden to: ${ORANGE}$2${NC}"
+        echo -e "${YELLOW}Build mode overriden:${NC}"
+        echo -e "From ${LIGHT_RED}$SOURCE_BUILD_MODE${NC} to ${LIGHT_GREEN}$2${NC}"
         shift
         ;;
       -b|--backup)
+        SOURCE_BACKUP_BASE=$COMBAWA_BACKUP_BASE
         COMBAWA_BACKUP_BASE="$2"
-        echo -e "${WHITE}Backup base overriden to: ${ORANGE}$2${NC}"
+        echo -e "${YELLOW}Backup base overriden:${NC}"
+        echo -e "From ${LIGHT_RED}$SOURCE_BACKUP_BASE${NC} to ${LIGHT_GREEN}$2${NC}"
         shift
         ;;
       -u|--uri)
-        URI="$2"
+        SOURCE_URI=$COMBAWA_WEBSITE_URI
+        COMBAWA_WEBSITE_URI="$2"
         if [ ! $2 ]; then
           echo "URI parameter can not be empty."
           exit 1
         fi
-        echo -e "${WHITE}URI overriden to: ${ORANGE}$2${NC}"
+        echo -e "${YELLOW}URI overriden:${NC}"
+        echo -e "From ${LIGHT_RED}$SOURCE_URI${NC} to ${LIGHT_GREEN}$2${NC}"
         shift
         ;;
       -h|--help)
@@ -126,6 +134,10 @@ do
         shift
         ;;
       -f|--fetch-db-dump)
+        COMBAWA_FETCH_DB_DUMP=1
+        echo -e "${YELLOW}Fetch DB dump from prod overriden:${NC}"
+        echo -e "To ${LIGHT_GREEN}$2${NC}"
+
         echo "Testing connection with remote SSH server from which the dump will be retrieved."
         ssh -q $COMBAWA_SSH_CONFIG_NAME exit
         if [[ $? != 0 ]]; then
@@ -133,8 +145,6 @@ do
           echo "Check your SSH config file. Should you connect through a VPN?"
           exit 1
         fi
-        COMBAWA_FETCH_DB_DUMP=1
-        echo -e "${WHITE}Fetch DB dump from prod overriden to: ${ORANGE}$2${NC}"
         shift
         ;;
       --) # End of all options
