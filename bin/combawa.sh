@@ -78,8 +78,6 @@ if [ $COMBAWA_WEBSITE_URI ]; then
   DRUSH="$DRUSH --uri=$COMBAWA_WEBSITE_URI"
 fi
 
-source $UTILS_DIR/prerequisites.sh
-
 # Set the arguments value.
 while [[ $1 ]]
 do
@@ -145,6 +143,8 @@ do
     shift
   fi
 done
+
+source $UTILS_DIR/prerequisites.sh
 
 # Show the build config.
 echo "------"
