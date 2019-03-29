@@ -91,6 +91,7 @@ do
           dev|recette|preprod|prod)
             SOURCE_ENV = $COMBAWA_ENV
             COMBAWA_ENV="$2"
+
             echo -e "${YELLOW}Environment overriden:${NC}"
             echo -e "From ${LIGHT_RED}$SOURCE_ENV${NC} to ${LIGHT_GREEN}$2${NC}"
             ;;
@@ -103,6 +104,7 @@ do
       -m|--mode)
         SOURCE_BUILD_MODE=$COMBAWA_BUILD_MODE
         COMBAWA_BUILD_MODE="$2"
+
         if [ $2 != "install" ] && [ $2 != "update" ] && [ $2 != "pull" ] ; then
           echo "Invalid build mode."
           exit 1
@@ -121,10 +123,12 @@ do
       -u|--uri)
         SOURCE_URI=$COMBAWA_WEBSITE_URI
         COMBAWA_WEBSITE_URI="$2"
+
         if [ ! $2 ]; then
           echo "URI parameter can not be empty."
           exit 1
         fi
+
         echo -e "${YELLOW}URI overriden:${NC}"
         echo -e "From ${LIGHT_RED}$SOURCE_URI${NC} to ${LIGHT_GREEN}$2${NC}"
         shift
@@ -136,9 +140,11 @@ do
       -f|--fetch-db-dump)
         SOURCE_FETCH=$COMBAWA_FETCH_DB_DUMP
         COMBAWA_FETCH_DB_DUMP="$2"
+
         echo -e "${YELLOW}Fetch DB dump from prod overriden:${NC}"
         echo -e "From ${LIGHT_RED}$SOURCE_FETCH${NC} to ${LIGHT_GREEN}$2${NC}"
         echo -e ""
+
         if [ "$COMBAWA_FETCH_DB_DUMP" == "1" ] ; then
           echo -e "${BLUE}Testing connection with remote SSH server from which the dump will be retrieved:${NC}"
           {
