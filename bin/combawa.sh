@@ -99,7 +99,7 @@ do
         ;;
       -m|--mode)
         COMBAWA_BUILD_MODE="$2"
-        if [ $2 != "install" ] && [ $2 != "update" ] ; then
+        if [ $2 != "install" ] && [ $2 != "update" ] && [ $2 != "pull" ] ; then
           echo "Invalid build mode."
           exit 1
         fi;
@@ -176,6 +176,13 @@ if [ "$COMBAWA_BUILD_MODE" == "install" ]; then
   source $APP_SCRIPTS_DIR/install.sh
   if [[ $? != 0 ]]; then
     echo "The install.sh generated an error. Check the logs."
+    exit $?
+  fi
+elif [ "$COMBAWA_BUILD_MODE" == "pull" ]; then
+  echo "Start the local update..."
+  source $APP_SCRIPTS_DIR/pull.sh
+  if [[ $? != 0 ]]; then
+    echo "The pull.sh generated an error. Check the logs."
     exit $?
   fi
 elif [ "$COMBAWA_BUILD_MODE" == "update" ]; then

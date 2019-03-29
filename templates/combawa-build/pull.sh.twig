@@ -1,0 +1,26 @@
+#!/bin/bash
+# Actions run when the script is in pull mode.
+# Available variables are defined in settings.sh or .env files.
+
+# Return error codes if they happen.
+set -xe
+
+# Flush drush cache to identify new commands such as rr.
+$DRUSH cc drush
+$DRUSH cr
+
+# Run the DB updates.
+$DRUSH updb --no-post-updates
+$DRUSH cr
+
+# Import the configuration.
+$DRUSH cim
+$DRUSH cr
+
+# Run entity updates.
+$DRUSH entup
+$DRUSH cr
+
+# Run the post updates.
+$DRUSH updb
+$DRUSH cr

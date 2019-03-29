@@ -56,11 +56,22 @@ case $COMBAWA_BUILD_MODE in
     fi
     echo -e "${GREEN}Update.sh check... OK!${NC}"
     ;;
-    * )
-      echo -e "${RED}Build mode unknown.${NC}"
+  "pull" )
+    echo -e ""
+    echo -e "${BLUE}Verifying pull.sh action script.${NC}"
+    if [ ! -f "$APP_SCRIPTS_DIR/pull.sh" ]; then
+      echo -e "${YELLOW}There is no <app>/scripts/pull.sh script at the moment or its not readable.${NC}"
+      echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
       echo ""
       exit -1
-      ;;
+    fi
+    echo -e "${GREEN}Pull.sh check... OK!${NC}"
+    ;;
+  * )
+    echo -e "${RED}Build mode unknown.${NC}"
+    echo ""
+    exit -1
+    ;;
 esac
 
 echo -e ""

@@ -180,7 +180,7 @@ class GenerateProjectCommand extends Command {
 
     if (!$generate_build) {
       $generate_build = $this->getIo()->confirm(
-        'Do you want to generate the build files (settings, install, update and pre/post deploy actions)?',
+        'Do you want to generate the build files (settings, install, update, pull and pre/post deploy actions)?',
         TRUE
       );
       $input->setOption('generate-build', $generate_build);
