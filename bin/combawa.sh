@@ -134,16 +134,22 @@ do
         shift
         ;;
       -f|--fetch-db-dump)
-        COMBAWA_FETCH_DB_DUMP=1
+        SOURCE_FETCH=$COMBAWA_FETCH_DB_DUMP
+        COMBAWA_FETCH_DB_DUMP="$2"
         echo -e "${YELLOW}Fetch DB dump from prod overriden:${NC}"
-        echo -e "To ${LIGHT_GREEN}$2${NC}"
-
-        echo "Testing connection with remote SSH server from which the dump will be retrieved."
-        ssh -q $COMBAWA_SSH_CONFIG_NAME exit
-        if [[ $? != 0 ]]; then
-          echo "Impossible to connect to the production server."
-          echo "Check your SSH config file. Should you connect through a VPN?"
-          exit 1
+        echo -e "From ${LIGHT_RED}$SOURCE_FETCH${NC} to ${LIGHT_GREEN}$2${NC}"
+        echo -e ""
+        if [ "$COMBAWA_FETCH_DB_DUMP" == "1" ] ; then
+          echo -e "${BLUE}Testing connection with remote SSH server from which the dump will be retrieved:${NC}"
+          {
+            ssh -q $COMBAWA_SSH_CONFIG_NAME exit
+          } || {
+            if [[ $? != 0 ]]; then
+              echo -e "${RED}Impossible to connect to the production server.${NC}"
+              echo -e "${ORANGE}Check your SSH config file. Should you connect through a VPN?${NC}"
+              exit 1
+            fi
+          }
         fi
         shift
         ;;
