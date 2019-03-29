@@ -232,6 +232,4 @@ fi
 source $APP_SCRIPTS_DIR/postdeploy_actions.sh
 
 # Send a notification to inform that the build is done.
-if hash notify-send 2>/dev/null; then
-  notify-send  "The build is completed."
-fi
+notify "The build is completed."

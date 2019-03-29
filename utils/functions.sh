@@ -30,3 +30,11 @@ usage() {
   echo -e '\t\tUsed when the reference dump should be updated.'
   exit
 }
+
+# Notify function.
+notify() {
+  if hash notify-send 2>/dev/null; then
+    notify-send "$1"
+  fi
+  exit
+}
