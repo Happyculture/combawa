@@ -120,6 +120,15 @@ do
       -b|--backup)
         SOURCE_BACKUP_BASE=$COMBAWA_BACKUP_BASE
         COMBAWA_BACKUP_BASE="$2"
+
+        if [ $2 != "0" ] && [ $2 != "1" ] ; then
+          COMBAWA_MESSAGE="Invalid backup flag."
+          echo -e "${RED}$COMBAWA_MESSAGE${NC}"
+          echo -e "${ORANGE}Only 0 or 1 is valid.${NC}"
+          notify "$COMBAWA_MESSAGE"
+          exit 1
+        fi
+
         echo -e "${YELLOW}Backup base overriden:${NC}"
         echo -e "From ${LIGHT_RED}$SOURCE_BACKUP_BASE${NC} to ${LIGHT_GREEN}$2${NC}"
         shift
