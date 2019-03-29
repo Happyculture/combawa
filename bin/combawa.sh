@@ -160,13 +160,21 @@ done
 source $UTILS_DIR/prerequisites.sh
 
 # Show the build config.
-echo "------"
-echo "[Environment built] $COMBAWA_ENV"
-echo "[Build mode] $COMBAWA_BUILD_MODE"
-echo "[Generate a backup] $COMBAWA_BACKUP_BASE"
-echo "[Environment URI] $COMBAWA_WEBSITE_URI"
-echo "[Retrieve DB from prod] $COMBAWA_FETCH_DB_DUMP"
-echo "------"
+USAGE=$(cat <<-END
+Environment built:\t${LIGHT_CYAN}$COMBAWA_ENV${NC}
+Build mode:\t${LIGHT_CYAN}$COMBAWA_BUILD_MODE${NC}
+Generate a backup:\t${LIGHT_CYAN}$COMBAWA_BACKUP_BASE${NC}
+Environment URI:\t${LIGHT_CYAN}$COMBAWA_WEBSITE_URI${NC}
+Retrieve DB from prod:\t${LIGHT_CYAN}$COMBAWA_FETCH_DB_DUMP${NC}
+END
+)
+
+echo -e "${BLUE}Build options summary:${NC}"
+echo -e ""
+echo -e "$USAGE" | sed 's/\t/,/g' | column -s ',' -t
+echo -e ""
+echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo -e ""
 
 if [ "$COMBAWA_BACKUP_BASE" == "1" ] ; then
   # Store a security backup in case the update doesn't go right.
