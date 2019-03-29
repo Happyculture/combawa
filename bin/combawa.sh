@@ -96,7 +96,9 @@ do
             echo -e "From ${LIGHT_RED}$SOURCE_ENV${NC} to ${LIGHT_GREEN}$2${NC}"
             ;;
           *)
-            echo "Unknown environment: $2. Please check your name."
+            COMBAWA_MESSAGE="Unknown environment: $2. Please check your name."
+            echo -e "${RED}$COMBAWA_MESSAGE${NC}"
+            notify "$COMBAWA_MESSAGE"
             exit 1
         esac
         shift
@@ -106,7 +108,9 @@ do
         COMBAWA_BUILD_MODE="$2"
 
         if [ $2 != "install" ] && [ $2 != "update" ] && [ $2 != "pull" ] ; then
-          echo "Invalid build mode."
+          COMBAWA_MESSAGE="Invalid build mode."
+          echo -e "${RED}$COMBAWA_MESSAGE${NC}"
+          notify "$COMBAWA_MESSAGE"
           exit 1
         fi;
         echo -e "${YELLOW}Build mode overriden:${NC}"
@@ -125,7 +129,9 @@ do
         COMBAWA_WEBSITE_URI="$2"
 
         if [ ! $2 ]; then
-          echo "URI parameter can not be empty."
+          COMBAWA_MESSAGE="URI parameter can not be empty."
+          echo -e "${RED}$COMBAWA_MESSAGE${NC}"
+          notify "$COMBAWA_MESSAGE"
           exit 1
         fi
 
@@ -152,8 +158,10 @@ do
             echo -e "${GREEN}SSH connection OK.${NC}"
           } || {
             if [[ $? != 0 ]]; then
-              echo -e "${RED}Impossible to connect to the production server.${NC}"
+              COMBAWA_MESSAGE="Impossible to connect to the production server."
+              echo -e "${RED}$COMBAWA_MESSAGE${NC}"
               echo -e "${ORANGE}Check your SSH config file. Should you connect through a VPN?${NC}"
+              notify "$COMBAWA_MESSAGE"
               exit 1
             fi
           }
