@@ -90,6 +90,7 @@ do
         case $2 in
           dev|recette|preprod|prod)
             COMBAWA_ENV="$2"
+            echo -e "${WHITE}Environment overriden to: ${ORANGE}$2${NC}"
             ;;
           *)
             echo "Unknown environment: $2. Please check your name."
@@ -103,11 +104,12 @@ do
           echo "Invalid build mode."
           exit 1
         fi;
-        echo "[Build mode] $2"
+        echo -e "${WHITE}Build mode overriden to: ${ORANGE}$2${NC}"
         shift
         ;;
       -b|--backup)
         COMBAWA_BACKUP_BASE="$2"
+        echo -e "${WHITE}Backup base overriden to: ${ORANGE}$2${NC}"
         shift
         ;;
       -u|--uri)
@@ -116,6 +118,7 @@ do
           echo "URI parameter can not be empty."
           exit 1
         fi
+        echo -e "${WHITE}URI overriden to: ${ORANGE}$2${NC}"
         shift
         ;;
       -h|--help)
@@ -130,8 +133,8 @@ do
           echo "Check your SSH config file. Should you connect through a VPN?"
           exit 1
         fi
-        echo "[Retrieve DB from prod] Yes."
         COMBAWA_FETCH_DB_DUMP=1
+        echo -e "${WHITE}Fetch DB dump from prod overriden to: ${ORANGE}$2${NC}"
         shift
         ;;
       --) # End of all options
