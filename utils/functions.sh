@@ -16,7 +16,7 @@ usage() {
   echo -e '\t\tDefault value: prod'
   echo ''
   echo -e "${bold}\t--mode, -m: Build mode${normal}"
-  echo -e '\t\tAllowed values are: install, update'
+  echo -e '\t\tAllowed values are: install, update, pull'
   echo -e '\t\tDefault value: update'
   echo ''
   echo -e "${bold}\t--backup, -e: Generates a backup before building the project.${normal}"
