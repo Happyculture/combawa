@@ -149,6 +149,7 @@ do
           echo -e "${BLUE}Testing connection with remote SSH server from which the dump will be retrieved:${NC}"
           {
             ssh -q $COMBAWA_SSH_CONFIG_NAME exit
+            echo -e "${GREEN}SSH connection OK.${NC}"
           } || {
             if [[ $? != 0 ]]; then
               echo -e "${RED}Impossible to connect to the production server.${NC}"
