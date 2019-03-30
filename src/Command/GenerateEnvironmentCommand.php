@@ -54,7 +54,7 @@ class GenerateEnvironmentCommand extends Command {
         'environment',
         null,
         InputOption::VALUE_REQUIRED,
-        'The build environment (prod, preprod or dev).'
+        'The built environment (prod, preprod, recette or dev).'
       )
       ->addOption(
         'environment-url',
@@ -180,7 +180,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$environment) {
       $environment = $this->getIo()->choice(
         'Which kind of environment is it?',
-        ['dev', 'preprod', 'prod'],
+        ['dev', 'recette', 'preprod', 'prod'],
         array_key_exists('COMBAWA_ENV', $envVars) ? $envVars['COMBAWA_ENV'] : 'prod'
       );
       $input->setOption('environment', $environment);
