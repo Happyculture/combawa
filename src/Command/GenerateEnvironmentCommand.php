@@ -384,11 +384,11 @@ class GenerateEnvironmentCommand extends Command {
    */
   protected function validateEnvironment($env) {
     $env = strtolower($env);
-    if (in_array($env, ['dev', 'preprod', 'prod'])) {
+    if (in_array($env, ['dev', 'recette', 'preprod', 'prod'])) {
       return $env;
     }
     else {
-      throw new \InvalidArgumentException(sprintf('Environment name "%s" is invalid (only dev, prod or preprod allowed).', $env));
+      throw new \InvalidArgumentException(sprintf('Environment name "%s" is invalid (only dev, recette, prod or preprod allowed).', $env));
     }
   }
 

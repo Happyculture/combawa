@@ -32,5 +32,10 @@ $config['config_split.config_split.dev']['status'] = TRUE;
 // Enable testing config split.
 $config['config_split.config_split.testing']['status'] = TRUE;
 
+{%- elseif environment == 'recette' -%}
+
+// Enable testing config split.
+$config['config_split.config_split.recette']['status'] = TRUE;
+
 {%- endif %}
 
