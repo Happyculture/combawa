@@ -146,8 +146,8 @@ class GenerateEnvironmentCommand extends Command {
     if ($generateParams['environment'] != 'prod') {
       $generateParams += [
         'environment_url' => $this->validateUrl($input->getOption('environment-url')),
-        'backup_base' => (bool) $input->getOption('backup-db'),
-        'fetch_dump' => (bool) $input->getOption('fetch-dump'),
+        'backup_base' => $input->getOption('backup-db') ? 1 : 0,
+        'fetch_dump' => $input->getOption('fetch-dump') ? 1 : 0,
         'dump_file_name' => $input->getOption('dump-file-name'),
       ];
 
@@ -224,7 +224,7 @@ class GenerateEnvironmentCommand extends Command {
       }
 
       try {
-        $fetch_dump = $input->getOption('fetch-dump') ? (bool) $input->getOption('fetch-dump') : null;
+        $fetch_dump = $input->getOption('fetch-dump') ? (bool) $input->getOption('fetch-dump') : FALSE;
       } catch (\Exception $error) {
         $this->getIo()->error($error->getMessage());
 
