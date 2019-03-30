@@ -128,10 +128,6 @@ class GenerateEnvironmentCommand extends Command {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    // @see use Drupal\Console\Command\Shared\ConfirmationTrait::confirmOperation
-    if (!$this->confirmOperation()) {
-      return 1;
-    }
 
     $generateParams = [
       'app_root' => $this->appRoot,
@@ -157,6 +153,36 @@ class GenerateEnvironmentCommand extends Command {
           'ssh_dump_path' => $input->getOption('ssh-dump-path'),
         ];
       }
+    }
+
+    // Improve attributes readibility.
+    $recap_db_password = empty($generateParams['db_password']) ? 'No password' : 'Your secret password';
+    $recap_backup_base = $generateParams['backup_base'] ? 'Yes' : 'No';
+    $recap_fetch_dump = $generateParams['fetch_dump'] ? 'Yes' : 'No';
+
+    $recap_params = [
+      ['App root', $generateParams['app_root']],
+      ['Environment', $generateParams['environment']],
+      ['DB Host', $generateParams['db_host']],
+      ['DB Port', $generateParams['db_port']],
+      ['DB name', $generateParams['db_user']],
+      ['DB Username', $generateParams['db_name']],
+      ['DB password', $recap_db_password],
+      ['Site URL', $generateParams['environment_url']],
+      ['Backup DB before build', $recap_backup_base],
+      ['Fetch remote dump', $recap_fetch_dump],
+      ['Reference dump filename', $generateParams['dump_file_name']],
+      ['SSH config name', $generateParams['ssh_config_name']],
+      ['Remote dump path', $generateParams['ssh_dump_path']],
+    ];
+
+    $this->getIo()->newLine(1);
+    $this->getIo()->commentBlock('Settings recap');
+    $this->getIo()->table(['Parameter', 'Value'], $recap_params);
+
+    // @see use Drupal\Console\Command\Shared\ConfirmationTrait::confirmOperation
+    if (!$this->confirmOperation()) {
+      return 1;
     }
 
     $this->generator->setIo($this->getIo());
