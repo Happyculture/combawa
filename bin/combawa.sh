@@ -202,7 +202,7 @@ END
 echo -e "${BLUE}Build options summary:${NC}"
 echo -e ""
 if hash column 2>/dev/null; then
-  echo -e "$USAGE" | sed 's/\t/,/g' | column -s ',' -t
+  echo -e "$USAGE" | column -s $'\t' -t
 else
   echo -e "$USAGE"
 fi
