@@ -201,7 +201,11 @@ END
 
 echo -e "${BLUE}Build options summary:${NC}"
 echo -e ""
-echo -e "$USAGE" | sed 's/\t/,/g' | column -s ',' -t
+if hash column 2>/dev/null; then
+  echo -e "$USAGE" | sed 's/\t/,/g' | column -s ',' -t
+else
+  echo -e "$USAGE"
+fi
 echo -e ""
 echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo -e ""
