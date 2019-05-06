@@ -212,10 +212,14 @@ echo -e ""
 
 if [ "$COMBAWA_BACKUP_BASE" == "1" ] ; then
   # Store a security backup in case the update doesn't go right.
+  echo -e "${BLUE}Generating backup dump file...${NC}"
   DUMP_NAME="update-backup-script-$(date +%Y%m%d%H%M%S).sql";
   DUMP_PATH="$WEBROOT/../dumps/$DUMP_NAME"
   mkdir -p "$WEBROOT/../dumps/"
   $DRUSH sql-dump --result-file=$DUMP_PATH --gzip
+  echo -e "${GREEN}DB backup... OK!${NC}"
+  echo -e ""
+
   # Remove older backups but keep the 10 youngest ones.
   if [ "$(ls -l $WEBROOT/../dumps/*.sql.gz | wc -l)" -gt 10 ]; then
     ls -tp $WEBROOT/../dumps/*.sql.gz | grep -v '/$' | tail -n +10 | tr '\n' '\0' | xargs -0 rm --
@@ -223,34 +227,46 @@ if [ "$COMBAWA_BACKUP_BASE" == "1" ] ; then
 fi
 
 # Run the potential actions to do pre deployment.
+echo -e "${BLUE}Playing predeploy actions...${NC}"
 source $APP_SCRIPTS_DIR/predeploy_actions.sh
+echo -e "${GREEN}Predeploy... OK!${NC}"
+echo -e ""
 
 # Run the build content.
 if [ "$COMBAWA_BUILD_MODE" == "install" ]; then
-  echo "Start the installation..."
+  echo -e "${BLUE}Start the installation...${NC}"
   source $APP_SCRIPTS_DIR/install.sh
   if [[ $? != 0 ]]; then
-    echo "The install.sh generated an error. Check the logs."
+    echo -e "${RED}The install.sh generated an error. Check the logs.${NC}"
     exit $?
   fi
+  echo -e "${GREEN}Install... OK!${NC}"
+  echo -e ""
 elif [ "$COMBAWA_BUILD_MODE" == "pull" ]; then
-  echo "Start the local update..."
+  echo -e "${BLUE}Start the local update...${NC}"
   source $APP_SCRIPTS_DIR/pull.sh
   if [[ $? != 0 ]]; then
-    echo "The pull.sh generated an error. Check the logs."
+    echo -e "${RED}The pull.sh generated an error. Check the logs.${NC}"
     exit $?
   fi
+  echo -e "${GREEN}Pull... OK!${NC}"
+  echo -e ""
 elif [ "$COMBAWA_BUILD_MODE" == "update" ]; then
-  echo "Start the update..."
+  echo -e "${BLUE}Start the update...${NC}"
   source $APP_SCRIPTS_DIR/update.sh
   if [[ $? != 0 ]]; then
-    echo "The update.sh generated an error. Check the logs."
+    echo -e "${RED}The update.sh generated an error. Check the logs.${NC}"
     exit $?
   fi
+  echo -e "${GREEN}Update... OK!${NC}"
+  echo -e ""
 fi
 
 # Run the potential actions to do post deployment.
+echo -e "${BLUE}Playing predeploy actions...${NC}"
 source $APP_SCRIPTS_DIR/postdeploy_actions.sh
+echo -e "${GREEN}Postdeploy... OK!${NC}"
+echo -e ""
 
 # Send a notification to inform that the build is done.
 notify "The build is completed."
