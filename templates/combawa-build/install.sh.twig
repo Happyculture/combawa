@@ -23,7 +23,7 @@ if [ $COMBAWA_ENV != "prod" ]; then
 fi
 
 # Install the site.
-$DRUSH site-install --sites-subdir=default --locale=fr --existing-config {{ machine_name }}
+$DRUSH site-install --locale=fr {{ machine_name }}
 
 # Example post install task running only on dev environments.
 #if [ "$COMBAWA_ENV" == "dev" ]; then

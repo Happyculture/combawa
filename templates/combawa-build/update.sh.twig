@@ -9,24 +9,21 @@ set -xe
 $DRUSH cc drush
 
 # Enable the maintenance mode.
-$DRUSH sset system.maintenance_mode 1
-$DRUSH cr
+$DRUSH vset maintenance_mode 1
+$DRUSH cc all
 
 # Run the DB updates.
-$DRUSH updb --no-post-updates
-$DRUSH cr
+$DRUSH updb
+$DRUSH cc all
 
-# Import the configuration.
-$DRUSH cim
-$DRUSH cr
+# Revert the features to their default state.
+$DRUSH fra
+$DRUSH cc all
 
 # Run entity updates.
 $DRUSH entup
-$DRUSH cr
-
-# Run the post updates.
-$DRUSH updb
+$DRUSH cc all
 
 # Remove the maintenance page.
-$DRUSH sset system.maintenance_mode 0
-$DRUSH cr
+$DRUSH vset maintenance_mode 0
+$DRUSH cc all
