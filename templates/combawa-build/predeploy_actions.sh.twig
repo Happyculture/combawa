@@ -22,7 +22,7 @@ case $COMBAWA_ENV in
     if [ "$COMBAWA_BUILD_MODE" == "update" ]; then
       if [ -f "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
         $DRUSH sql-drop -y;
-        zcat "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" | $DRUSH sqlc
+        pv --progress --name 'DB Import in progress' -tea "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" | zcat | $DRUSH sqlc
       else
         echo "Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found."
         exit 1;
@@ -34,7 +34,7 @@ case $COMBAWA_ENV in
     if [ "$COMBAWA_BUILD_MODE" == "update" ]; then
       if [ -f "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
         $DRUSH sql-drop -y;
-        zcat "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" | $DRUSH sqlc
+        pv --progress --name 'DB Import in progress' -tea "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" | zcat | $DRUSH sqlc
       else
         echo "Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found."
         exit 1;
