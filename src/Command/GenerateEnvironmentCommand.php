@@ -129,7 +129,7 @@ class GenerateEnvironmentCommand extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
 
-    $generateParams = [
+    $defaults = [
       'app_root' => $this->appRoot,
       'environment' => $this->validateEnvironment($input->getOption('environment')),
       'db_host' => $input->getOption('db-host'),
@@ -137,9 +137,16 @@ class GenerateEnvironmentCommand extends Command {
       'db_name' => $input->getOption('db-name'),
       'db_user' => $input->getOption('db-user'),
       'db_password' => $input->getOption('db-password'),
+      'environment_url' => '',
+      'backup_base' => 1,
+      'fetch_dump' => 0,
+      'ssh_config_name' => '',
+      'ssh_dump_path' => '',
+      'dump_file_name' => '',
     ];
 
-    if ($generateParams['environment'] != 'prod') {
+    $generateParams = [];
+    if ($defaults['environment'] != 'prod') {
       $generateParams += [
         'environment_url' => $this->validateUrl($input->getOption('environment-url')),
         'backup_base' => $input->getOption('backup-db') ? 1 : 0,
@@ -154,6 +161,7 @@ class GenerateEnvironmentCommand extends Command {
         ];
       }
     }
+    $generateParams += $defaults;
 
     // Improve attributes readibility.
     $recap_db_password = empty($generateParams['db_password']) ? 'No password' : 'Your secret password';
