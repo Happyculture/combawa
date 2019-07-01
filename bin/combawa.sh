@@ -263,7 +263,7 @@ elif [ "$COMBAWA_BUILD_MODE" == "update" ]; then
 fi
 
 # Run the potential actions to do post deployment.
-echo -e "${BLUE}Playing predeploy actions...${NC}"
+echo -e "${BLUE}Playing postdeploy actions...${NC}"
 source $APP_SCRIPTS_DIR/postdeploy_actions.sh
 echo -e "${GREEN}Postdeploy... OK!${NC}"
 echo -e ""
