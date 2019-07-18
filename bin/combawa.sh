@@ -89,7 +89,7 @@ do
       -e | --env)
         case $2 in
           dev|recette|preprod|prod)
-            SOURCE_ENV = $COMBAWA_ENV
+            SOURCE_ENV=$COMBAWA_ENV
             COMBAWA_ENV="$2"
 
             echo -e "${YELLOW}Environment overriden:${NC}"
