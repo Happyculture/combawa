@@ -7,9 +7,16 @@
 set -e
 
 if [ "$COMBAWA_FETCH_DB_DUMP" == "1" ] ; then
-  echo "Updating the reference dump."
-  # Do the magic that connects to the server and retrieves the SQL dump.
-  scp $COMBAWA_SSH_CONFIG_NAME:$COMBAWA_PROD_DB_DUMP_PATH "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
+  echo -e "${BLUE}Updating the reference dump.${NC}"
+  if [ -z "$COMBAWA_SSH_CONFIG_NAME" ]; then
+    echo -e "${YELLOW}Copying locally the dump file.${NC}"
+    cp $COMBAWA_PROD_DB_DUMP_PATH "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
+    echo -e "${GREEN}Done!${NC}"
+  else
+    echo -e "${YELLOW}Fetching the dump from remote source...${NC}"
+    scp $COMBAWA_SSH_CONFIG_NAME:$COMBAWA_PROD_DB_DUMP_PATH "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
+    echo -e "${GREEN}Done!${NC}"
+  fi
   if [[ $? != 0 ]]; then
     echo -e "${RED}Impossible to retrieve the dump file. Verify the file name.${NC}"
     exit 1

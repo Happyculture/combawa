@@ -161,16 +161,18 @@ do
         echo -e ""
 
         if [ "$COMBAWA_FETCH_DB_DUMP" == "1" ] ; then
-          echo -e "${BLUE}Testing connection with remote SSH server from which the dump will be retrieved:${NC}"
-          ssh -q $COMBAWA_SSH_CONFIG_NAME echo > /dev/null
-          if [ "$?" != "0" ] ; then
-            COMBAWA_MESSAGE="Impossible to connect to the production server."
-            echo -e "${RED}$COMBAWA_MESSAGE${NC}"
-            echo -e "${ORANGE}Check your SSH config file. Should you connect through a VPN?${NC}"
-            notify "$COMBAWA_MESSAGE"
-            exit 1
-          else
-            echo -e "${GREEN}SSH connection OK.${NC}"
+          if [[ ! -z "$COMBAWA_SSH_CONFIG_NAME" ]]; then
+            echo -e "${BLUE}Testing connection with remote SSH server from which the dump will be retrieved:${NC}"
+            ssh -q $COMBAWA_SSH_CONFIG_NAME echo > /dev/null
+            if [ "$?" != "0" ] ; then
+              COMBAWA_MESSAGE="Impossible to connect to the production server."
+              echo -e "${RED}$COMBAWA_MESSAGE${NC}"
+              echo -e "${ORANGE}Check your SSH config file. Should you connect through a VPN?${NC}"
+              notify "$COMBAWA_MESSAGE"
+              exit 1
+            else
+              echo -e "${GREEN}SSH connection OK.${NC}"
+            fi
           fi
         fi
         shift
