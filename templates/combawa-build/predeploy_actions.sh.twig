@@ -11,7 +11,7 @@ if [ "$COMBAWA_FETCH_DB_DUMP" == "1" ] ; then
   # Do the magic that connects to the server and retrieves the SQL dump.
   scp $COMBAWA_SSH_CONFIG_NAME:$COMBAWA_PROD_DB_DUMP_PATH "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
   if [[ $? != 0 ]]; then
-    echo "Impossible to retrieve the dump file. Verify the file name."
+    echo -e "${RED}Impossible to retrieve the dump file. Verify the file name.${NC}"
     exit 1
   fi
 fi
@@ -37,7 +37,7 @@ case $COMBAWA_ENV in
         echo -e "${GREEN}DB import... OK!${NC}"
         echo -e ""
       else
-        echo "Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found."
+        echo "${RED}Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found.${NC}"
         exit 1;
       fi
     fi
@@ -62,7 +62,7 @@ case $COMBAWA_ENV in
         echo -e "${GREEN}DB import... OK!${NC}"
         echo -e ""
       else
-        echo "Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found."
+        echo "${RED}Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found.${NC}"
         exit 1;
       fi
     fi
@@ -70,6 +70,6 @@ case $COMBAWA_ENV in
   prod)
     ;;
   *)
-    echo "Unknown environment: $COMBAWA_ENV. Please check your name."
+    echo -e "${RED}Unknown environment: $COMBAWA_ENV. Please check your name.${NC}"
     exit 1;
 esac
