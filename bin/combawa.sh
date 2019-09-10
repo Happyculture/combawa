@@ -25,7 +25,7 @@ UTILS_DIR="$SCRIPTS_PATH/../utils"
 TEMPLATES_DIR="$SCRIPTS_PATH/../templates"
 
 # App variables.
-APP_ROOT="$SCRIPTS_PATH/../../../.."
+APP_ROOT="$SCRIPTS_PATH/../../.."
 WEBROOT="$APP_ROOT/web"
 CONFIG_DIR="$APP_ROOT/config"
 APP_SCRIPTS_DIR="$APP_ROOT/scripts"
