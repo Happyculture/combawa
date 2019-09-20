@@ -103,16 +103,38 @@ class GenerateProjectCommand extends Command {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    // @see use Drupal\Console\Command\Shared\ConfirmationTrait::confirmOperation
-    if (!$this->confirmOperation()) {
-      return 1;
-    }
     $name = $this->validateName($input->getOption('name'));
     $machine_name = $this->validateMachineName($input->getOption('machine-name'));
     $generate_build = (bool) $input->getOption('generate-build');
     $url = $this->validateUrl($input->getOption('url'));
     $config_folder = $this->validatePath($input->getOption('config-folder'));
     $generate_config = (bool) $input->getOption('generate-config');
+    $theme_folder = 'themes/custom';
+    $profiles_folder = 'profiles';
+
+    // Improve attributes readibility.
+    $recap_gen_build = $generate_build ? 'Yes' : 'No';
+    $recap_gen_config = $generate_config ? 'Yes' : 'No';
+
+    $recap_params = [
+      ['Name', $name],
+      ['Machine name', $machine_name],
+      ['URL', $url],
+      ['Generate build', $recap_gen_build],
+      ['Generate config', $recap_gen_config],
+      ['Config folder', $config_folder],
+      ['Profiles folder', $profiles_folder],
+      ['Themes folder', $theme_folder],
+    ];
+
+    $this->getIo()->newLine(1);
+    $this->getIo()->commentBlock('Settings recap');
+    $this->getIo()->table(['Parameter', 'Value'], $recap_params);
+
+    // @see use Drupal\Console\Command\Shared\ConfirmationTrait::confirmOperation
+    if (!$this->confirmOperation()) {
+      return 1;
+    }
 
     $this->generator->generate([
       'name' => $name,
@@ -121,8 +143,8 @@ class GenerateProjectCommand extends Command {
       'url' => $url,
       'config_folder' => $config_folder,
       'generate_config' => $generate_config,
-      'profiles_dir' => 'profiles',
-      'themes_dir' => 'themes/custom'
+      'profiles_dir' => $profiles_folder,
+      'themes_dir' => $theme_folder,
     ]);
   }
 
