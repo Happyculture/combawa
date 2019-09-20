@@ -16,6 +16,9 @@ class ProjectGenerator extends Generator {
    */
   protected $fs;
 
+  // Drupal core version built.
+  protected $core_version;
+
   /**
    * {@inheritdoc}
    */
@@ -45,6 +48,8 @@ class ProjectGenerator extends Generator {
    * @param array $parameters
    */
   public function generate(array $parameters) {
+    $this->core_version = $parameters['core'];
+
     $this->generateProfile($parameters);
     $this->generateAdminTheme($parameters);
     $this->generateDefaultTheme($parameters);
@@ -71,19 +76,19 @@ class ProjectGenerator extends Generator {
     ];
 
     $this->renderFile(
-      'combawa-profile/info.yml.twig',
+      'combawa-profile/' . $this->core_version . '/info.yml.twig',
       $profilePath . '.info.yml',
       $profileParameters
     );
 
     $this->renderFile(
-      'combawa-profile/profile.twig',
+      'combawa-profile/' . $this->core_version . '/profile.twig',
       $profilePath . '.profile',
       $profileParameters
     );
 
     $this->renderFile(
-      'combawa-profile/install.twig',
+      'combawa-profile/' . $this->core_version . '/install.twig',
       $profilePath . '.install',
       $profileParameters
     );
@@ -92,13 +97,13 @@ class ProjectGenerator extends Generator {
     // Core bug. Consider moving it when https://www.drupal.org/node/2904550
     // is commited.
     $this->renderFile(
-      'combawa-profile/breakpoints.yml.twig',
+      'combawa-profile/' . $this->core_version . '/breakpoints.yml.twig',
       $profilePath . '.breakpoints.yml',
       $profileParameters
     );
 
     $this->renderFile(
-      'combawa-profile/src/Helpers/StaticBlockBase.php.twig',
+      'combawa-profile/' . $this->core_version . '/src/Helpers/StaticBlockBase.php.twig',
       dirname($profilePath) . '/src/Helpers/StaticBlockBase.php',
       $profileParameters
     );
@@ -124,32 +129,32 @@ class ProjectGenerator extends Generator {
 
     // Base files.
     $this->renderFile(
-      'combawa-admin-theme/info.yml.twig',
+      'combawa-admin-theme/' . $this->core_version . '/info.yml.twig',
       $adminThemePath . '.info.yml',
       $adminThemeParameters
     );
 
     $this->renderFile(
-      'combawa-admin-theme/theme.twig',
+      'combawa-admin-theme/' . $this->core_version . '/theme.twig',
       $adminThemePath . '.theme',
       $adminThemeParameters
     );
 
     $this->renderFile(
-      'combawa-admin-theme/libraries.yml.twig',
+      'combawa-admin-theme/' . $this->core_version . '/libraries.yml.twig',
       $adminThemePath . '.libraries.yml',
       $adminThemeParameters
     );
 
     $this->renderFile(
-      'combawa-admin-theme/base.css.twig',
+      'combawa-admin-theme/' . $this->core_version . '/base.css.twig',
       dirname($adminThemePath) . '/css/' . $machine_name . '.css',
       $adminThemeParameters
     );
 
     // Blocks configuration.
     $config_folder = $parameters['config_folder'];
-    $dir = opendir(self::TPL_DIR . '/combawa-admin-theme/config/blocks');
+    $dir = opendir(self::TPL_DIR . '/combawa-admin-theme/' . $this->core_version . '/config/blocks');
     while ($file = readdir($dir)) {
       if ($file[0] === '.') {
         continue;
@@ -157,7 +162,7 @@ class ProjectGenerator extends Generator {
 
       $block_id = substr($file, 0, -1 * strlen('.yml.twig'));
       $this->renderFile(
-        'combawa-admin-theme/config/blocks/' . $file,
+        'combawa-admin-theme/' . $this->core_version . '/config/blocks/' . $file,
         $config_folder . '/block.block.' . $machine_name . '_admin_theme_' . $block_id . '.yml',
         $adminThemeParameters
       );
@@ -175,7 +180,7 @@ class ProjectGenerator extends Generator {
 
     $this->checkDir(($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_theme');
 
-    $defaultThemePath = ($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_theme' . '/' . $machine_name . '_theme';
+    $defaultThemePath = ($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_theme';
     $defaultThemeParameters = [
       'profile' => $parameters['name'],
       'theme' => $parameters['name'],
@@ -183,78 +188,78 @@ class ProjectGenerator extends Generator {
     ];
 
     $this->renderFile(
-      'combawa-theme/gitignore.twig',
+      'combawa-theme/' . $this->core_version . '/gitignore.twig',
       dirname($defaultThemePath) . '/.gitignore',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'combawa-theme/gulpfile.js.twig',
+      'combawa-theme/' . $this->core_version . '/gulpfile.js.twig',
       dirname($defaultThemePath) . '/gulpfile.js',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'combawa-theme/info.yml.twig',
+      'combawa-theme/' . $this->core_version . '/info.yml.twig',
       $defaultThemePath . '.info.yml',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'combawa-theme/libraries.yml.twig',
+      'combawa-theme/' . $this->core_version . '/libraries.yml.twig',
       $defaultThemePath . '.libraries.yml',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'combawa-theme/theme.twig',
+      'combawa-theme/' . $this->core_version . '/theme.twig',
       $defaultThemePath . '.theme',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'combawa-theme/package.json.twig',
+      'combawa-theme/' . $this->core_version . '/package.json.twig',
       dirname($defaultThemePath) . '/package.json',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'combawa-theme/readme.twig',
+      'combawa-theme/' . $this->core_version . '/readme.twig',
       dirname($defaultThemePath) . '/README.md',
       $defaultThemeParameters
     );
 
     // Assets.
     $this->renderFile(
-      'combawa-theme/global.js.twig',
+      'combawa-theme/' . $this->core_version . '/global.js.twig',
       dirname($defaultThemePath) . '/assets-src/js/global.js',
       $defaultThemeParameters
     );
 
     // Copy the entire sass directory as we don't need any variable replacement.
-    $this->getFs()->mirror(self::TPL_DIR . '/combawa-theme/sass', dirname($defaultThemePath) . '/assets-src/sass');
+    $this->getFs()->mirror(self::TPL_DIR . '/combawa-theme/' . $this->core_version . '/sass', dirname($defaultThemePath) . '/assets-src/sass');
     $this->trackGeneratedDirectory(dirname($defaultThemePath) . '/assets-src/sass');
 
     // Copy the entire templates directory as we don't need any variable
     // replacement.
-    $this->getFs()->mirror(self::TPL_DIR . '/combawa-theme/templates', dirname($defaultThemePath) . '/templates');
+    $this->getFs()->mirror(self::TPL_DIR . '/combawa-theme/' . $this->core_version, dirname($defaultThemePath) . '/templates');
     $this->trackGeneratedDirectory(dirname($defaultThemePath) . '/templates');
 
     // Gitkeeps.
-    $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/assets-src/fonts/.gitkeep');
-    $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/assets-src/images/.gitkeep');
+    $this->renderFile('combawa-theme/' . $this->core_version . '/gitkeep.twig', dirname($defaultThemePath) . '/assets-src/fonts/.gitkeep');
+    $this->renderFile('combawa-theme/' . $this->core_version . '/gitkeep.twig', dirname($defaultThemePath) . '/assets-src/images/.gitkeep');
 
-    $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/dist/css/.gitkeep');
-    $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/dist/fonts/.gitkeep');
-    $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/dist/images/.gitkeep');
-    $this->renderFile('combawa-theme/gitkeep.twig', dirname($defaultThemePath) . '/dist/js/.gitkeep');
+    $this->renderFile('combawa-theme/' . $this->core_version . '/gitkeep.twig', dirname($defaultThemePath) . '/dist/css/.gitkeep');
+    $this->renderFile('combawa-theme/' . $this->core_version . '/gitkeep.twig', dirname($defaultThemePath) . '/dist/fonts/.gitkeep');
+    $this->renderFile('combawa-theme/' . $this->core_version . '/gitkeep.twig', dirname($defaultThemePath) . '/dist/images/.gitkeep');
+    $this->renderFile('combawa-theme/' . $this->core_version . '/gitkeep.twig', dirname($defaultThemePath) . '/dist/js/.gitkeep');
 
     // Safety.
-    $this->renderFile('combawa-theme/htaccess.deny.twig', dirname($defaultThemePath) . '/assets-src/.htaccess');
+    $this->renderFile('combawa-theme/' . $this->core_version . '/htaccess.deny.twig', dirname($defaultThemePath) . '/assets-src/.htaccess');
 
     // Blocks configuration.
     $config_folder = $parameters['config_folder'];
-    $dir = opendir(self::TPL_DIR . '/combawa-theme/config/blocks');
+    $dir = opendir(self::TPL_DIR . '/combawa-theme/' . $this->core_version . '/config/blocks');
     while ($file = readdir($dir)) {
       if ($file[0] === '.') {
         continue;
@@ -262,7 +267,7 @@ class ProjectGenerator extends Generator {
 
       $block_id = substr($file, 0, -1 * strlen('.yml.twig'));
       $this->renderFile(
-        'combawa-theme/config/blocks/' . $file,
+        'combawa-theme/' . $this->core_version . '/config/blocks/' . $file,
         $config_folder . '/block.block.' . $machine_name . '_theme_' . $block_id . '.yml',
         $defaultThemeParameters
       );
@@ -324,7 +329,7 @@ class ProjectGenerator extends Generator {
       'production_url' => $parameters['url'],
     ];
 
-    $dir = opendir(self::TPL_DIR . '/combawa-build');
+    $dir = opendir(self::TPL_DIR . '/combawa-build/' . $this->core_version . '');
     while ($file = readdir($dir)) {
       if ($file[0] === '.') {
         continue;
@@ -332,7 +337,7 @@ class ProjectGenerator extends Generator {
 
       $destination_file = substr($file, 0, -1 * strlen('.twig'));
       $this->renderFile(
-        'combawa-build/' . $file,
+        'combawa-build/' . $this->core_version . '/' . $file,
         $scripts_folder . '/' . $destination_file,
         $buildParameters
       );
