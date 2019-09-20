@@ -52,3 +52,16 @@ You can build your project by running `composer build`.
 ## Wrapper
 
 If you are using this script accross different projects, you should use the Combawa wrapper (https://github.com/Happyculture/combawa-wrapper) that works as the Drush wrapper. One global command to run the Combawa build without targetting the `vendor/bin/combawa` binary.
+
+## Troubleshooting
+
+If you encounter the following error:
+
+```
+  [InvalidArgumentException]                              
+  Package type "drupal-console-library" is not supported 
+```
+
+Add this line to the `composer.json` file to specify the package location in the `extra` > `installer-paths` section.
+
+`"vendor/{$vendor}/{$name}": ["type:drupal-console-library"]`
