@@ -231,23 +231,29 @@ if [ "$COMBAWA_BUILD_MODE" == "install" ]; then
   echo "Start the installation..."
   source $APP_SCRIPTS_DIR/install.sh
   if [[ $? != 0 ]]; then
-    echo "The install.sh generated an error. Check the logs."
+    echo -e "${RED}The install.sh generated an error. Check the logs.${NC}"
     exit $?
   fi
+  echo -e "${GREEN}Install... OK!${NC}"
+  echo -e ""
 elif [ "$COMBAWA_BUILD_MODE" == "pull" ]; then
   echo "Start the local update..."
   source $APP_SCRIPTS_DIR/pull.sh
   if [[ $? != 0 ]]; then
-    echo "The pull.sh generated an error. Check the logs."
+    echo -e "${RED}The pull.sh generated an error. Check the logs.${NC}"
     exit $?
   fi
+  echo -e "${GREEN}Pull... OK!${NC}"
+  echo -e ""
 elif [ "$COMBAWA_BUILD_MODE" == "update" ]; then
   echo "Start the update..."
   source $APP_SCRIPTS_DIR/update.sh
   if [[ $? != 0 ]]; then
-    echo "The update.sh generated an error. Check the logs."
+    echo -e "${RED}The update.sh generated an error. Check the logs.${NC}"
     exit $?
   fi
+  echo -e "${GREEN}Update... OK!${NC}"
+  echo -e ""
 fi
 
 # Run the potential actions to do post deployment.
