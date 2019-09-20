@@ -62,6 +62,11 @@ class GenerateProjectCommand extends Command {
       ->setAliases(['cgp'])
       ->setDescription('Generate an install profile, a default theme and an admin theme.')
       ->addOption(
+        'core',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'Drupal core version built (Drupal 7, Drupal 8).'
+      )->addOption(
         'name',
         null,
         InputOption::VALUE_REQUIRED,
@@ -109,6 +114,7 @@ class GenerateProjectCommand extends Command {
     $url = $this->validateUrl($input->getOption('url'));
     $config_folder = $this->validatePath($input->getOption('config-folder'));
     $generate_config = (bool) $input->getOption('generate-config');
+    $core_version = $this->extractCoreVersion($input->getOption('core'));
     $theme_folder = 'themes/custom';
     $profiles_folder = 'profiles';
 
@@ -117,6 +123,7 @@ class GenerateProjectCommand extends Command {
     $recap_gen_config = $generate_config ? 'Yes' : 'No';
 
     $recap_params = [
+      ['Core version', $core_version],
       ['Name', $name],
       ['Machine name', $machine_name],
       ['URL', $url],
@@ -137,6 +144,7 @@ class GenerateProjectCommand extends Command {
     }
 
     $this->generator->generate([
+      'core' => $core_version,
       'name' => $name,
       'machine_name' => $machine_name,
       'generate_build' => $generate_build,
@@ -152,6 +160,25 @@ class GenerateProjectCommand extends Command {
    * {@inheritdoc}
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
+    // Identify the Drupal version built.
+    try {
+      $core_version = $input->getOption('core') ? $input->getOption('core') : null;
+      if (empty($core_version)) {
+        $core_version = $this->getIo()->choice(
+          'With which version of Drupal will you run this project?',
+          ['Drupal 7', 'Drupal 8'],
+          'Drupal 8'
+        );
+        $input->setOption('core', $core_version);
+      }
+      else if (!in_array($core_version, [7, 8])) {
+        throw new \InvalidArgumentException(sprintf('Invalid version "%s" specified (only 7 or 8 are supported at the moment).', $core_version));
+      }
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+      return 1;
+    }
+
     try {
       // A profile is technically also a module, so we can use the same
       // validator to check the name.
@@ -357,4 +384,14 @@ class GenerateProjectCommand extends Command {
     return $url;
   }
 
+  /**
+   * @param $core_version
+   */
+  protected function extractCoreVersion($core_version) {
+    $matches = [];
+    if (preg_match('`^Drupal ([0-9]+)$`', $core_version, $matches)) {
+      $core_version = $matches[1];
+    }
+    return $core_version;
+  }
 }
