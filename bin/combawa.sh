@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Return error codes if they happen.
-set -e
+# Catch all errors.
+set -euo pipefail
+IFS=$'\n\t'
 
 # Working directory.
 # Helper to let you run the install script from anywhere.
