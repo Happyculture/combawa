@@ -8,6 +8,15 @@ services:
     arguments: ['@combawa.generator.project', '@console.string_converter', '@app.root']
     tags:
       - { name: drupal.command, bootstrap: uninstall }
+  combawa.generator.build:
+    class: \Drupal\Console\Combawa\Generator\BuildGenerator
+    tags:
+      - { name: drupal.generator, bootstrap: uninstall }
+  combawa.generate_build:
+    class: \Drupal\Console\Combawa\Command\GenerateBuildCommand
+    arguments: ['@combawa.generator.build', '@console.string_converter', '@app.root']
+    tags:
+      - { name: drupal.command, bootstrap: uninstall }
   combawa.generator.environment:
     class: \Drupal\Console\Combawa\Generator\EnvironmentGenerator
     tags:
