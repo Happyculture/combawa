@@ -38,3 +38,32 @@ notify() {
   fi
   exit
 }
+
+# Load dump function.
+load_dump() {
+  if [ -f "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
+    $DRUSH sql-drop -y;
+    echo -e "${GREEN}DB drop... OK!${NC}"
+    echo -e ""
+
+    echo -e "${BLUE}Importing the new DB...${NC}"
+    echo -e "${YELLOW}Decompressing file...${NC}"
+    gzip -dkf $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz
+    echo -e "${GREEN}Done!${NC}"
+    if hash pv 2>/dev/null; then
+      pv --progress --name 'DB Import in progress' -tea "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME" | $DRUSH sqlc
+    else
+      echo -e "${YELLOW}DB Import in progress...${NC}"
+      $DRUSH sqlc < "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME"
+    fi
+    echo -e "${GREEN}Done!${NC}"
+    echo -e "${YELLOW}Removing tempory sql file...${NC}"
+    rm -f $APP_ROOT/$COMBAWA_DUMP_FILE_NAME
+    echo -e "${GREEN}Done!${NC}"
+    echo -e "${GREEN}DB import... OK!${NC}"
+    echo -e ""
+  else
+    echo "${RED}Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found.${NC}"
+    exit 1;
+  fi
+}

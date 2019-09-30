@@ -27,51 +27,13 @@ case $COMBAWA_ENV in
   dev)
     # In update mode, load the reference dump if it exists.
     if [ "$COMBAWA_BUILD_MODE" == "update" ]; then
-      if [ -f "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
-        $DRUSH sql-drop -y;
-        echo -e "${GREEN}DB drop... OK!${NC}"
-        echo -e ""
-
-        echo -e "${BLUE}Importing the new DB...${NC}"
-        echo -e "${YELLOW}Decompressing file...${NC}"
-        gzip -dkf $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz
-        echo -e "${GREEN}Done!${NC}"
-        pv --progress --name 'DB Import in progress' -tea "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME" | $DRUSH sqlc
-        echo -e "${GREEN}Done!${NC}"
-        echo -e "${YELLOW}Removing tempory sql file...${NC}"
-        rm -f $APP_ROOT/$COMBAWA_DUMP_FILE_NAME
-        echo -e "${GREEN}Done!${NC}"
-        echo -e "${GREEN}DB import... OK!${NC}"
-        echo -e ""
-      else
-        echo "${RED}Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found.${NC}"
-        exit 1;
-      fi
+      load_dump
     fi
     ;;
   recette|preprod)
     # In update mode, load the reference dump if it exists.
     if [ "$COMBAWA_BUILD_MODE" == "update" ]; then
-      if [ -f "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
-        $DRUSH sql-drop -y;
-        echo -e "${GREEN}DB drop... OK!${NC}"
-        echo -e ""
-
-        echo -e "${BLUE}Importing the new DB...${NC}"
-        echo -e "${YELLOW}Decompressing file...${NC}"
-        gzip -dkf $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz
-        echo -e "${GREEN}Done!${NC}"
-        pv --progress --name 'DB Import in progress' -tea "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME" | $DRUSH sqlc
-        echo -e "${GREEN}Done!${NC}"
-        echo -e "${YELLOW}Removing tempory sql file...${NC}"
-        rm -f $APP_ROOT/$COMBAWA_DUMP_FILE_NAME
-        echo -e "${GREEN}Done!${NC}"
-        echo -e "${GREEN}DB import... OK!${NC}"
-        echo -e ""
-      else
-        echo "${RED}Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found.${NC}"
-        exit 1;
-      fi
+      load_dump
     fi
     ;;
   prod)
