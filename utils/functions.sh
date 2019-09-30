@@ -39,6 +39,24 @@ notify() {
   exit
 }
 
+# Download dump function.
+download_dump() {
+  echo -e "${BLUE}Updating the reference dump.${NC}"
+  if [ -z "$COMBAWA_SSH_CONFIG_NAME" ]; then
+    echo -e "${YELLOW}Copying locally the dump file.${NC}"
+    cp $COMBAWA_PROD_DB_DUMP_PATH "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
+    echo -e "${GREEN}Done!${NC}"
+  else
+    echo -e "${YELLOW}Fetching the dump from remote source...${NC}"
+    scp $COMBAWA_SSH_CONFIG_NAME:$COMBAWA_PROD_DB_DUMP_PATH "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
+    echo -e "${GREEN}Done!${NC}"
+  fi
+  if [[ $? != 0 ]]; then
+    echo -e "${RED}Impossible to retrieve the dump file. Verify the file name.${NC}"
+    exit 1
+  fi
+}
+
 # Load dump function.
 load_dump() {
   if [ -f "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
