@@ -143,7 +143,7 @@ class ProjectGenerator extends Generator {
 
     $this->renderFile(
       'combawa-admin-theme/base.css.twig',
-      dirname($adminThemePath) . '/css/' . $machine_name . '.css',
+      dirname($adminThemePath) . '/css/' . $adminThemeParameters['machine_name'] . '.css',
       $adminThemeParameters
     );
 
