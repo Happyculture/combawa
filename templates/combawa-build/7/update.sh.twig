@@ -1,0 +1,25 @@
+#!/bin/bash
+# Actions run when the script is in update mode.
+# Available variables are defined in settings.sh or .env files.
+
+# Return error codes if they happen.
+set -xe
+
+# Flush drush cache to identify new commands such as rr.
+$DRUSH cc drush
+
+# Enable the maintenance mode.
+$DRUSH vset maintenance_mode 1
+$DRUSH cc all
+
+# Run the DB updates.
+$DRUSH updb
+$DRUSH cc all
+
+# Revert the features to their default state.
+$DRUSH fra
+$DRUSH cc all
+
+# Remove the maintenance page.
+$DRUSH vset maintenance_mode 0
+$DRUSH cc all

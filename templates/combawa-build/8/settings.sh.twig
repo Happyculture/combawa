@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+##### PRODUCTION project settings.
+# All these settings can still be overridden by, a .env file. Some can also be
+# overridden by the command line parameters.
+# All variables defined here will be available in the other scripts.
+
+# Default environment is prod.
+COMBAWA_ENV=prod
+
+# Default build mode. Can be install or update.
+COMBAWA_BUILD_MODE=install
+
+# Backup base before build.
+COMBAWA_BACKUP_BASE=1
+
+# Default URI.
+COMBAWA_WEBSITE_URI={{ production_url }}
+
+# Default dump fetching. Always disabled for production.
+# Run `drupal combawa:generate-environment` to set them locally.
+COMBAWA_FETCH_DB_DUMP=0
+COMBAWA_SSH_CONFIG_NAME=""
+COMBAWA_PROD_DB_DUMP_PATH=""
+COMBAWA_DUMP_FILE_NAME=""

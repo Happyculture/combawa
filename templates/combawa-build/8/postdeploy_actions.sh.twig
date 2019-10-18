@@ -1,0 +1,32 @@
+#!/bin/bash
+# Action to run after the main and shared deployment actions.
+# It can be useful to enable specific modules for instance.
+# Available variables are defined in settings.sh.
+
+# Return error codes if they happen.
+set -e
+
+PROFILE={{ machine_name }}
+THEME={{ machine_name }}_theme
+
+case $COMBAWA_ENV in
+  dev)
+    # Rebuild search indexes.
+#    $DRUSH sapi-r
+#    $DRUSH sapi-i
+
+    # Connect.
+    $DRUSH uli
+    ;;
+  recette|preprod)
+    # Rebuild search indexes.
+#    $DRUSH sapi-r
+#    $DRUSH sapi-i
+    ;;
+  prod)
+    ;;
+  *)
+    echo "Unknown environment: $COMBAWA_ENV. Please check your name."
+    exit 1;
+esac
+

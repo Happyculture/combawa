@@ -1,0 +1,31 @@
+#!/bin/bash
+# Actions to run before the main and shared deployment actions.
+# It can be useful to backup, import databases or doing something similar.
+# Available variables are defined in settings.sh.
+
+# Return error codes if they happen.
+set -e
+
+if [ "$COMBAWA_FETCH_DB_DUMP" == "1" ] ; then
+  download_dump
+fi
+
+case $COMBAWA_ENV in
+  dev)
+    # In update mode, load the reference dump if it exists.
+    if [ "$COMBAWA_BUILD_MODE" == "update" ]; then
+      load_dump
+    fi
+    ;;
+  recette|preprod)
+    # In update mode, load the reference dump if it exists.
+    if [ "$COMBAWA_BUILD_MODE" == "update" ]; then
+      load_dump
+    fi
+    ;;
+  prod)
+    ;;
+  *)
+    echo -e "${RED}Unknown environment: $COMBAWA_ENV. Please check your name.${NC}"
+    exit 1;
+esac
