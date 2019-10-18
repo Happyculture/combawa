@@ -9,6 +9,10 @@ set -e
 PROFILE={{ machine_name }}
 THEME={{ machine_name }}_theme
 
+# Update translations.
+$DRUSH locale:check
+$DRUSH locale:update
+
 case $COMBAWA_ENV in
   dev)
     # Rebuild search indexes.

@@ -2,7 +2,6 @@
 
 # Catch all errors.
 set -euo pipefail
-IFS=$'\n\t'
 
 # Working directory.
 # Helper to let you run the install script from anywhere.
@@ -80,6 +79,7 @@ if [ $COMBAWA_WEBSITE_URI ]; then
 fi
 
 # Set the arguments value.
+set +u
 while [[ $1 ]]
 do
   key="$1"
@@ -187,6 +187,7 @@ do
     shift
   fi
 done
+set -u
 
 source $UTILS_DIR/prerequisites.sh
 
