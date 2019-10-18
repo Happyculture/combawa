@@ -1,15 +1,11 @@
 ![Logo Combawa](logo_combawa.png)
 
-* **Combawa**
-* **Installation**
-* **Building projects**
-* **How to use Combawa**
-* **Combawa options**
-* **Project generator**
-* **Environment generator**
+* **[Combawa](#combawa)**
+* **[Installation](#installation)**
+* **[Usage](#usage)**
+* **[Drupal console commands](#drupal-console-commands)**
 
-# Combawa
-
+# <a name="combawa"></a>Combawa
 Combawa is a bash script that helps you **build** your Drupal projects.
 
 It's compatible with Drupal 8 and 7 and is meant to be used by developers and CI applications.
@@ -18,9 +14,10 @@ You are encouraged to use Combawa as a daily companion to reinstall/update your 
 
 Because Combawa is very cool, you can also use it when you bootstrap your project. Combawa lands with 2 Drupal console commands to help you setup your environment variables and bootstrap your project. See below for details.
 
-## Installation
+## <a name="installation"></a>Installation
 
 - `composer require happyculture/combawa`
+- Use `drupal combawa:generate-build` to initiate your build files.
 - Use `drupal combawa:generate-environment` to setup your environment.
 
 ### Recommanded
@@ -40,7 +37,7 @@ We recommand you to install Drupal console to benefit from scaffolding features 
 
 `composer require drupal/console`
 
-## Usage
+## <a name="usage"></a>Usage
 
 ### Conception & philosophy 
 
@@ -101,8 +98,7 @@ Here is the list of available arguments:
 * `--uri`, `-u`: Local URL of your project. Used when the final drush uli command is runned.
 * `--fetch-db-dump`, `-f`: Fetch a fresh DB dump from the production site. Used when the reference dump should be updated.
 
-## Drupal console commands
-
+## <a name="drupal-console-commands"></a>Drupal console commands
 
 ### Environment generator
 
