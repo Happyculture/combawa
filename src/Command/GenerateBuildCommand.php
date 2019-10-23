@@ -59,6 +59,12 @@ class GenerateBuildCommand extends Command {
       ->setAliases(['cgb'])
       ->setDescription('Generate build scripts.')
       ->addOption(
+        'core',
+        null,
+        InputOption::VALUE_REQUIRED,
+	'Drupal core version built (Drupal 7, Drupal 8).'
+      )
+      ->addOption(
         'name',
         null,
         InputOption::VALUE_REQUIRED,
@@ -85,8 +91,10 @@ class GenerateBuildCommand extends Command {
     $name = $this->validateName($input->getOption('name'));
     $machine_name = $this->validateMachineName($input->getOption('machine-name'));
     $url = $this->validateUrl($input->getOption('url'));
+    $core_version = $this->extractCoreVersion($input->getOption('core'));
 
     $recap_params = [
+      ['Core Version', $core_version],
       ['Name', $name],
       ['Machine name', $machine_name],
       ['URL', $url],
@@ -102,6 +110,7 @@ class GenerateBuildCommand extends Command {
     }
 
     $this->generator->generate([
+      'core' => $core_version,
       'name' => $name,
       'machine_name' => $machine_name,
       'url' => $url,
@@ -112,6 +121,25 @@ class GenerateBuildCommand extends Command {
    * {@inheritdoc}
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
+    // Identify the Drupal version built.
+    try {
+      $core_version = $input->getOption('core') ? $input->getOption('core') : null;
+      if (empty($core_version)) {
+        $core_version = $this->getIo()->choice(
+          'With which version of Drupal will you run this project?',
+          ['Drupal 7', 'Drupal 8'],
+          'Drupal 8'
+        );
+        $input->setOption('core', $core_version);
+      }
+      else if (!in_array($core_version, [7, 8])) {
+        throw new \InvalidArgumentException(sprintf('Invalid version "%s" specified (only 7 or 8 are supported at the moment).', $core_version));
+      }
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+      return 1;
+    }
+	      
     try {
       // A profile is technically also a module, so we can use the same
       // validator to check the name.
@@ -241,6 +269,17 @@ class GenerateBuildCommand extends Command {
       );
     }
     return $url;
+  }
+
+  /**
+   * @param $core_version
+   */
+  protected function extractCoreVersion($core_version) {
+    $matches = [];
+    if (preg_match('`^Drupal ([0-9]+)$`', $core_version, $matches)) {
+      $core_version = $matches[1];
+    }
+    return $core_version;
   }
 
 }
