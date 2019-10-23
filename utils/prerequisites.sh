@@ -1,95 +1,72 @@
 #!/usr/bin/env bash
 
-echo -e ""
-echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+#################################
+section_separator
+#################################
 
 # Check predeploy action script.
-echo -e ""
-echo -e "${BLUE}Verifying predeploy action script.${NC}"
+message_step "Verifying predeploy action script."
 if [ ! -f "$APP_SCRIPTS_DIR/predeploy_actions.sh" ]; then
-  echo -e "${YELLOW}There is no predeploy actions script at the moment or its not readable.${NC}"
-  echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
-  echo ""
-  exit -1
+  notify_error "There is no predeploy actions script at the moment or its not readable." "You should run the following command to initialize it: 'drupal combawa:generate-project'."
 fi
-echo -e "${GREEN}Predeploy actions script... OK!${NC}"
 
-echo -e ""
-echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+#################################
+section_separator
+#################################
 
 # Check postdeploy actions script.
-echo -e ""
-echo -e "${BLUE}Verifying postdeploy action script.${NC}"
+message_step "Verifying postdeploy action script."
 if [ ! -f "$APP_SCRIPTS_DIR/postdeploy_actions.sh" ]; then
-  echo -e "${YELLOW}There is no postdeploy actions script at the moment or its not readable.${NC}"
-  echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
-  echo ""
-  exit -1
+  notify_error "There is no postdeploy actions script at the moment or its not readable." "You should run the following command to initialize it: 'drupal combawa:generate-project'."
 fi
-echo -e "${GREEN}Postdeploy actions script... OK!${NC}"
+message_confirm "Postdeploy actions script... OK!"
 
-echo -e ""
-echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+#################################
+section_separator
+#################################
 
 # Preliminary verification to avoid running actions
 # if the requiprements are not met.
 case $COMBAWA_BUILD_MODE in
   "install" )
-    echo -e ""
-    echo -e "${BLUE}Verifying install.sh action script.${NC}"
+    message_step "Verifying install.sh action script."
     if [ ! -f "$APP_SCRIPTS_DIR/install.sh" ]; then
-      echo -e "${YELLOW}There is no <app>/scripts/install.sh script at the moment or its not readable.${NC}"
-      echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
-      echo ""
-      exit -1
+      notify_error "There is no <app>/scripts/install.sh script at the moment or its not readable." "You should run the following command to initialize it: 'drupal combawa:generate-project'."
     fi
-    echo -e "${GREEN}Install.sh check... OK!${NC}"
+    message_confirm "Install.sh check... OK!"
     ;;
   "update" )
-    echo -e ""
-    echo -e "${BLUE}Verifying update.sh action script.${NC}"
+    message_step "Verifying update.sh action script."
     if [ ! -f "$APP_SCRIPTS_DIR/update.sh" ]; then
-      echo -e "${YELLOW}There is no <app>/scripts/update.sh script at the moment or its not readable.${NC}"
-      echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
-      echo ""
-      exit -1
+      notify_error "There is no <app>/scripts/update.sh script at the moment or its not readable." "You should run the following command to initialize it: 'drupal combawa:generate-project'."
     fi
-    echo -e "${GREEN}Update.sh check... OK!${NC}"
+    message_confirm "Update.sh check... OK!"
     ;;
   "pull" )
-    echo -e ""
-    echo -e "${BLUE}Verifying pull.sh action script.${NC}"
+    message_step "Verifying pull.sh action script."
     if [ ! -f "$APP_SCRIPTS_DIR/pull.sh" ]; then
-      echo -e "${YELLOW}There is no <app>/scripts/pull.sh script at the moment or its not readable.${NC}"
-      echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
-      echo ""
-      exit -1
+      notify_error "There is no <app>/scripts/pull.sh script at the moment or its not readable." "You should run the following command to initialize it: 'drupal combawa:generate-project'."
     fi
-    echo -e "${GREEN}Pull.sh check... OK!${NC}"
+    message_confirm "Pull.sh check... OK!"
     ;;
   * )
-    echo -e "${RED}Build mode unknown.${NC}"
-    echo ""
-    exit -1
+    notify_error "Build mode unknown."
     ;;
 esac
 
-echo -e ""
-echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+#################################
+section_separator
+#################################
 
 # Test DB connection.
-echo -e ""
-echo -e "${BLUE}Verifying database connectivity.${NC}"
+message_step "Verifying database connectivity."
 {
   $DRUSH sql-connect
 } &> /dev/null || { # catch
-  echo -e "${RED}The connection to the database is impossible.${NC}"
-  echo ""
-  exit -2
+  notify_error "The connection to the database is impossible."
 }
+message_confirm "DB connection... OK!"
 
-echo -e "${GREEN}DB connection... OK!${NC}"
-
-echo -e ""
-echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-echo -e ""
+#################################
+section_separator
+#################################
