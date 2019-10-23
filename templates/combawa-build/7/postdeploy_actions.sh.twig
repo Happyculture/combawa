@@ -26,6 +26,5 @@ case $COMBAWA_ENV in
   prod)
     ;;
   *)
-    echo "Unknown environment: $COMBAWA_ENV. Please check your name."
-    exit 1;
+    notify_error "Unknown environment: $COMBAWA_ENV. Please check your name."
 esac
