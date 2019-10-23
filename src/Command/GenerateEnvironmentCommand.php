@@ -51,6 +51,12 @@ class GenerateEnvironmentCommand extends Command {
       ->setAliases(['cge'])
       ->setDescription('Generate the project .env file.')
       ->addOption(
+        'core',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'Drupal core version built (Drupal 7, Drupal 8).'
+      )
+      ->addOption(
         'environment',
         null,
         InputOption::VALUE_REQUIRED,
@@ -137,6 +143,7 @@ class GenerateEnvironmentCommand extends Command {
       'db_name' => $input->getOption('db-name'),
       'db_user' => $input->getOption('db-user'),
       'db_password' => $input->getOption('db-password'),
+      'core' => $this->extractCoreVersion($input->getOption('core')),
       'environment_url' => '',
       'backup_base' => 1,
       'fetch_dump' => 0,
@@ -170,6 +177,7 @@ class GenerateEnvironmentCommand extends Command {
 
     $recap_params = [
       ['App root', $generateParams['app_root']],
+      ['Core Version', $generateParams['core']],
       ['Environment', $generateParams['environment']],
       ['DB Host', $generateParams['db_host']],
       ['DB Port', $generateParams['db_port']],
@@ -202,6 +210,25 @@ class GenerateEnvironmentCommand extends Command {
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
     $envVars = getenv();
+
+    // Identify the Drupal version built.
+    try {
+      $core_version = $input->getOption('core') ? $input->getOption('core') : null;
+      if (empty($core_version)) {
+        $core_version = $this->getIo()->choice(
+          'With which version of Drupal will you run this project?',
+          ['Drupal 7', 'Drupal 8'],
+          'Drupal 8'
+        );
+        $input->setOption('core', $core_version);
+      }
+      else if (!in_array($core_version, [7, 8])) {
+        throw new \InvalidArgumentException(sprintf('Invalid version "%s" specified (only 7 or 8 are supported at the moment).', $core_version));
+      }
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+      return 1;
+    }
 
     try {
       $environment = $input->getOption('environment') ? $this->validateEnvironment($input->getOption('environment')) : null;
@@ -454,6 +481,17 @@ class GenerateEnvironmentCommand extends Command {
       );
     }
     return $url;
+  }
+
+  /**
+   * @param $core_version
+   */
+  protected function extractCoreVersion($core_version) {
+    $matches = [];
+    if (preg_match('`^Drupal ([0-9]+)$`', $core_version, $matches)) {
+      $core_version = $matches[1];
+    }
+    return $core_version;
   }
 
 }
