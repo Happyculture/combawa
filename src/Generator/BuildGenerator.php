@@ -16,6 +16,7 @@ class BuildGenerator extends ProjectGenerator {
    */
   public function generate(array $parameters) {
     $parameters['generate_build'] = TRUE;
+    $this->core_version = $parameters['core'];
     $this->generateBuild($parameters);
   }
 
