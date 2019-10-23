@@ -61,8 +61,8 @@ echo -e ""
 
 # Check project settings are set.
 if [ ! -f "$APP_SCRIPTS_DIR/settings.sh" ]; then
-  echo -e "${RED}There is no settings file at the moment or its not readable.${NC}"
-  echo -e "${ORANGE}You should run the following command to initialize it: 'drupal combawa:generate-project'.${NC}"
+  message_error "There is no settings file at the moment or its not readable."
+  message_warning "You should run the following command to initialize it: 'drupal combawa:generate-project'."
   exit -1
 fi
 
@@ -93,14 +93,11 @@ do
             SOURCE_ENV=$COMBAWA_ENV
             COMBAWA_ENV="$2"
 
-            echo -e "${YELLOW}Environment overriden:${NC}"
-            echo -e "From ${LIGHT_RED}$SOURCE_ENV${NC} to ${LIGHT_GREEN}$2${NC}"
+            message_action "Environment overriden:"
+            message_override "$SOURCE_ENV" "$COMBAWA_ENV"
             ;;
           *)
-            COMBAWA_MESSAGE="Unknown environment: $2. Please check your name."
-            echo -e "${RED}$COMBAWA_MESSAGE${NC}"
-            notify "$COMBAWA_MESSAGE"
-            exit 1
+            notify_error "Unknown environment: $2. Please check your name."
         esac
         shift
         ;;
@@ -109,13 +106,10 @@ do
         COMBAWA_BUILD_MODE="$2"
 
         if [ $2 != "install" ] && [ $2 != "update" ] && [ $2 != "pull" ] ; then
-          COMBAWA_MESSAGE="Invalid build mode."
-          echo -e "${RED}$COMBAWA_MESSAGE${NC}"
-          notify "$COMBAWA_MESSAGE"
-          exit 1
+          notify_error "Invalid build mode."
         fi;
-        echo -e "${YELLOW}Build mode overriden:${NC}"
-        echo -e "From ${LIGHT_RED}$SOURCE_BUILD_MODE${NC} to ${LIGHT_GREEN}$2${NC}"
+        message_action "Build mode overriden:"
+        message_override "$SOURCE_BUILD_MODE" "$COMBAWA_BUILD_MODE"
         shift
         ;;
       -b|--backup)
@@ -123,15 +117,11 @@ do
         COMBAWA_BACKUP_BASE="$2"
 
         if [ $2 != "0" ] && [ $2 != "1" ] ; then
-          COMBAWA_MESSAGE="Invalid backup flag."
-          echo -e "${RED}$COMBAWA_MESSAGE${NC}"
-          echo -e "${ORANGE}Only 0 or 1 is valid.${NC}"
-          notify "$COMBAWA_MESSAGE"
-          exit 1
+          notify_error "Invalid backup flag." "Only 0 or 1 is valid."
         fi
 
-        echo -e "${YELLOW}Backup base overriden:${NC}"
-        echo -e "From ${LIGHT_RED}$SOURCE_BACKUP_BASE${NC} to ${LIGHT_GREEN}$2${NC}"
+        message_action "Backup base overriden:"
+        message_override "$SOURCE_BACKUP_BASE" "$COMBAWA_BACKUP_BASE"
         shift
         ;;
       -u|--uri)
@@ -139,14 +129,11 @@ do
         COMBAWA_WEBSITE_URI="$2"
 
         if [ ! $2 ]; then
-          COMBAWA_MESSAGE="URI parameter can not be empty."
-          echo -e "${RED}$COMBAWA_MESSAGE${NC}"
-          notify "$COMBAWA_MESSAGE"
-          exit 1
+          notify_error "URI parameter can not be empty."
         fi
 
-        echo -e "${YELLOW}URI overriden:${NC}"
-        echo -e "From ${LIGHT_RED}$SOURCE_URI${NC} to ${LIGHT_GREEN}$2${NC}"
+        message_action "URI overriden:"
+        message_override "$SOURCE_URI" "$COMBAWA_WEBSITE_URI"
         shift
         ;;
       -h|--help)
@@ -157,22 +144,18 @@ do
         SOURCE_FETCH=$COMBAWA_FETCH_DB_DUMP
         COMBAWA_FETCH_DB_DUMP="$2"
 
-        echo -e "${YELLOW}Fetch DB dump from prod overriden:${NC}"
-        echo -e "From ${LIGHT_RED}$SOURCE_FETCH${NC} to ${LIGHT_GREEN}$2${NC}"
+        message_action "Fetch DB dump from prod overriden:"
+        message_override "$SOURCE_FETCH" "$COMBAWA_FETCH_DB_DUMP"
         echo -e ""
 
         if [ "$COMBAWA_FETCH_DB_DUMP" == "1" ] ; then
           if [[ ! -z "$COMBAWA_SSH_CONFIG_NAME" ]]; then
-            echo -e "${BLUE}Testing connection with remote SSH server from which the dump will be retrieved:${NC}"
+            message_step "Testing connection with remote SSH server from which the dump will be retrieved:"
             ssh -q $COMBAWA_SSH_CONFIG_NAME echo > /dev/null
             if [ "$?" != "0" ] ; then
-              COMBAWA_MESSAGE="Impossible to connect to the production server."
-              echo -e "${RED}$COMBAWA_MESSAGE${NC}"
-              echo -e "${ORANGE}Check your SSH config file. Should you connect through a VPN?${NC}"
-              notify "$COMBAWA_MESSAGE"
-              exit 1
+              notify_error "Impossible to connect to the production server." "Check your SSH config file. Should you connect through a VPN?"
             else
-              echo -e "${GREEN}SSH connection OK.${NC}"
+              message_confirm "SSH connection OK."
             fi
           fi
         fi
@@ -201,16 +184,17 @@ Retrieve DB from prod:\t${LIGHT_CYAN}$COMBAWA_FETCH_DB_DUMP${NC}
 END
 )
 
-echo -e "${BLUE}Build options summary:${NC}"
+message_step "Build options summary:"
 echo -e ""
 if hash column 2>/dev/null; then
   echo -e "$USAGE" | column -s $'\t' -t
 else
   echo -e "$USAGE"
 fi
-echo -e ""
-echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-echo -e ""
+
+#################################
+section_separator
+#################################
 
 if [ "$COMBAWA_BACKUP_BASE" == "1" ] ; then
   # Store a security backup in case the update doesn't go right.
@@ -232,28 +216,28 @@ if [ "$COMBAWA_BUILD_MODE" == "install" ]; then
   echo "Start the installation..."
   source $APP_SCRIPTS_DIR/install.sh
   if [[ $? != 0 ]]; then
-    echo -e "${RED}The install.sh generated an error. Check the logs.${NC}"
+    message_error "The install.sh generated an error. Check the logs."
     exit $?
   fi
-  echo -e "${GREEN}Install... OK!${NC}"
+  message_confirm "Install... OK!"
   echo -e ""
 elif [ "$COMBAWA_BUILD_MODE" == "pull" ]; then
   echo "Start the local update..."
   source $APP_SCRIPTS_DIR/pull.sh
   if [[ $? != 0 ]]; then
-    echo -e "${RED}The pull.sh generated an error. Check the logs.${NC}"
+    message_error "The pull.sh generated an error. Check the logs."
     exit $?
   fi
-  echo -e "${GREEN}Pull... OK!${NC}"
+  message_confirm "Pull... OK!"
   echo -e ""
 elif [ "$COMBAWA_BUILD_MODE" == "update" ]; then
   echo "Start the update..."
   source $APP_SCRIPTS_DIR/update.sh
   if [[ $? != 0 ]]; then
-    echo -e "${RED}The update.sh generated an error. Check the logs.${NC}"
+    message_error "The update.sh generated an error. Check the logs."
     exit $?
   fi
-  echo -e "${GREEN}Update... OK!${NC}"
+  message_confirm "Update... OK!"
   echo -e ""
 fi
 

@@ -1,8 +1,73 @@
 #!/usr/bin/env bash
 
 ########## FUNCTION ##############
+
+# Display messages in specific colors.
+# Arg1: Message string.
+# Arg2: Message color (see colors.sh for available colors).
+message_color()
+{
+  _MESSAGE="$1"
+  _COLOR="$2"
+  echo -e "${_COLOR}${_MESSAGE}${NC}"
+}
+
+# Displays a step message.
+message_step()
+{
+  _MESSAGE="$1"
+  message_color "${_MESSAGE}" "${BLUE}"
+}
+
+# Displays an action message.
+message_action()
+{
+  _MESSAGE="$1"
+  message_color "${_MESSAGE}" "${YELLOW}"
+}
+
+# Displays a confirmation message.
+message_confirm()
+{
+  _MESSAGE="$1"
+  message_color "${_MESSAGE}" "${GREEN}"
+}
+
+# Displays a warning message.
+message_warning()
+{
+  _MESSAGE="$1"
+  message_color "${_MESSAGE}" "${ORANGE}"
+}
+
+# Displays an error message.
+message_error()
+{
+  _MESSAGE="$1"
+  message_color "${_MESSAGE}" "${RED}"
+}
+
+# Display a variable override.
+# Arg 1 is the source value.
+# Arg 2 is the new value.
+message_override()
+{
+  _VAL_SOURCE="$1"
+  _VAL_OVERRIDE="$2"
+  echo -e "From ${LIGHT_RED}${_VAL_SOURCE}${NC} to ${LIGHT_GREEN}${_VAL_OVERRIDE}${NC}"
+}
+
+# Useful to separate build steps.
+section_separator()
+{
+  echo -e ""
+  echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+  echo -e ""
+}
+
 # Help function.
-usage() {
+usage()
+{
   bold=$(tput bold)
   normal=$(tput sgr0)
 
@@ -32,56 +97,78 @@ usage() {
 }
 
 # Notify function.
-notify() {
+notify()
+{
   if hash notify-send 2>/dev/null; then
     notify-send "$1"
   fi
-  exit
+  exit 1
+}
+
+# Notify error.
+notify_error()
+{
+  _MESSAGE="$1"
+  message_error "$_MESSAGE"
+  # Test if we have a suggestion message and display it if so.
+  # Bash is weird, we must test if the second argument is empty (the opposite
+  # test doesn't exist). It means that when we enter in the if, we don't want
+  # to do anything.
+  if [ -z ${2+x} ]; then
+    # We need to use ":" to do nothing (an empty string generates a syntax
+    # error)
+    :
+  else
+    message_warning "$2"
+  fi
+  notify "$_MESSAGE"
 }
 
 # Download dump function.
-download_dump() {
-  echo -e "${BLUE}Updating the reference dump.${NC}"
+download_dump()
+{
+  message_step "Updating the reference dump:"
   if [ -z "$COMBAWA_SSH_CONFIG_NAME" ]; then
-    echo -e "${YELLOW}Copying locally the dump file.${NC}"
+    message_action "Copying locally the dump file..."
     cp $COMBAWA_PROD_DB_DUMP_PATH "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
-    echo -e "${GREEN}Done!${NC}"
+    message_confirm "Done!"
   else
-    echo -e "${YELLOW}Fetching the dump from remote source...${NC}"
+    message_action "Fetching the dump from remote source..."
     scp $COMBAWA_SSH_CONFIG_NAME:$COMBAWA_PROD_DB_DUMP_PATH "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
-    echo -e "${GREEN}Done!${NC}"
+    message_confirm "Done!"
   fi
   if [[ $? != 0 ]]; then
-    echo -e "${RED}Impossible to retrieve the dump file. Verify the file name.${NC}"
+    message_error "Impossible to retrieve the dump file. Verify the file name."
     exit 1
   fi
 }
 
 # Load dump function.
-load_dump() {
+load_dump()
+{
   if [ -f "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
     $DRUSH sql-drop -y;
-    echo -e "${GREEN}DB drop... OK!${NC}"
+    message_confirm "DB drop... OK!"
     echo -e ""
 
-    echo -e "${BLUE}Importing the new DB...${NC}"
-    echo -e "${YELLOW}Decompressing file...${NC}"
+    message_step "Importing the new DB..."
+    message_action "Decompressing file..."
     gzip -dkf $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz
-    echo -e "${GREEN}Done!${NC}"
+    message_confirm "Done!"
     if hash pv 2>/dev/null; then
       pv --progress --name 'DB Import in progress' -tea "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME" | $DRUSH sqlc
     else
-      echo -e "${YELLOW}DB Import in progress...${NC}"
+      message_action "DB Import in progress..."
       $DRUSH sqlc < "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME"
     fi
-    echo -e "${GREEN}Done!${NC}"
-    echo -e "${YELLOW}Removing tempory sql file...${NC}"
+    message_confirm "Done!"
+    message_action "Removing tempory sql file..."
     rm -f $APP_ROOT/$COMBAWA_DUMP_FILE_NAME
-    echo -e "${GREEN}Done!${NC}"
-    echo -e "${GREEN}DB import... OK!${NC}"
+    message_confirm "Done!"
+    message_confirm "DB import... OK!"
     echo -e ""
   else
-    echo "${RED}Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found.${NC}"
+    message_error "Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found."
     exit 1;
   fi
 }
