@@ -9,10 +9,6 @@ set -e
 PROFILE={{ machine_name }}
 THEME={{ machine_name }}_theme
 
-# Update translations.
-$DRUSH locale:check
-$DRUSH locale:update
-
 case $COMBAWA_ENV in
   dev)
     # Rebuild search indexes.
@@ -33,4 +29,3 @@ case $COMBAWA_ENV in
     echo "Unknown environment: $COMBAWA_ENV. Please check your name."
     exit 1;
 esac
-
