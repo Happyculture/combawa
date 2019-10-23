@@ -1,0 +1,14 @@
+<?php
+
+// Environment variables are defined in the .env file at the project root.
+$databases['default']['default'] = [
+  'host' => getenv('COMBAWA_DB_HOSTNAME'),
+  'port' => getenv('COMBAWA_DB_PORT'),
+  'database' => getenv('COMBAWA_DB_DATABASE'),
+  'password' => getenv('COMBAWA_DB_PASSWORD'),
+  'username' => getenv('COMBAWA_DB_USER'),
+  'prefix' => '',
+  'driver' => 'mysql',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+];
+
