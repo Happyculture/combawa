@@ -9,6 +9,7 @@ message_step "Verifying predeploy action script."
 if [ ! -f "$APP_SCRIPTS_DIR/predeploy_actions.sh" ]; then
   notify_error "There is no predeploy actions script at the moment or its not readable." "You should run the following command to initialize it: 'drupal combawa:generate-project'."
 fi
+message_confirm "Predeploy actions script... OK!"
 
 #################################
 section_separator
