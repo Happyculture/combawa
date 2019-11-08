@@ -102,7 +102,8 @@ notify()
   if hash notify-send 2>/dev/null; then
     notify-send "$1"
   fi
-  exit 1
+
+  message_confirm "$1"
 }
 
 # Notify error.
