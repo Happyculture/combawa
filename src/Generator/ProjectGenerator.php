@@ -229,16 +229,10 @@ class ProjectGenerator extends Generator {
       $defaultThemeParameters
     );
 
-    // Assets.
-    $this->renderFile(
-      'combawa-theme/' . $this->core_version . '/global.js.twig',
-      $defaultThemePath . '/assets-src/js/global.js',
-      $defaultThemeParameters
-    );
-
-    // Copy the entire sass directory as we don't need any variable replacement.
-    $this->getFs()->mirror(self::TPL_DIR . '/combawa-theme/' . $this->core_version . '/sass', $defaultThemePath . '/assets-src/sass');
-    $this->trackGeneratedDirectory($defaultThemePath . '/assets-src/sass');
+    // Copy the entire assets-src directory as we don't need any variable
+    // replacement.
+    $this->getFs()->mirror(self::TPL_DIR . '/combawa-theme/' . $this->core_version . '/assets-src', $defaultThemePath . '/assets-src');
+    $this->trackGeneratedDirectory($defaultThemePath . '/assets-src');
 
     // Copy the entire templates directory as we don't need any variable
     // replacement.
