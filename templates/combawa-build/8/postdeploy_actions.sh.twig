@@ -11,6 +11,16 @@ THEME={{ machine_name }}_theme
 
 case $COMBAWA_ENV in
   dev)
+    # Build theme assets.
+    (
+      cd $WEBROOT/themes/custom/$THEME
+      npm install
+      npm run build-dev
+    )
+
+    # Clear assets cache to ensure previously generated files are used.
+    $DRUSH cc css-js
+
     # Rebuild search indexes.
 #    $DRUSH sapi-r
 #    $DRUSH sapi-i
@@ -19,11 +29,30 @@ case $COMBAWA_ENV in
     $DRUSH uli
     ;;
   recette|preprod)
+    # Build theme assets.
+    (
+      cd $WEBROOT/themes/custom/$THEME
+      npm install
+      npm run build
+    )
+
+    # Clear assets cache to ensure previously generated files are used.
+    $DRUSH cc css-js
+
     # Rebuild search indexes.
 #    $DRUSH sapi-r
 #    $DRUSH sapi-i
     ;;
   prod)
+    # Build theme assets.
+    (
+      cd $WEBROOT/themes/custom/$THEME
+      npm install
+      npm run build
+    )
+
+    # Clear assets cache to ensure previously generated files are used.
+    $DRUSH cc css-js
     ;;
   *)
     notify_error "Unknown environment: $COMBAWA_ENV. Please check your name."
