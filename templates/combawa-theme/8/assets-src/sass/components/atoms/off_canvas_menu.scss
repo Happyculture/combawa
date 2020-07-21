@@ -1,0 +1,84 @@
+
+.off-canvas-menu {
+  $root: &;
+
+  &__button {
+    background: none;
+    border: none;
+    text-align: center;
+
+    &__label {
+      display: block;
+    }
+
+    &__icon {
+      display: block;
+      width: 2.4rem;
+      height: 2.4rem;
+      background: url("/core/misc/icons/ffffff/hamburger.svg") center bottom no-repeat;
+      margin: auto;
+    }
+
+    &--close {
+      display: block;
+      float: right;
+
+      & + * {
+        clear: right;
+      }
+
+      #{$root} {
+        &__button__icon {
+          background: url("/core/misc/icons/ffffff/ex.svg") center bottom no-repeat;
+        }
+      }
+    }
+  }
+
+  &__content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 3;
+    padding: 1rem 0 0 1.5rem;
+    text-align: inherit;
+    background-color: $white;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transform: translateX(0);
+    transition: transform .25s ease-in-out;
+
+    &[aria-hidden] {
+      transform: translateX(100%);
+    }
+  }
+
+
+  @include breakpoint(desktop) {
+
+    &__button {
+      display: none;
+    }
+
+    &__content {
+      position: relative;
+      width: 100%;
+      height: auto;
+      padding: 0;
+      background: none;
+      overflow: initial;
+
+      &[aria-hidden] {
+        transform: none;
+      }
+    }
+
+  }
+}
+
+body.menu-displayed {
+  overflow-y: hidden;
+}

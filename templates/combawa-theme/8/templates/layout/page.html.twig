@@ -38,11 +38,12 @@
  */
 #}
 <div class="layout-container">
-
-  {{ page.navigation }}
+  <header role="header" class="layout-header">
+    {{ page.branding }}
+    {{ page.navigation }}
+  </header>
 
   {{ page.highlighted }}
-
   {{ page.help }}
 
   <main role="main">
@@ -54,6 +55,7 @@
 
   </main>
 
-  {{ page.footer }}
-
+  <footer role="footer" class="layout-footer">
+    {{ page.footer }}
+  </footer>
 </div>{# /.layout-container #}
