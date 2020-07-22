@@ -29,4 +29,5 @@ body.toolbar-fixed {
 
 .layout-container {
   overflow-y: hidden;
+  position: relative; // Prevent absolute top to get behind the toolbar.
 }
