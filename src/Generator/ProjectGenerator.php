@@ -239,6 +239,10 @@ class ProjectGenerator extends Generator {
     $this->getFs()->mirror(self::TPL_DIR . '/combawa-theme/' . $this->core_version . '/templates', $defaultThemePath . '/templates');
     $this->trackGeneratedDirectory($defaultThemePath . '/templates');
 
+    // Copy the logo.
+    $this->getFs()->copy(self::TPL_DIR . '/combawa-theme/' . $this->core_version . '/logo.svg', $defaultThemePath . '/logo.svg');
+    $this->trackGeneratedDirectory($defaultThemePath . '/logo.svg');
+
     // Gitkeeps.
     $this->renderFile('combawa-theme/' . $this->core_version . '/gitkeep.twig', $defaultThemePath . '/assets-src/fonts/.gitkeep');
     $this->renderFile('combawa-theme/' . $this->core_version . '/gitkeep.twig', $defaultThemePath . '/assets-src/images/.gitkeep');
