@@ -1,0 +1,129 @@
+.menu--main {
+  position: static;
+
+  .menu__root {
+    margin: 0;
+    padding: 1rem;
+
+    a,
+    button {
+      background-color: transparent;
+      border: none;
+      display: block;
+      outline: 0; // Replaced by effective hover & focus styles.
+      padding: .25rem 0;
+      text-align: left;
+      width: 100%;
+
+      // TODO adapt this.
+      &:hover,
+      &:focus-within {
+
+      }
+
+      // TODO adapt this.
+      &.is-active {
+
+      }
+    }
+
+    > .menu-item {
+      // Reset default styles.
+      list-style: none;
+      padding-bottom: 1rem;
+      padding-top: 0;
+
+      > a,
+      > button {
+        @include grid-column(2, 7);
+        @include set-font-size(h3, mobile);
+        align-items: center;
+        display: flex;
+        flex-flow: row nowrap;
+        font-weight: bold;
+        justify-content: space-between;
+
+        &[aria-expanded] .decorator {
+          @extend %icon-chevron-down;
+          display: block;
+          flex-grow: 0;
+          height: 1.5rem;
+          order: 2;
+          transition: transform .25s ease-in-out;
+          width: 1.5rem;
+        }
+        &[aria-expanded="true"] .decorator {
+          transform: rotate(-180deg);
+        }
+      }
+    }
+  }
+
+  .menu__child {
+    margin: 0 0 0 1.5rem;
+
+    &__panel {
+      @include grid-column(2, 7);
+      max-height: 50vh;
+      overflow: hidden;
+      transition: max-height .25s ease-in-out;
+
+      &[aria-hidden]:not(:focus-within) {
+        max-height: 0;
+        transition: max-height .25s cubic-bezier(0, 1, 0, 1);
+      }
+
+      h3 {
+        @include visually-hidden;
+      }
+    }
+
+    > .menu-item {
+      > a,
+      > button {
+        @include set-font-size(h5, mobile);
+        font-weight: bold;
+      }
+
+      // TODO adapt!
+      &--active-trail {
+
+      }
+    }
+  }
+
+  @include breakpoint(desktop) {
+    .menu__root {
+      align-items: center;
+      display: flex;
+      justify-content: flex-start;
+      margin: 0;
+
+      a,
+      button {
+        line-height: 1;
+        padding: 1rem;
+        text-transform: none;
+      }
+
+      > .menu-item {
+        display: block;
+      }
+    }
+
+    .menu__child__panel {
+      position: absolute;
+      z-index: 10;
+    }
+
+    .menu__child__wrapper {
+      background: $white;
+      border: 1px solid $black;
+    }
+
+    .menu__child {
+      display: block;
+      margin: 0;
+    }
+  }
+}

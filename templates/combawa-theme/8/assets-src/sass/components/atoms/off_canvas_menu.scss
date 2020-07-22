@@ -26,6 +26,7 @@
       flex-flow: row nowrap;
       float: right;
       justify-content: flex-end;
+      padding: 1rem;
 
       & + * {
         clear: right;
@@ -47,7 +48,7 @@
     left: 0;
     height: 100vh;
     z-index: 3;
-    padding: 1rem 0 0 1.5rem;
+    padding: 0;
     text-align: inherit;
     background-color: $white;
     overflow-x: hidden;

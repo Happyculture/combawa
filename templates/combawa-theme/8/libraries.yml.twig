@@ -22,3 +22,10 @@ off_canvas_menu:
     - core/drupal.debounce
     - {{ machine_name }}/tools
 
+main_menu:
+  js:
+    dist/js/main_menu.min.js: { minified: true }
+  dependencies:
+    - core/drupal
+    - core/drupal.debounce
+    - {{ machine_name }}/tools

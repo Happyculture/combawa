@@ -28,8 +28,7 @@
 
   @include breakpoint(desktop) {
     .region-navigation {
-      @include grid-column(4, 9);
-      justify-self: flex-end;
+      @include grid-column(5, 8);
     }
   }
 }
