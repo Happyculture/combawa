@@ -14,9 +14,11 @@ var sourcemaps = require('gulp-sourcemaps');
 // PostCSS processors.
 var autoprefixer = require('autoprefixer');
 var clean = require('postcss-clean');
+var discardUnused = require('postcss-discard-unused');
 var flexibility = require('postcss-flexibility');
 var mqpacker = require('css-mqpacker');
 var processors = [
+  discardUnused(),
   autoprefixer(),
   mqpacker({sort: true}),
   flexibility()
