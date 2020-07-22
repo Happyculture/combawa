@@ -1,0 +1,10 @@
+.layout-footer {
+  @include full-page-width();
+  background: $grey-light;
+  padding-bottom: var(--grid-row-gap);
+  padding-top: var(--grid-row-gap);
+
+  & > .content-wrapper {
+    @include grid-setup();
+  }
+}
