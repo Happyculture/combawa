@@ -11,6 +11,10 @@
   @return map-get($external-gutter-size, $device);
 }
 
+@function grid-max-width($device: mobile) {
+  @return map-get($grid-max-size, $device);
+}
+
 // Mixins.
 
 @mixin grid-container($device: mobile) {
@@ -20,24 +24,33 @@
   grid-template-columns: repeat(map-get($nb-cols, $device), map-get($col-size, $device));
 }
 
-@mixin grid-width($device: mobile) {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: map-get($grid-max-size, $device);
-  padding-left: map-get($external-gutter-size, $device);
-  padding-right: map-get($external-gutter-size, $device);
-}
-
-@mixin grid-setup($subgrid: false) {
+@mixin grid-setup-grid() {
   @each $device in $major-breakpoints {
     @include breakpoint($device) {
-      @if ($subgrid == false) {
-        @include grid-width($device);
-      }
       @include grid-container($device);
     }
   }
+}
+
+@mixin grid-setup-width() {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--external-gutter-size);
+  padding-right: var(--external-gutter-size);
+
+  @each $device in $major-breakpoints {
+    @include breakpoint($device) {
+      max-width: grid-max-width($device);
+    }
+  }
+}
+
+@mixin grid-setup($subgrid: false) {
+  @if($subgrid == false) {
+    @include grid-setup-width();
+  }
+  @include grid-setup-grid();
 }
 
 @mixin subgrid-setup() {
