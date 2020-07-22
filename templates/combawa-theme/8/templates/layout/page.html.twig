@@ -39,23 +39,27 @@
 #}
 <div class="layout-container">
   <header role="header" class="layout-header">
-    {{ page.branding }}
-    {{ page.navigation }}
+    <div class="content-wrapper">
+      {{ page.branding }}
+      {{ page.navigation }}
+    </div>
   </header>
 
-  {{ page.highlighted }}
-  {{ page.help }}
+  <div class="layout-content">
+    <div class="content-wrapper">
+      {{ page.highlighted }}
+      {{ page.help }}
 
-  <main role="main">
-    <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
-
-    <div class="layout-content">
-      {{ page.content }}
-    </div>{# /.layout-content #}
-
-  </main>
+      <main role="main">
+        <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
+        {{ page.content }}
+      </main>
+    </div>
+  </div>
 
   <footer role="footer" class="layout-footer">
-    {{ page.footer }}
+    <div class="content-wrapper">
+      {{ page.footer }}
+    </div>
   </footer>
 </div>{# /.layout-container #}
