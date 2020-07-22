@@ -11,17 +11,21 @@
       display: block;
     }
 
-    &__icon {
-      display: block;
-      width: 2.4rem;
-      height: 2.4rem;
-      background: url("/core/misc/icons/ffffff/hamburger.svg") center bottom no-repeat;
-      margin: auto;
+    &--open {
+      #{$root} {
+        &__button__icon {
+          @extend %icon-menu;
+          margin: .5rem auto;
+        }
+      }
     }
 
     &--close {
-      display: block;
+      align-items: center;
+      display: flex;
+      flex-flow: row nowrap;
       float: right;
+      justify-content: flex-end;
 
       & + * {
         clear: right;
@@ -29,7 +33,7 @@
 
       #{$root} {
         &__button__icon {
-          background: url("/core/misc/icons/ffffff/ex.svg") center bottom no-repeat;
+          @extend %icon-close;
         }
       }
     }
