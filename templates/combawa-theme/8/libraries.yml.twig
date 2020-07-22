@@ -1,4 +1,10 @@
 
+tools:
+  js:
+    dist/js/tools.min.js: { minified: true }
+  dependencies:
+    - core/drupal
+
 global:
   css:
     theme:
@@ -14,3 +20,5 @@ off_canvas_menu:
   dependencies:
     - core/drupal
     - core/drupal.debounce
+    - {{ machine_name }}/tools
+
