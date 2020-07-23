@@ -15,9 +15,6 @@ class EnvironmentGenerator extends Generator {
    */
   protected $fs;
 
-  // Drupal core version built.
-  protected $core_version;
-
   /**
    * {@inheritdoc}
    */
@@ -48,24 +45,23 @@ class EnvironmentGenerator extends Generator {
    */
   public function generate(array $parameters) {
     $drupalRoot = $parameters['app_root'];
-    $this->core_version = $parameters['core'];
 
     $this->renderFile(
-      'combawa-env/' . $this->core_version . '/env.twig',
+      'combawa-env/' . $parameters['core'] . '/env.twig',
       '../.env',
       $parameters
     );
 
     if (!$this->getFs()->exists($drupalRoot . '/sites/default/settings.local.php')) {
       $this->renderFile(
-        'combawa-env/' . $this->core_version . '/settings.local.php.twig',
+        'combawa-env/' . $parameters['core'] . '/settings.local.php.twig',
         'sites/default/settings.local.php',
         $parameters
       );
     }
     else {
       $content = $this->renderer->render(
-        'combawa-env/' . $this->core_version . '/settings.local.php.twig',
+        'combawa-env/' . $parameters['core'] . '/settings.local.php.twig',
         $parameters
       );
       $this->getIo()->writeln('File sites/default/settings.local.php already exist. Skipping generation.');
