@@ -1,13 +1,4 @@
 services:
-  combawa.generator.project:
-    class: \Drupal\Console\Combawa\Generator\ProjectGenerator
-    tags:
-      - { name: drupal.generator, bootstrap: uninstall }
-  combawa.generate_project:
-    class: \Drupal\Console\Combawa\Command\GenerateProjectCommand
-    arguments: ['@combawa.generator.project', '@console.string_converter', '@app.root']
-    tags:
-      - { name: drupal.command, bootstrap: uninstall }
   combawa.generator.build:
     class: \Drupal\Console\Combawa\Generator\BuildGenerator
     tags:
