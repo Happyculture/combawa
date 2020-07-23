@@ -121,6 +121,8 @@ class GenerateBuildCommand extends Command {
    * {@inheritdoc}
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
+    $envVars = getenv();
+
     // Identify the Drupal version built.
     try {
       $core_version = $input->getOption('core') ? $input->getOption('core') : null;
@@ -153,7 +155,7 @@ class GenerateBuildCommand extends Command {
     if (!$name) {
       $name = $this->getIo()->ask(
         'What is the human readable name of the project?',
-        'Happy Rocket',
+        array_key_exists('COMBAWA_PROJECT_NAME', $envVars) ? $envVars['COMBAWA_PROJECT_NAME'] : 'Happy Rocket',
         function ($name) {
           return $this->validateName($name);
         }
@@ -172,7 +174,7 @@ class GenerateBuildCommand extends Command {
     if (!$machine_name) {
       $machine_name = $this->getIo()->ask(
         'What is the machine name of the project?',
-        $this->stringConverter->createMachineName($name),
+        array_key_exists('COMBAWA_PROJECT_MACHINE_NAME', $envVars) ? $envVars['COMBAWA_PROJECT_MACHINE_NAME'] : $this->stringConverter->createMachineName($name),
         function ($machine_name) {
           return $this->validateMachineName($machine_name);
         }
@@ -191,7 +193,7 @@ class GenerateBuildCommand extends Command {
     if (!$url) {
       $url = $this->getIo()->ask(
         'What is the production URL of the project?',
-        'https://happyculture.coop',
+        array_key_exists('COMBAWA_WEBSITE_URI', $envVars) ? $envVars['COMBAWA_WEBSITE_URI'] : 'https://happyculture.coop',
         function ($url) {
           return $this->validateUrl($url);
         }
