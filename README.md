@@ -43,7 +43,7 @@ Add the following lines within your `VirtualHost` to do so :
 ```
 This is due to the fact that there is no native autoload for Drupal 7.
 
-### Recommanded
+### Recommended
 
 #### Combawa wrapper as a global command
 
@@ -51,7 +51,6 @@ If you are lazy as we are (you should), it is possible to use a global command `
 In order to do that, you need to install the Combawa wrapper (https://github.com/Happyculture/combawa-wrapper). It works similarly as the Drush wrapper. 
 
 `composer require happyculture/combawa-wrapper`
-
 
 #### Drupal console commands
 
