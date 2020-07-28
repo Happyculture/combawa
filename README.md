@@ -135,6 +135,7 @@ All interactive options are also available in non-interactive mode if you need t
 Eg:
 ```
 drupal combawa:generate-environment \
+    --core=8 \
     --environment=preprod \
     --environment-url=https://mysite.url \
     --dump-file-name=reference_dump.sql \
