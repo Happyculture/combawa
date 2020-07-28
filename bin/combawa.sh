@@ -266,5 +266,9 @@ source $APP_SCRIPTS_DIR/postdeploy_actions.sh
 echo -e "${GREEN}Postdeploy... OK!${NC}"
 echo -e ""
 
+# Add a deprecation warning.
+echo -e "${YELLOW}Your combawa version has been deprecated. You should consider upgrading to a new major version!${NC}"
+echo -e ""
+
 # Send a notification to inform that the build is done.
 notify "The build is completed."

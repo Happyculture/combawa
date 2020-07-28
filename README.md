@@ -1,6 +1,8 @@
 ![Logo Combawa](logo_combawa.png)
 # Combawa
 
+> :warning: **Deprecated version**: The 7.x branch of Combawa has been deprecated. 8.x and 9.x versions still work with Drupal 7. You should consider upgrading.
+
 Used in combination of happyculture/happy_rocket or any other drupal-project based composer template, combawa will help you to setup your project and be ready to start working. 
 Then, it will help you build your projects in a consistent and adaptative way.
 
