@@ -84,7 +84,7 @@ usage()
   echo -e '\t\tAllowed values are: install, update, pull'
   echo -e '\t\tDefault value: update'
   echo ''
-  echo -e "${bold}\t--backup, -e: Generates a backup before building the project.${normal}"
+  echo -e "${bold}\t--backup, -b: Generates a backup before building the project.${normal}"
   echo -e '\t\tAllowed values are: 0: does not generate a backup, 1: generates a backup.'
   echo -e '\t\tDefault value: 1'
   echo ''
@@ -93,6 +93,10 @@ usage()
   echo ''
   echo -e "${bold}\t--fetch-db-dump, -f: Fetch a fresh DB dump from the production site.${normal}"
   echo -e '\t\tUsed when the reference dump should be updated.'
+  echo ''
+  echo -e "${bold}\t--reinstall, -r: Reinstall the site from the reference dump.${normal}"
+  echo -e '\t\tAllowed values are: 0: does not reinstall the site, 1: reinstall the website.'
+  echo -e '\t\tDefault value: 0'
   exit
 }
 

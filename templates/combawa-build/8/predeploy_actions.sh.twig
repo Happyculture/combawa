@@ -6,22 +6,10 @@
 # Return error codes if they happen.
 set -e
 
-if [ "$COMBAWA_FETCH_DB_DUMP" == "1" ] ; then
-  download_dump
-fi
-
 case $COMBAWA_ENV in
   dev)
-    # In update mode, load the reference dump if it exists.
-    if [ "$COMBAWA_BUILD_MODE" == "update" ]; then
-      load_dump
-    fi
     ;;
   recette|preprod)
-    # In update mode, load the reference dump if it exists.
-    if [ "$COMBAWA_BUILD_MODE" == "update" ]; then
-      load_dump
-    fi
     ;;
   prod)
     ;;

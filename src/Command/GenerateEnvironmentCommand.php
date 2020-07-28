@@ -99,6 +99,12 @@ class GenerateEnvironmentCommand extends Command {
         'The name of the local dump file to load before building.'
       )
       ->addOption(
+        'reinstall',
+        null,
+        InputOption::VALUE_NONE,
+        'Reinstall the website from the reference dump on each build.'
+      )
+      ->addOption(
         'db-host',
         null,
         InputOption::VALUE_REQUIRED,
@@ -146,6 +152,7 @@ class GenerateEnvironmentCommand extends Command {
       'core' => $this->extractCoreVersion($input->getOption('core')),
       'environment_url' => '',
       'backup_base' => 1,
+      'reinstall' => 0,
       'fetch_dump' => 0,
       'ssh_config_name' => '',
       'ssh_dump_path' => '',
@@ -157,6 +164,7 @@ class GenerateEnvironmentCommand extends Command {
       $generateParams += [
         'environment_url' => $this->validateUrl($input->getOption('environment-url')),
         'backup_base' => $input->getOption('backup-db') ? 1 : 0,
+        'reinstall' => $input->getOption('reinstall') ? 1 : 0,
         'fetch_dump' => $input->getOption('fetch-dump') ? 1 : 0,
         'dump_file_name' => $input->getOption('dump-file-name'),
       ];
@@ -174,6 +182,7 @@ class GenerateEnvironmentCommand extends Command {
     $recap_db_password = empty($generateParams['db_password']) ? 'No password' : 'Your secret password';
     $recap_backup_base = $generateParams['backup_base'] ? 'Yes' : 'No';
     $recap_fetch_dump = $generateParams['fetch_dump'] ? 'Yes' : 'No';
+    $recap_reinstall = $generateParams['reinstall'] ? 'Yes' : 'No';
 
     $recap_params = [
       ['App root', $generateParams['app_root']],
@@ -190,6 +199,7 @@ class GenerateEnvironmentCommand extends Command {
       ['Reference dump filename', $generateParams['dump_file_name']],
       ['SSH config name', $generateParams['ssh_config_name']],
       ['Remote dump path', $generateParams['ssh_dump_path']],
+      ['Always reinstall from reference dump', $recap_reinstall],
     ];
 
     $this->getIo()->newLine(1);
@@ -351,6 +361,23 @@ class GenerateEnvironmentCommand extends Command {
         );
         $input->setOption('dump-file-name', $dump_file_name);
       }
+
+      try {
+        $reinstall = $input->getOption('reinstall') ? (bool) $input->getOption('reinstall') : null;
+      } catch (\Exception $error) {
+        $this->getIo()->error($error->getMessage());
+
+        return 0;
+      }
+
+      if (!$reinstall) {
+        $reinstall = $this->getIo()->confirm(
+          'Do you want the site to be reinstalled from the reference dump on each build?',
+          array_key_exists('COMBAWA_REINSTALL', $envVars) ? $envVars['COMBAWA_REINSTALL'] : FALSE
+        );
+        $input->setOption('reinstall', $reinstall);
+      }
+
     }
 
     try {
