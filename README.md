@@ -149,6 +149,9 @@ drupal combawa:generate-environment \
     --db-name=db_name \
     --db-user=db_user \
     --db-password=db_password \
+    --reinstall=0 \
+    --backup=1 \
+    --fetch-dump=0 \
     --no-interaction
 ```
 
