@@ -9,7 +9,7 @@
 # <a name="combawa"></a>Combawa
 Combawa is a bash script that helps you **build** your Drupal projects.
 
-It's compatible with Drupal 8 and 7 and is meant to be used by developers and CI applications.
+It's compatible with Drupal 7, 8 and 9 and is meant to be used by developers and CI applications.
 
 You are encouraged to use Combawa as a daily companion to reinstall/update your local installation.
 
@@ -124,7 +124,8 @@ Here is the list of available arguments:
 * `--mode`, `-m`: Build mode. Allowed values are: install, update, pull
 * `--backup`, `-e`: Generates a backup before building the project. Allowed values are: 0: does not generate a backup, 1: generates a backup.
 * `--uri`, `-u`: Local URL of your project. Used when the final drush uli command is runned.
-* `--fetch-db-dump`, `-f`: Fetch a fresh DB dump from the production site. Used when the reference dump should be updated.
+* `--fetch-db-dump`, `-f`: Fetches a fresh DB dump from the production site. Used when the reference dump should be updated.
+* `--reinstall`, `-r`: Reinstalls the site from the reference dump (DB drop and replace). 
 
 ## <a name="drupal-console-commands"></a>Drupal console commands
 
