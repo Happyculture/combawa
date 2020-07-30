@@ -13,7 +13,7 @@ It's compatible with Drupal 7, 8 and 9 and is meant to be used by developers and
 
 You are encouraged to use Combawa as a daily companion to reinstall/update your local installation.
 
-Because Combawa is very cool, you can also use it when you bootstrap your project. Combawa lands with 2 Drupal console commands to help you setup your environment variables and bootstrap your project. See below for details.
+Because Combawa is very cool, you can also use it when you bootstrap your project. Combawa lands with 2 Drupal console commands to help you setup your environment variables and bootstrap your build files. See below for details.
 
 ## <a name="installation"></a>Installation
 
