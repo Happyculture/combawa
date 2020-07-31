@@ -135,11 +135,11 @@ download_dump()
   message_step "Updating the reference dump:"
   if [ -z "$COMBAWA_SSH_CONFIG_NAME" ]; then
     message_action "Copying locally the dump file..."
-    cp $COMBAWA_PROD_DB_DUMP_PATH "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
+    cp $COMBAWA_PROD_DB_DUMP_PATH "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
     message_confirm "Done!"
   else
     message_action "Fetching the dump from remote source..."
-    scp $COMBAWA_SSH_CONFIG_NAME:$COMBAWA_PROD_DB_DUMP_PATH "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
+    scp $COMBAWA_SSH_CONFIG_NAME:$COMBAWA_PROD_DB_DUMP_PATH "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
     message_confirm "Done!"
   fi
   if [[ $? != 0 ]]; then
@@ -151,7 +151,7 @@ download_dump()
 # Load dump function.
 load_dump()
 {
-  if [ -f "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
+  if [ -f "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
     message_step "Let's import the reference dump:"
     echo -e ""
     $DRUSH sql-drop -y;
@@ -160,22 +160,22 @@ load_dump()
 
     message_step "Importing the new DB..."
     message_action "Decompressing file..."
-    gzip -dkf $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz
+    gzip -dkf $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz
     message_confirm "Done!"
     if hash pv 2>/dev/null; then
-      pv --progress --name 'DB Import in progress' -tea "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME" | $DRUSH sqlc
+      pv --progress --name 'DB Import in progress' -tea "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME" | $DRUSH sqlc
     else
       message_action "DB Import in progress..."
-      $DRUSH sqlc < "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME"
+      $DRUSH sqlc < "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME"
     fi
     message_confirm "Done!"
     message_action "Removing tempory sql file..."
-    rm -f $APP_ROOT/$COMBAWA_DUMP_FILE_NAME
+    rm -f $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME
     message_confirm "Done!"
     message_confirm "Reimporting the reference dump... OK!"
     echo -e ""
   else
-    message_error "Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found."
+    message_error "Database reference dump $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found."
     exit 1;
   fi
 }

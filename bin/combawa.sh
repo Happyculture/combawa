@@ -25,10 +25,10 @@ UTILS_DIR="$SCRIPTS_PATH/../utils"
 TEMPLATES_DIR="$SCRIPTS_PATH/../templates"
 
 # App variables.
-APP_ROOT="$SCRIPTS_PATH/../../../.."
-WEBROOT="$APP_ROOT/web"
-CONFIG_DIR="$APP_ROOT/config"
-APP_SCRIPTS_DIR="$APP_ROOT/scripts"
+COMBAWA_ROOT="$SCRIPTS_PATH/../../../.."
+WEBROOT="$COMBAWA_ROOT/web"
+CONFIG_DIR="$COMBAWA_ROOT/config"
+COMBAWA_SCRIPTS_DIR="$COMBAWA_ROOT/scripts"
 
 source $UTILS_DIR/colors.sh
 source $UTILS_DIR/functions.sh
@@ -60,20 +60,20 @@ echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
 echo -e ""
 
 # Check project settings are set.
-if [ ! -f "$APP_ROOT/.combawa" ]; then
+if [ ! -f "$COMBAWA_ROOT/.combawa" ]; then
   message_error "There is no settings file at the moment or its not readable."
   message_warning "You should run the following command to initialize it: 'drupal combawa:generate-project'."
   exit -1
 fi
 
 # Build variables and their overrides.
-source $APP_ROOT/.combawa
-if [ -f "$APP_ROOT/.env" ]; then
-  source $APP_ROOT/.env
+source $COMBAWA_ROOT/.combawa
+if [ -f "$COMBAWA_ROOT/.env" ]; then
+  source $COMBAWA_ROOT/.env
 fi
 
 # Make drush a variable to use the one shipped with the repository.
-DRUSH="$APP_ROOT/vendor/bin/drush -y --root=$WEBROOT"
+DRUSH="$COMBAWA_ROOT/vendor/bin/drush -y --root=$WEBROOT"
 if [ $COMBAWA_WEBSITE_URI ]; then
   DRUSH="$DRUSH --uri=$COMBAWA_WEBSITE_URI"
 fi
@@ -173,6 +173,9 @@ do
         fi
         shift
         ;;
+      --only-predeploy)
+        shift
+        ;;
       --) # End of all options
         shift
         ;;
@@ -232,12 +235,12 @@ if [ "$COMBAWA_REIMPORT_REF_DUMP" == "1" ] ; then
 fi
 
 # Run the potential actions to do pre deployment.
-source $APP_SCRIPTS_DIR/predeploy_actions.sh
+source $COMBAWA_SCRIPTS_DIR/predeploy_actions.sh
 
 # Run the build content.
 if [ "$COMBAWA_BUILD_MODE" == "install" ]; then
   echo "Start the installation..."
-  source $APP_SCRIPTS_DIR/install.sh
+  source $COMBAWA_SCRIPTS_DIR/install.sh
   if [[ $? != 0 ]]; then
     message_error "The install.sh generated an error. Check the logs."
     exit $?
@@ -246,7 +249,7 @@ if [ "$COMBAWA_BUILD_MODE" == "install" ]; then
   echo -e ""
 elif [ "$COMBAWA_BUILD_MODE" == "pull" ]; then
   echo "Start the local update..."
-  source $APP_SCRIPTS_DIR/pull.sh
+  source $COMBAWA_SCRIPTS_DIR/pull.sh
   if [[ $? != 0 ]]; then
     message_error "The pull.sh generated an error. Check the logs."
     exit $?
@@ -255,7 +258,7 @@ elif [ "$COMBAWA_BUILD_MODE" == "pull" ]; then
   echo -e ""
 elif [ "$COMBAWA_BUILD_MODE" == "update" ]; then
   echo "Start the update..."
-  source $APP_SCRIPTS_DIR/update.sh
+  source $COMBAWA_SCRIPTS_DIR/update.sh
   if [[ $? != 0 ]]; then
     message_error "The update.sh generated an error. Check the logs."
     exit $?
@@ -265,7 +268,7 @@ elif [ "$COMBAWA_BUILD_MODE" == "update" ]; then
 fi
 
 # Run the potential actions to do post deployment.
-source $APP_SCRIPTS_DIR/postdeploy_actions.sh
+source $COMBAWA_SCRIPTS_DIR/postdeploy_actions.sh
 
 # Send a notification to inform that the build is done.
 notify "The build is completed."
