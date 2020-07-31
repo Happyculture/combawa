@@ -33,9 +33,14 @@ class BuildGenerator extends Generator {
       }
 
       $destination_file = substr($file, 0, -1 * strlen('.twig'));
+
+      $destination = $scripts_folder . '/' . $destination_file;
+      if ($destination_file == 'env.combawa') {
+        $destination = '../.combawa';
+      }
       $this->renderFile(
         'combawa-build/' . $parameters['core'] . '/' . $file,
-        $scripts_folder . '/' . $destination_file,
+        $destination,
         $buildParameters
       );
     }

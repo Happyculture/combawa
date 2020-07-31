@@ -132,7 +132,7 @@ Here is the list of available arguments:
 ### Environment generator
 
 Used once per environment, this command creates two files: 
-- `.env`: Used to override the default settings set in `settings.sh`.
+- `.env`: Used to override the default settings set in `.combawa`.
 - `settings.local.php`: Used to include the dynamic values of the variables set by the environment.
 
 To generate those files in interactive mode, just run `drupal combawa:generate-environment`.\

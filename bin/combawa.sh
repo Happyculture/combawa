@@ -60,14 +60,14 @@ echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
 echo -e ""
 
 # Check project settings are set.
-if [ ! -f "$APP_SCRIPTS_DIR/settings.sh" ]; then
+if [ ! -f "$APP_ROOT/.combawa" ]; then
   message_error "There is no settings file at the moment or its not readable."
   message_warning "You should run the following command to initialize it: 'drupal combawa:generate-project'."
   exit -1
 fi
 
 # Build variables and their overrides.
-source $APP_SCRIPTS_DIR/settings.sh
+source $APP_ROOT/.combawa
 if [ -f "$APP_ROOT/.env" ]; then
   source $APP_ROOT/.env
 fi
