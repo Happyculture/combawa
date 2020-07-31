@@ -124,16 +124,16 @@ do
         message_override "$SOURCE_BACKUP_BASE" "$COMBAWA_BACKUP_BASE"
         shift
         ;;
-      -r|--reinstall)
-        SOURCE_REINSTALL=$COMBAWA_REINSTALL
-        COMBAWA_REINSTALL="$2"
+      -r|--reimport)
+        SOURCE_REIMPORT=$COMBAWA_REIMPORT_REF_DUMP
+        COMBAWA_REIMPORT_REF_DUMP="$2"
 
         if [ $2 != "0" ] && [ $2 != "1" ] ; then
           notify_error "Invalid backup flag." "Only 0 or 1 is valid."
         fi
 
-        message_action "Reinstall site overriden:"
-        message_override "$SOURCE_REINSTALL" "$COMBAWA_REINSTALL"
+        message_action "Reimport reference dump flag overriden:"
+        message_override "$SOURCE_REIMPORT" "$COMBAWA_REIMPORT_REF_DUMP"
         shift
         ;;
       -u|--uri)
@@ -193,7 +193,7 @@ Build mode:\t${LIGHT_CYAN}$COMBAWA_BUILD_MODE${NC}
 Generate a backup:\t${LIGHT_CYAN}$COMBAWA_BACKUP_BASE${NC}
 Environment URI:\t${LIGHT_CYAN}$COMBAWA_WEBSITE_URI${NC}
 Retrieve DB from prod:\t${LIGHT_CYAN}$COMBAWA_FETCH_DB_DUMP${NC}
-Reinstall site:\t${LIGHT_CYAN}$COMBAWA_REINSTALL${NC}
+Reimport site:\t${LIGHT_CYAN}$COMBAWA_REIMPORT_REF_DUMP${NC}
 END
 )
 
@@ -226,8 +226,8 @@ if [ "$COMBAWA_FETCH_DB_DUMP" == "1" ] ; then
   download_dump
 fi
 
-# Reinstall the site from a SQL dump file.
-if [ "$COMBAWA_REINSTALL" == "1" ] ; then
+# Reimport the SQL reference dump.
+if [ "$COMBAWA_REIMPORT_REF_DUMP" == "1" ] ; then
   load_dump
 fi
 

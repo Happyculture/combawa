@@ -99,10 +99,10 @@ class GenerateEnvironmentCommand extends Command {
         'The name of the local dump file to load before building.'
       )
       ->addOption(
-        'reinstall',
+        'reimport',
         null,
         InputOption::VALUE_NONE,
-        'Reinstall the website from the reference dump on each build.'
+        'Reimport the website from the reference dump on each build.'
       )
       ->addOption(
         'db-host',
@@ -152,7 +152,7 @@ class GenerateEnvironmentCommand extends Command {
       'core' => $this->extractCoreVersion($input->getOption('core')),
       'environment_url' => '',
       'backup_base' => 1,
-      'reinstall' => 0,
+      'reimport' => 0,
       'fetch_dump' => 0,
       'ssh_config_name' => '',
       'ssh_dump_path' => '',
@@ -164,7 +164,7 @@ class GenerateEnvironmentCommand extends Command {
       $generateParams += [
         'environment_url' => $this->validateUrl($input->getOption('environment-url')),
         'backup_base' => $input->getOption('backup-db') ? 1 : 0,
-        'reinstall' => $input->getOption('reinstall') ? 1 : 0,
+        'reimport' => $input->getOption('reimport') ? 1 : 0,
         'fetch_dump' => $input->getOption('fetch-dump') ? 1 : 0,
         'dump_file_name' => $input->getOption('dump-file-name'),
       ];
@@ -182,7 +182,7 @@ class GenerateEnvironmentCommand extends Command {
     $recap_db_password = empty($generateParams['db_password']) ? 'No password' : 'Your secret password';
     $recap_backup_base = $generateParams['backup_base'] ? 'Yes' : 'No';
     $recap_fetch_dump = $generateParams['fetch_dump'] ? 'Yes' : 'No';
-    $recap_reinstall = $generateParams['reinstall'] ? 'Yes' : 'No';
+    $recap_reimport = $generateParams['reimport'] ? 'Yes' : 'No';
 
     $recap_params = [
       ['App root', $generateParams['app_root']],
@@ -199,7 +199,7 @@ class GenerateEnvironmentCommand extends Command {
       ['Reference dump filename', $generateParams['dump_file_name']],
       ['SSH config name', $generateParams['ssh_config_name']],
       ['Remote dump path', $generateParams['ssh_dump_path']],
-      ['Always reinstall from reference dump', $recap_reinstall],
+      ['Always reimport from reference dump', $recap_reimport],
     ];
 
     $this->getIo()->newLine(1);
@@ -363,19 +363,19 @@ class GenerateEnvironmentCommand extends Command {
       }
 
       try {
-        $reinstall = $input->getOption('reinstall') ? (bool) $input->getOption('reinstall') : null;
+        $reimport = $input->getOption('reimport') ? (bool) $input->getOption('reimport') : null;
       } catch (\Exception $error) {
         $this->getIo()->error($error->getMessage());
 
         return 0;
       }
 
-      if (!$reinstall) {
-        $reinstall = $this->getIo()->confirm(
-          'Do you want the site to be reinstalled from the reference dump on each build?',
-          array_key_exists('COMBAWA_REINSTALL', $envVars) ? $envVars['COMBAWA_REINSTALL'] : FALSE
+      if (!$reimport) {
+        $reimport = $this->getIo()->confirm(
+          'Do you want the site to be reimported from the reference dump on each build?',
+          array_key_exists('COMBAWA_REIMPORT_REF_DUMP', $envVars) ? $envVars['COMBAWA_REIMPORT_REF_DUMP'] : FALSE
         );
-        $input->setOption('reinstall', $reinstall);
+        $input->setOption('reimport', $reimport);
       }
 
     }

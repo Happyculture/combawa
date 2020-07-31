@@ -125,7 +125,7 @@ Here is the list of available arguments:
 * `--backup`, `-e`: Generates a backup before building the project. Allowed values are: 0: does not generate a backup, 1: generates a backup.
 * `--uri`, `-u`: Local URL of your project. Used when the final drush uli command is runned.
 * `--fetch-db-dump`, `-f`: Fetches a fresh DB dump from the production site. Used when the reference dump should be updated.
-* `--reinstall`, `-r`: Reinstalls the site from the reference dump (DB drop and replace). 
+* `--reimport`, `-r`: Reimports the site from the reference dump (DB drop and replace). 
 
 ## <a name="drupal-console-commands"></a>Drupal console commands
 
@@ -149,7 +149,7 @@ drupal combawa:generate-environment \
     --db-name=db_name \
     --db-user=db_user \
     --db-password=db_password \
-    --reinstall=0 \
+    --reimport=0 \
     --backup=1 \
     --fetch-dump=0 \
     --no-interaction

@@ -94,8 +94,8 @@ usage()
   echo -e "${bold}\t--fetch-db-dump, -f: Fetch a fresh DB dump from the production site.${normal}"
   echo -e '\t\tUsed when the reference dump should be updated.'
   echo ''
-  echo -e "${bold}\t--reinstall, -r: Reinstall the site from the reference dump.${normal}"
-  echo -e '\t\tAllowed values are: 0: does not reinstall the site, 1: reinstall the website.'
+  echo -e "${bold}\t--reimport, -r: Reimport the site from the reference dump.${normal}"
+  echo -e '\t\tAllowed values are: 0: does not reimport the reference dump, 1: reimports the ref dump (drop and inject).'
   echo -e '\t\tDefault value: 0'
   exit
 }
@@ -152,6 +152,8 @@ download_dump()
 load_dump()
 {
   if [ -f "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
+    message_step "Let's import the reference dump:"
+    echo -e ""
     $DRUSH sql-drop -y;
     message_confirm "DB drop... OK!"
     echo -e ""
@@ -170,7 +172,7 @@ load_dump()
     message_action "Removing tempory sql file..."
     rm -f $APP_ROOT/$COMBAWA_DUMP_FILE_NAME
     message_confirm "Done!"
-    message_confirm "DB import... OK!"
+    message_confirm "Reimporting the reference dump... OK!"
     echo -e ""
   else
     message_error "Database reference dump $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found."
