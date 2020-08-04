@@ -24,7 +24,7 @@ SCRIPTS_PATH=$(currentscriptpath)
 UTILS_DIR="$SCRIPTS_PATH/../utils"
 TEMPLATES_DIR="$SCRIPTS_PATH/../templates"
 
-# App variables.
+# App variables.
 COMBAWA_ROOT="$SCRIPTS_PATH/../../../.."
 WEBROOT="$COMBAWA_ROOT/web"
 CONFIG_DIR="$COMBAWA_ROOT/config"
@@ -35,6 +35,7 @@ _COMBAWA_ONLY_PREDEPLOY=0
 _COMBAWA_ONLY_POSTDEPLOY=0
 _COMBAWA_NO_PREDEPLOY=0
 _COMBAWA_NO_POSTDEPLOY=0
+_COMBAWA_REIMPORT_FORCE_EXIT=0
 
 # Compute steps to run. By default, every steps are run.
 _COMBAWA_RUN_PREDEPLOY=1
@@ -200,6 +201,10 @@ do
         _COMBAWA_RUN_POSTDEPLOY=0
         message_action "Postdeploy actions will not be run."
         ;;
+      --stop-after-reimport)
+        _COMBAWA_REIMPORT_FORCE_EXIT=1
+        message_action "Postdeploy actions will not be run."
+        ;;
       --) # End of all options
         shift
         ;;
@@ -247,7 +252,7 @@ section_separator
 #################################
 
 if [ "$COMBAWA_BACKUP_BASE" == "1" ] ; then
-  # Store a security backup in case the update doesn't go right.
+  # Store a security backup in case the update doesn't go right.
   DUMP_NAME="update-backup-script-$(date +%Y%m%d%H%M%S).sql";
   DUMP_PATH="$WEBROOT/../dumps/$DUMP_NAME"
   mkdir -p "$WEBROOT/../dumps/"
@@ -266,6 +271,16 @@ fi
 # Reimport the SQL reference dump.
 if [ "$COMBAWA_REIMPORT_REF_DUMP" == "1" ] ; then
   load_dump
+fi
+
+# Exit if the force exit flag has been raised. It's interesting to check if the prod dump doesn't have config to export.
+if [ "$_COMBAWA_REIMPORT_FORCE_EXIT" == 1 ]; then
+  if [ "$COMBAWA_REIMPORT_REF_DUMP" == "1" ] ; then
+    message_action "Exiting now that the reference dump has been reimported and the force exit flag has been raised!"
+    else
+      message_action "Build stopped as requested but no dump has been reimported. Didn't you forget to add the --reimport flag? ;-)."
+  fi
+  exit
 fi
 
 if [ "$_COMBAWA_RUN_PREDEPLOY" == 1 ]; then

@@ -128,6 +128,7 @@ Here is the list of available arguments:
 * `--backup`, `-e`: Generates a backup before building the project. Allowed values are: 0: does not generate a backup, 1: generates a backup.
 * `--uri`, `-u`: Local URL of your project. Used when the final drush uli command is runned.
 * `--fetch-db-dump`, `-f`: Fetches a fresh DB dump from the production site. Used when the reference dump should be updated.
+* `--stop-after-reimport`: Flag to stop building after reimporting the DB. Useful to version config from prod. 
 
 ## <a name="drupal-console-commands"></a>Drupal console commands
 

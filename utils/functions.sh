@@ -104,6 +104,9 @@ usage()
   echo -e "${bold}\t--reimport, -r: Reimport the site from the reference dump.${normal}"
   echo -e '\t\tAllowed values are: 0: does not reimport the reference dump, 1: reimports the ref dump (drop and inject).'
   echo -e '\t\tDefault value: 0'
+  echo ''
+  echo -e "${bold}\t--stop-after-reimport: Utilitary flag to stop building after reimporting the DB.${normal}"
+  echo -e '\t\tThis option is useful if you want to fetch your remote DB, import it and version its config.'
   exit
 }
 
