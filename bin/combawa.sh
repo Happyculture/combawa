@@ -270,8 +270,11 @@ fi
 
 if [ "$_COMBAWA_RUN_PREDEPLOY" == 1 ]; then
   message_step "Running predeploy actions."
+  # Return error codes if they happen.
+  set -xe
   # Run the potential actions to do pre deployment.
   source $COMBAWA_SCRIPTS_DIR/predeploy_actions.sh
+  set +xe
 
   message_confirm "Predeploy actions... Done!"
 
@@ -284,7 +287,10 @@ if [ "$_COMBAWA_RUN_MAIN_BUILD_STEP" == 1 ]; then
   # Run the build content.
   if [ "$COMBAWA_BUILD_MODE" == "install" ]; then
     message_step "Running install."
+    # Return error codes if they happen.
+    set -xe
     source $COMBAWA_SCRIPTS_DIR/install.sh
+    set +xe
     if [[ $? != 0 ]]; then
       message_error "The install.sh generated an error. Check the logs."
       exit $?
@@ -292,7 +298,10 @@ if [ "$_COMBAWA_RUN_MAIN_BUILD_STEP" == 1 ]; then
     message_confirm "Install... OK!"
   elif [ "$COMBAWA_BUILD_MODE" == "update" ]; then
     message_step "Running update."
+    # Return error codes if they happen.
+    set -xe
     source $COMBAWA_SCRIPTS_DIR/update.sh
+    set +xe
     if [[ $? != 0 ]]; then
       message_error "The update.sh generated an error. Check the logs."
       exit $?
@@ -304,7 +313,10 @@ fi
 if [ "$_COMBAWA_RUN_POSTDEPLOY" == 1 ]; then
   message_step "Running postdeploy actions."
   # Run the potential actions to do post deployment.
+  # Return error codes if they happen.
+  set -xe
   source $COMBAWA_SCRIPTS_DIR/postdeploy_actions.sh
+  set +xe
 
   message_confirm "Postdeploy actions... Done!"
 
