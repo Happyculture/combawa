@@ -100,7 +100,7 @@ do
     case $key in
       -e | --env)
         case $2 in
-          dev|recette|preprod|prod)
+          dev|testing|prod)
             SOURCE_ENV=$COMBAWA_ENV
             COMBAWA_ENV="$2"
 

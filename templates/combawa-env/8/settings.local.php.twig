@@ -27,15 +27,9 @@ $settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.null';
 // Enable dev config split.
 $config['config_split.config_split.dev']['status'] = TRUE;
 
-{%- elseif environment == 'preprod' -%}
+{%- elseif environment == 'testing' -%}
 
 // Enable testing config split.
 $config['config_split.config_split.testing']['status'] = TRUE;
 
-{%- elseif environment == 'recette' -%}
-
-// Enable testing config split.
-$config['config_split.config_split.recette']['status'] = TRUE;
-
 {%- endif %}
-

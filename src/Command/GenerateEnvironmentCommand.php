@@ -60,7 +60,7 @@ class GenerateEnvironmentCommand extends Command {
         'environment',
         null,
         InputOption::VALUE_REQUIRED,
-        'The built environment (prod, preprod, recette or dev).'
+        'The built environment (prod, testing or dev).'
       )
       ->addOption(
         'environment-url',
@@ -251,7 +251,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$environment) {
       $environment = $this->getIo()->choice(
         'Which kind of environment is it?',
-        ['dev', 'recette', 'preprod', 'prod'],
+        ['dev', 'testing', 'prod'],
         array_key_exists('COMBAWA_ENV', $envVars) ? $envVars['COMBAWA_ENV'] : 'prod'
       );
       $input->setOption('environment', $environment);
@@ -472,11 +472,11 @@ class GenerateEnvironmentCommand extends Command {
    */
   protected function validateEnvironment($env) {
     $env = strtolower($env);
-    if (in_array($env, ['dev', 'recette', 'preprod', 'prod'])) {
+    if (in_array($env, ['dev', 'testing', 'prod'])) {
       return $env;
     }
     else {
-      throw new \InvalidArgumentException(sprintf('Environment name "%s" is invalid (only dev, recette, prod or preprod allowed).', $env));
+      throw new \InvalidArgumentException(sprintf('Environment name "%s" is invalid (only dev, testing or prod allowed).', $env));
     }
   }
 

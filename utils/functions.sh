@@ -78,7 +78,7 @@ usage()
   echo ''
   echo -e "Available arguments are:"
   echo -e "${bold}\t--env, -e: Environment to build.${normal}"
-  echo -e '\t\tAllowed values are: dev, recette, preprod, prod'
+  echo -e '\t\tAllowed values are: dev, testing, prod'
   echo -e '\t\tDefault value: prod'
   echo ''
   echo -e "${bold}\t--mode, -m: Build mode${normal}"
