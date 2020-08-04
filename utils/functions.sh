@@ -85,6 +85,12 @@ usage()
   echo -e '\t\tAllowed values are: install, update'
   echo -e '\t\tDefault value: update'
   echo ''
+  echo -e '\tIn addition to the build mode you may want to use those options to control the steps to execute:'
+  echo -e "${bold}\t--no-predeploy:${normal} Do not process predeploy actions."
+  echo -e "${bold}\t--no-postdeploy:${normal} Do not process postdeploy actions."
+  echo -e "${bold}\t--only-predeploy:${normal} Only process predeploy actions."
+  echo -e "${bold}\t--only-postdeploy:${normal} Only process postdeploy actions."
+  echo ''
   echo -e "${bold}\t--backup, -b: Generates a backup before building the project.${normal}"
   echo -e '\t\tAllowed values are: 0: does not generate a backup, 1: generates a backup.'
   echo -e '\t\tDefault value: 1'

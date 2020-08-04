@@ -121,10 +121,14 @@ You can use more arguments such as : `./vendor/bin/combawa.sh --env dev --mode i
 Here is the list of available arguments:
 * `--env`, `-e`: Environment to build. Allowed values are: dev, recette, preprod, prod
 * `--mode`, `-m`: Build mode. Allowed values are: install, update
+* `--only-predeploy`: Only execute the predeploy actions.
+* `--only-postdeploy`: Only execute the postdeploy actions.
+* `--no-predeploy`: Do not execute the predeploy actions.
+* `--no-postdeploy`: Do not execute the postdeploy actions.
+* `--reimport`, `-r`: Reimports the site from the reference dump (DB drop and replace). 
 * `--backup`, `-e`: Generates a backup before building the project. Allowed values are: 0: does not generate a backup, 1: generates a backup.
 * `--uri`, `-u`: Local URL of your project. Used when the final drush uli command is runned.
 * `--fetch-db-dump`, `-f`: Fetches a fresh DB dump from the production site. Used when the reference dump should be updated.
-* `--reimport`, `-r`: Reimports the site from the reference dump (DB drop and replace). 
 
 ## <a name="drupal-console-commands"></a>Drupal console commands
 
