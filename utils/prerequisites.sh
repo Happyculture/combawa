@@ -43,13 +43,6 @@ case $COMBAWA_BUILD_MODE in
     fi
     message_confirm "Update.sh check... OK!"
     ;;
-  "pull" )
-    message_step "Verifying pull.sh action script."
-    if [ ! -f "$COMBAWA_SCRIPTS_DIR/pull.sh" ]; then
-      notify_error "There is no <app>/scripts/pull.sh script at the moment or its not readable." "You should run the following command to initialize it: 'drupal combawa:generate-project'."
-    fi
-    message_confirm "Pull.sh check... OK!"
-    ;;
   * )
     notify_error "Build mode unknown."
     ;;

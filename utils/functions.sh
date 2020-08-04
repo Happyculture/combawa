@@ -31,6 +31,7 @@ message_confirm()
 {
   _MESSAGE="$1"
   message_color "${_MESSAGE}" "${GREEN}"
+  echo -e ""
 }
 
 # Displays a warning message.
@@ -81,7 +82,7 @@ usage()
   echo -e '\t\tDefault value: prod'
   echo ''
   echo -e "${bold}\t--mode, -m: Build mode${normal}"
-  echo -e '\t\tAllowed values are: install, update, pull'
+  echo -e '\t\tAllowed values are: install, update'
   echo -e '\t\tDefault value: update'
   echo ''
   echo -e "${bold}\t--backup, -b: Generates a backup before building the project.${normal}"

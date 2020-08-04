@@ -30,6 +30,17 @@ WEBROOT="$COMBAWA_ROOT/web"
 CONFIG_DIR="$COMBAWA_ROOT/config"
 COMBAWA_SCRIPTS_DIR="$COMBAWA_ROOT/scripts"
 
+# State variables.
+_COMBAWA_ONLY_PREDEPLOY=0
+_COMBAWA_ONLY_POSTDEPLOY=0
+_COMBAWA_NO_PREDEPLOY=0
+_COMBAWA_NO_POSTDEPLOY=0
+
+# Compute steps to run. By default, every steps are run.
+_COMBAWA_RUN_PREDEPLOY=1
+_COMBAWA_RUN_MAIN_BUILD_STEP=1
+_COMBAWA_RUN_POSTDEPLOY=1
+
 source $UTILS_DIR/colors.sh
 source $UTILS_DIR/functions.sh
 
@@ -105,7 +116,7 @@ do
         SOURCE_BUILD_MODE=$COMBAWA_BUILD_MODE
         COMBAWA_BUILD_MODE="$2"
 
-        if [ $2 != "install" ] && [ $2 != "update" ] && [ $2 != "pull" ] ; then
+        if [ $2 != "install" ] && [ $2 != "update" ] ; then
           notify_error "Invalid build mode."
         fi;
         message_action "Build mode overriden:"
@@ -129,7 +140,7 @@ do
         COMBAWA_REIMPORT_REF_DUMP="$2"
 
         if [ $2 != "0" ] && [ $2 != "1" ] ; then
-          notify_error "Invalid backup flag." "Only 0 or 1 is valid."
+          notify_error "Invalid reimport flag." "Only 0 or 1 is valid."
         fi
 
         message_action "Reimport reference dump flag overriden:"
@@ -174,7 +185,20 @@ do
         shift
         ;;
       --only-predeploy)
-        shift
+        _COMBAWA_ONLY_PREDEPLOY=1
+        message_action "Only predeploy actions will be run."
+        ;;
+      --only-postdeploy)
+        _COMBAWA_ONLY_POSTDEPLOY=1
+        message_action "Only postdeploy actions will be run."
+        ;;
+      --no-predeploy)
+        _COMBAWA_RUN_PREDEPLOY=0
+        message_action "Predeploy actions will not be run."
+        ;;
+      --no-postdeploy)
+        _COMBAWA_RUN_POSTDEPLOY=0
+        message_action "Postdeploy actions will not be run."
         ;;
       --) # End of all options
         shift
@@ -186,6 +210,16 @@ do
   fi
 done
 set -u
+
+# Compute steps to run. By default, every steps are run.
+if [ "$_COMBAWA_ONLY_PREDEPLOY" == 1 ]; then
+  _COMBAWA_RUN_MAIN_BUILD_STEP=0
+  _COMBAWA_RUN_POSTDEPLOY=0
+fi
+if [ "$_COMBAWA_ONLY_POSTDEPLOY" == 1 ]; then
+  _COMBAWA_RUN_PREDEPLOY=0
+  _COMBAWA_RUN_MAIN_BUILD_STEP=0
+fi
 
 source $UTILS_DIR/prerequisites.sh
 
@@ -234,41 +268,50 @@ if [ "$COMBAWA_REIMPORT_REF_DUMP" == "1" ] ; then
   load_dump
 fi
 
-# Run the potential actions to do pre deployment.
-source $COMBAWA_SCRIPTS_DIR/predeploy_actions.sh
+if [ "$_COMBAWA_RUN_PREDEPLOY" == 1 ]; then
+  message_step "Running predeploy actions."
+  # Run the potential actions to do pre deployment.
+  source $COMBAWA_SCRIPTS_DIR/predeploy_actions.sh
 
-# Run the build content.
-if [ "$COMBAWA_BUILD_MODE" == "install" ]; then
-  echo "Start the installation..."
-  source $COMBAWA_SCRIPTS_DIR/install.sh
-  if [[ $? != 0 ]]; then
-    message_error "The install.sh generated an error. Check the logs."
-    exit $?
+  message_confirm "Predeploy actions... Done!"
+
+  if [ "$_COMBAWA_ONLY_PREDEPLOY" == "1" ] ; then
+    message_action "Exiting now that predeploy actions have been run!"
   fi
-  message_confirm "Install... OK!"
-  echo -e ""
-elif [ "$COMBAWA_BUILD_MODE" == "pull" ]; then
-  echo "Start the local update..."
-  source $COMBAWA_SCRIPTS_DIR/pull.sh
-  if [[ $? != 0 ]]; then
-    message_error "The pull.sh generated an error. Check the logs."
-    exit $?
-  fi
-  message_confirm "Pull... OK!"
-  echo -e ""
-elif [ "$COMBAWA_BUILD_MODE" == "update" ]; then
-  echo "Start the update..."
-  source $COMBAWA_SCRIPTS_DIR/update.sh
-  if [[ $? != 0 ]]; then
-    message_error "The update.sh generated an error. Check the logs."
-    exit $?
-  fi
-  message_confirm "Update... OK!"
-  echo -e ""
 fi
 
-# Run the potential actions to do post deployment.
-source $COMBAWA_SCRIPTS_DIR/postdeploy_actions.sh
+if [ "$_COMBAWA_RUN_MAIN_BUILD_STEP" == 1 ]; then
+  # Run the build content.
+  if [ "$COMBAWA_BUILD_MODE" == "install" ]; then
+    message_step "Running install."
+    source $COMBAWA_SCRIPTS_DIR/install.sh
+    if [[ $? != 0 ]]; then
+      message_error "The install.sh generated an error. Check the logs."
+      exit $?
+    fi
+    message_confirm "Install... OK!"
+  elif [ "$COMBAWA_BUILD_MODE" == "update" ]; then
+    message_step "Running update."
+    source $COMBAWA_SCRIPTS_DIR/update.sh
+    if [[ $? != 0 ]]; then
+      message_error "The update.sh generated an error. Check the logs."
+      exit $?
+    fi
+    message_confirm "Update... OK!"
+  fi
+fi
+
+if [ "$_COMBAWA_RUN_POSTDEPLOY" == 1 ]; then
+  message_step "Running postdeploy actions."
+  # Run the potential actions to do post deployment.
+  source $COMBAWA_SCRIPTS_DIR/postdeploy_actions.sh
+
+  message_confirm "Postdeploy actions... Done!"
+
+  if [ "$_COMBAWA_ONLY_POSTDEPLOY" == "1" ] ; then
+    message_action "Exiting now that postdeploy actions have been run!"
+  fi
+fi
 
 # Send a notification to inform that the build is done.
 notify "The build is completed."

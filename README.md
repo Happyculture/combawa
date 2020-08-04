@@ -84,7 +84,7 @@ Running Combawa to (re)build your project mostly resumes to run this command: `.
 When you are building a site, the following steps are followed:
 * Preflight checkup (system requirement + setup verifications)
 * Predeployment actions (fetch a remote DB, save a backup of the current install, drop the DB)
-* Build actions (install, update or pull mode (differences below))
+* Build actions (install or update mode (differences below))
 * Postdeployment (rebuild caches, generate a connection link...)
 
 Combawa takes the default settings when you run it with no extra arguments.
@@ -109,9 +109,8 @@ When you are targeting a specific environment, you can edit `predeploy_actions.s
 When you build your projects, you are in three different scenarios:
 - Install mode: You are initiating the project and build from an installation profile.
 - Update mode: You are advanced in your project life cycle and may have it in production. You want to rebuild from the configuration that you exported or a reference SQL dump.
-- Pull mode: You are working in a team and need to retrieve the feature pused by a coworker without loosing your work.
 
-Each mode (option `-m`) is using a different build file since you don't run the same commands whether you are installing/updating/pulling.
+Each mode (option `-m`) is using a different build file since you don't run the same commands whether you are installing/updating.
 
 Combawa ships with template files for each mode, you can update them when you need to adjust to your constraints.
 
@@ -121,7 +120,7 @@ You can use more arguments such as : `./vendor/bin/combawa.sh --env dev --mode i
 
 Here is the list of available arguments:
 * `--env`, `-e`: Environment to build. Allowed values are: dev, recette, preprod, prod
-* `--mode`, `-m`: Build mode. Allowed values are: install, update, pull
+* `--mode`, `-m`: Build mode. Allowed values are: install, update
 * `--backup`, `-e`: Generates a backup before building the project. Allowed values are: 0: does not generate a backup, 1: generates a backup.
 * `--uri`, `-u`: Local URL of your project. Used when the final drush uli command is runned.
 * `--fetch-db-dump`, `-f`: Fetches a fresh DB dump from the production site. Used when the reference dump should be updated.
