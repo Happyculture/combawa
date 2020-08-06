@@ -165,14 +165,14 @@ do
         shift
         ;;
       -f|--fetch-db-dump)
-        SOURCE_FETCH=$COMBAWA_FETCH_DB_DUMP
-        COMBAWA_FETCH_DB_DUMP="$2"
+        SOURCE_DB_FETCH_FLAG=$COMBAWA_DB_FETCH_FLAG
+        COMBAWA_DB_FETCH_FLAG="$2"
 
         message_action "Fetch DB dump from prod overriden:"
-        message_override "$SOURCE_FETCH" "$COMBAWA_FETCH_DB_DUMP"
+        message_override "$SOURCE_DB_FETCH_FLAG" "$COMBAWA_DB_FETCH_FLAG"
         echo -e ""
 
-        if [ "$COMBAWA_FETCH_DB_DUMP" == "1" ] ; then
+        if [ "$COMBAWA_DB_FETCH_FLAG" == "1" ] ; then
           if [[ ! -z "$COMBAWA_SSH_CONFIG_NAME" ]]; then
             message_step "Testing connection with remote SSH server from which the dump will be retrieved:"
             ssh -q $COMBAWA_SSH_CONFIG_NAME echo > /dev/null
@@ -234,7 +234,7 @@ Environment built:\t${LIGHT_CYAN}$COMBAWA_BUILD_ENV${NC}
 Build mode:\t${LIGHT_CYAN}$COMBAWA_BUILD_MODE${NC}
 Generate a backup:\t${LIGHT_CYAN}$COMBAWA_DB_BACKUP_FLAG${NC}
 Environment URI:\t${LIGHT_CYAN}$COMBAWA_WEBSITE_URI${NC}
-Retrieve DB from prod:\t${LIGHT_CYAN}$COMBAWA_FETCH_DB_DUMP${NC}
+Retrieve DB from prod:\t${LIGHT_CYAN}$COMBAWA_DB_FETCH_FLAG${NC}
 Reimport site:\t${LIGHT_CYAN}$COMBAWA_REIMPORT_REF_DUMP${NC}
 END
 )
@@ -264,7 +264,7 @@ if [ "$COMBAWA_DB_BACKUP_FLAG" == "1" ] ; then
 fi
 
 # Download the reference dump file.
-if [ "$COMBAWA_FETCH_DB_DUMP" == "1" ] ; then
+if [ "$COMBAWA_DB_FETCH_FLAG" == "1" ] ; then
   download_dump
 fi
 

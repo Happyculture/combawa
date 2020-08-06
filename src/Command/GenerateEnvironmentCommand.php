@@ -305,7 +305,7 @@ class GenerateEnvironmentCommand extends Command {
       if (!$fetch_dump) {
         $fetch_dump = $this->getIo()->confirm(
           'Do you want the database dump to be fetched from a remote server before each build?',
-          array_key_exists('COMBAWA_FETCH_DB_DUMP', $envVars) ? $envVars['COMBAWA_FETCH_DB_DUMP'] : TRUE
+          array_key_exists('COMBAWA_DB_FETCH_FLAG', $envVars) ? $envVars['COMBAWA_DB_FETCH_FLAG'] : TRUE
         );
         $input->setOption('fetch-dump', $fetch_dump);
       }
