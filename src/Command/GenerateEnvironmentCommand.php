@@ -64,10 +64,16 @@ class GenerateEnvironmentCommand extends Command {
         'Backup the database on each build.'
       )
       ->addOption(
-        'fetch-dump',
+        'dump-always-update',
         null,
         InputOption::VALUE_NONE,
-        'Fetch a database dump from a remote server before the build.'
+        'Always update the reference dump before building.'
+      )
+      ->addOption(
+        'dump-retrieval-tool',
+        null,
+        InputOption::VALUE_NONE,
+        'Tool used to retrieve the reference dump.'
       )
       ->addOption(
         'ssh-config-name',
@@ -76,10 +82,22 @@ class GenerateEnvironmentCommand extends Command {
         'The remote server name where to find the dump.'
       )
       ->addOption(
-        'ssh-dump-path',
+        'scp-connection-info',
         null,
         InputOption::VALUE_REQUIRED,
-        'The remote server path where to find the dump.'
+        'Connection string to the remote server (user@host.com).'
+      )
+      ->addOption(
+        'fetch-source-path',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'Source path to copy the reference dump from.'
+      )
+      ->addOption(
+        'fetch-dest-path',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'Destination path to copy the reference dump to.'
       )
       ->addOption(
         'dump-file-name',
@@ -143,9 +161,12 @@ class GenerateEnvironmentCommand extends Command {
       'environment_url' => '',
       'backup_base' => 1,
       'reimport' => 0,
-      'fetch_dump' => 0,
+      'dump_always_update' => 0,
+      'dump_retrieval_tool' => $this->validateRetrievalTool($input->getOption('dump-retrieval-tool')),
       'ssh_config_name' => '',
-      'ssh_dump_path' => '',
+      'scp_connection_info' => '',
+      'fetch_source_path' => '',
+      'fetch_dest_path' => '',
       'dump_file_name' => '',
     ];
 
@@ -155,24 +176,48 @@ class GenerateEnvironmentCommand extends Command {
         'environment_url' => $this->validateUrl($input->getOption('environment-url')),
         'backup_base' => $input->getOption('backup-db') ? 1 : 0,
         'reimport' => $input->getOption('reimport') ? 1 : 0,
-        'fetch_dump' => $input->getOption('fetch-dump') ? 1 : 0,
+        'dump_always_update' => $input->getOption('dump-always-update') ? 1 : 0,
+        'dump_retrieval_tool' => $input->getOption('dump-retrieval-tool'),
         'dump_file_name' => $input->getOption('dump-file-name'),
       ];
 
-      if ($generateParams['fetch_dump']) {
+      if ($input->getOption('dump-retrieval-tool') == 'scp') {
+        if (!empty($input->getOption('ssh-config-name'))) {
+          $generateParams += [
+            'ssh_config_name' => $input->getOption('ssh-config-name'),
+          ];
+          $scp_connection = $input->getOption('ssh-config-name');
+        }
+        else {
+          $generateParams += [
+            'scp_connection_info' => $input->getOption('scp-connection-info'),
+          ];
+
+          $scp_connection = $input->getOption('scp-connection-info');
+        }
         $generateParams += [
           'ssh_config_name' => $input->getOption('ssh-config-name'),
-          'ssh_dump_path' => $input->getOption('ssh-dump-path'),
         ];
       }
+      $generateParams += [
+        'fetch_source_path' => $input->getOption('fetch-source-path'),
+        'fetch_dest_path' => $input->getOption('fetch-dest-path'),
+      ];
     }
     $generateParams += $defaults;
 
     // Improve attributes readibility.
     $recap_db_password = empty($generateParams['db_password']) ? 'No password' : 'Your secret password';
     $recap_backup_base = $generateParams['backup_base'] ? 'Yes' : 'No';
-    $recap_fetch_dump = $generateParams['fetch_dump'] ? 'Yes' : 'No';
+    $recap_update_ref_dump = $generateParams['dump_always_update'] ? 'Yes' : 'No';
     $recap_reimport = $generateParams['reimport'] ? 'Yes' : 'No';
+
+    if ($generateParams['dump_retrieval_tool'] == 'scp') {
+      $recap_retrieval_tool = 'scp ' . $scp_connection . ':' . $generateParams['fetch_source_path'] . ' ' . $generateParams['fetch_dest_path'];
+    }
+    else {
+      $recap_retrieval_tool = 'cp ' . $generateParams['fetch_source_path'] . ' ' . $generateParams['fetch_dest_path'];
+    }
 
     $recap_params = [
       ['App root', $generateParams['app_root']],
@@ -185,10 +230,9 @@ class GenerateEnvironmentCommand extends Command {
       ['DB password', $recap_db_password],
       ['Site URL', $generateParams['environment_url']],
       ['Backup DB before build', $recap_backup_base],
-      ['Fetch remote dump', $recap_fetch_dump],
+      ['Update ref dump before build', $recap_update_ref_dump],
+      ['Retrieve dump', $recap_retrieval_tool],
       ['Reference dump filename', $generateParams['dump_file_name']],
-      ['SSH config name', $generateParams['ssh_config_name']],
-      ['Remote dump path', $generateParams['ssh_dump_path']],
       ['Always reimport from reference dump', $recap_reimport],
     ];
 
@@ -284,90 +328,136 @@ class GenerateEnvironmentCommand extends Command {
         $input->setOption('backup-db', $backup_db);
       }
 
-      try {
-        $fetch_dump = $input->getOption('fetch-dump') ? (bool) $input->getOption('fetch-dump') : FALSE;
-      } catch (\Exception $error) {
-        $this->getIo()->error($error->getMessage());
-
-        return 1;
-      }
-
-      if (!$fetch_dump) {
-        $fetch_dump = $this->getIo()->confirm(
-          'Do you want the database dump to be fetched from a remote server before each build?',
+      $build_mode = array_key_exists('COMBAWA_BUILD_MODE', $envVars) ? $envVars['COMBAWA_BUILD_MODE'] : 'install';
+      if ($build_mode == 'update') {
+        $always_update_ref_dump = $this->getIo()->confirm(
+          'Do you want to update the reference dump before each build?',
           array_key_exists('COMBAWA_DB_FETCH_FLAG', $envVars) ? $envVars['COMBAWA_DB_FETCH_FLAG'] : TRUE
         );
-        $input->setOption('fetch-dump', $fetch_dump);
-      }
-
-      if ($fetch_dump) {
+        $input->setOption('dump-always-update', $always_update_ref_dump);
 
         try {
-          $ssh_config_name = $input->getOption('ssh-config-name');
+          $always_update_ref_dump = $input->getOption('dump-always-update') ? (bool) $input->getOption('dump-always-update') : FALSE;
         } catch (\Exception $error) {
           $this->getIo()->error($error->getMessage());
 
           return 1;
         }
 
-        if (!$ssh_config_name) {
-          $ssh_config_name = $this->getIo()->ask(
-            'What is the name for the dump remote server in your ~/.ssh/config file?',
-            array_key_exists('COMBAWA_DB_FETCH_CNX_STRING', $envVars) ? $envVars['COMBAWA_DB_FETCH_CNX_STRING'] : 'my_remote'
+        $retrieval_tool = $this->getIo()->choice(
+          'When updated, what is the tool used to retrieve the reference dump?',
+          ['cp', 'scp'],
+          array_key_exists('COMBAWA_DB_RETRIEVAL_TOOL', $envVars) ? $envVars['COMBAWA_DB_RETRIEVAL_TOOL'] : 'scp'
+        );
+        $input->setOption('dump-retrieval-tool', $retrieval_tool);
+
+        if ($retrieval_tool == 'scp') {
+
+          $use_ssh_config_name = $this->getIo()->confirm(
+            'Do you have an SSH config name from your ~/.ssh/config to use to retrieve the dump?',
+            FALSE
           );
-          $input->setOption('ssh-config-name', $ssh_config_name);
+
+          if ($use_ssh_config_name) {
+            try {
+              $ssh_config_name = $input->getOption('ssh-config-name');
+            } catch (\Exception $error) {
+              $this->getIo()->error($error->getMessage());
+
+              return 1;
+            }
+
+            if (!$ssh_config_name) {
+              $ssh_config_name = $this->getIo()->ask(
+                'What is the name of you config entry in your ~/.ssh/config file?',
+                array_key_exists('COMBAWA_DB_FETCH_SSH_CONFIG_NAME', $envVars) ? $envVars['COMBAWA_DB_FETCH_SSH_CONFIG_NAME'] : 'my_remote'
+              );
+              $input->setOption('ssh-config-name', $ssh_config_name);
+            }
+          }
+          else {
+            try {
+              $ssh_connection_info = $input->getOption('scp-connection-info');
+            } catch (\Exception $error) {
+              $this->getIo()->error($error->getMessage());
+
+              return 1;
+            }
+
+            if (!$ssh_connection_info) {
+              $ssh_connection_info = $this->getIo()->ask(
+                'What is the connection string to the remote server?',
+                array_key_exists('COMBAWA_DB_FETCH_SCP_CONNECTION', $envVars) ? $envVars['COMBAWA_DB_FETCH_SCP_CONNECTION'] : 'user@server.org'
+              );
+              $input->setOption('scp-connection-info', $ssh_connection_info);
+            }
+          }
         }
 
         try {
-          $ssh_dump_path = $input->getOption('ssh-dump-path');
+          $fetch_source_path = $input->getOption('fetch-source-path');
         } catch (\Exception $error) {
           $this->getIo()->error($error->getMessage());
 
           return 1;
         }
 
-        if (!$ssh_dump_path) {
-          $ssh_dump_path = $this->getIo()->ask(
-            'What is the full path of the dump file on the remote server?',
-            array_key_exists('COMBAWA_DB_FETCH_PATH', $envVars) ? $envVars['COMBAWA_DB_FETCH_PATH'] : '/home/dumps/my_dump.sql.gz'
+        if (!$fetch_source_path) {
+          $fetch_source_path = $this->getIo()->ask(
+            'What is the source path of the reference dump to copy?',
+            array_key_exists('COMBAWA_DB_CP_SOURCE', $envVars) ? $envVars['COMBAWA_DB_CP_SOURCE'] : '/home/dumps-source/my_dump.sql.gz'
           );
-          $input->setOption('ssh-dump-path', $ssh_dump_path);
+          $input->setOption('fetch-source-path', $fetch_source_path);
         }
 
+        try {
+          $fetch_dest_path = $input->getOption('fetch-dest-path');
+        } catch (\Exception $error) {
+          $this->getIo()->error($error->getMessage());
+
+          return 1;
+        }
+
+        if (!$fetch_dest_path) {
+          $fetch_dest_path = $this->getIo()->ask(
+            'Where should the reference dump be copied?',
+            array_key_exists('COMBAWA_DB_CP_DEST', $envVars) ? $envVars['COMBAWA_DB_CP_DEST'] : '/home/dumps-dest/my_dump.sql.gz'
+          );
+          $input->setOption('fetch-dest-path', $fetch_dest_path);
+        }
+
+        try {
+          $dump_file_name = $input->getOption('dump-file-name');
+        } catch (\Exception $error) {
+          $this->getIo()->error($error->getMessage());
+
+          return 1;
+        }
+
+        if (!$dump_file_name) {
+          $dump_file_name = $this->getIo()->ask(
+            'What is the local name of the dump file to be loaded before the builds? Do not include the .gz extension.',
+            array_key_exists('COMBAWA_DUMP_FILE_NAME', $envVars) ? $envVars['COMBAWA_DUMP_FILE_NAME'] : 'reference_dump.sql'
+          );
+          $input->setOption('dump-file-name', $dump_file_name);
+        }
+
+        try {
+          $reimport = $input->getOption('reimport') ? (bool) $input->getOption('reimport') : null;
+        } catch (\Exception $error) {
+          $this->getIo()->error($error->getMessage());
+
+          return 0;
+        }
+
+        if (!$reimport) {
+          $reimport = $this->getIo()->confirm(
+            'Do you want the site to be reimported from the reference dump on each build?',
+            array_key_exists('COMBAWA_REIMPORT_REF_DUMP', $envVars) ? $envVars['COMBAWA_REIMPORT_REF_DUMP'] : FALSE
+          );
+          $input->setOption('reimport', $reimport);
+        }
       }
-
-      try {
-        $dump_file_name = $input->getOption('dump-file-name');
-      } catch (\Exception $error) {
-        $this->getIo()->error($error->getMessage());
-
-        return 1;
-      }
-
-      if (!$dump_file_name) {
-        $dump_file_name = $this->getIo()->ask(
-          'What is the local name of the dump file to be loaded before the builds? Do not include the .gz extension.',
-          array_key_exists('COMBAWA_DUMP_FILE_NAME', $envVars) ? $envVars['COMBAWA_DUMP_FILE_NAME'] : 'reference_dump.sql'
-        );
-        $input->setOption('dump-file-name', $dump_file_name);
-      }
-
-      try {
-        $reimport = $input->getOption('reimport') ? (bool) $input->getOption('reimport') : null;
-      } catch (\Exception $error) {
-        $this->getIo()->error($error->getMessage());
-
-        return 0;
-      }
-
-      if (!$reimport) {
-        $reimport = $this->getIo()->confirm(
-          'Do you want the site to be reimported from the reference dump on each build?',
-          array_key_exists('COMBAWA_REIMPORT_REF_DUMP', $envVars) ? $envVars['COMBAWA_REIMPORT_REF_DUMP'] : FALSE
-        );
-        $input->setOption('reimport', $reimport);
-      }
-
     }
 
     try {
@@ -467,6 +557,25 @@ class GenerateEnvironmentCommand extends Command {
     }
     else {
       throw new \InvalidArgumentException(sprintf('Environment name "%s" is invalid (only dev, testing or prod allowed).', $env));
+    }
+  }
+
+  /**
+   * Validates a retrieval tool name.
+   *
+   * @param string $tool
+   *   The tool name.
+   * @return string
+   *   The tool name.
+   * @throws \InvalidArgumentException
+   */
+  protected function validateRetrievalTool($tool) {
+    $tool = strtolower($tool);
+    if (in_array($tool, ['cp', 'scp'])) {
+      return $tool;
+    }
+    else {
+      throw new \InvalidArgumentException(sprintf('The retrieval tool name "%s" is invalid (only cp or scp allowed).', $tool));
     }
   }
 
