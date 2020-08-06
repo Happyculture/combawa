@@ -289,7 +289,7 @@ class GenerateEnvironmentCommand extends Command {
       if (!$backup_db) {
         $backup_db = $this->getIo()->confirm(
           'Do you want the database to be backed up before each build?',
-          array_key_exists('COMBAWA_BACKUP_BASE', $envVars) ? $envVars['COMBAWA_BACKUP_BASE'] : TRUE
+          array_key_exists('COMBAWA_DB_BACKUP_FLAG', $envVars) ? $envVars['COMBAWA_DB_BACKUP_FLAG'] : TRUE
         );
         $input->setOption('backup-db', $backup_db);
       }

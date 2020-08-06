@@ -125,15 +125,15 @@ do
         shift
         ;;
       -b|--backup)
-        SOURCE_BACKUP_BASE=$COMBAWA_BACKUP_BASE
-        COMBAWA_BACKUP_BASE="$2"
+        SOURCE_DB_BACKUP_FLAG=$COMBAWA_DB_BACKUP_FLAG
+        COMBAWA_DB_BACKUP_FLAG="$2"
 
         if [ $2 != "0" ] && [ $2 != "1" ] ; then
           notify_error "Invalid backup flag." "Only 0 or 1 is valid."
         fi
 
         message_action "Backup base overriden:"
-        message_override "$SOURCE_BACKUP_BASE" "$COMBAWA_BACKUP_BASE"
+        message_override "$SOURCE_DB_BACKUP_FLAG" "$COMBAWA_DB_BACKUP_FLAG"
         shift
         ;;
       -r|--reimport)
@@ -232,7 +232,7 @@ source $UTILS_DIR/prerequisites.sh
 USAGE=$(cat <<-END
 Environment built:\t${LIGHT_CYAN}$COMBAWA_BUILD_ENV${NC}
 Build mode:\t${LIGHT_CYAN}$COMBAWA_BUILD_MODE${NC}
-Generate a backup:\t${LIGHT_CYAN}$COMBAWA_BACKUP_BASE${NC}
+Generate a backup:\t${LIGHT_CYAN}$COMBAWA_DB_BACKUP_FLAG${NC}
 Environment URI:\t${LIGHT_CYAN}$COMBAWA_WEBSITE_URI${NC}
 Retrieve DB from prod:\t${LIGHT_CYAN}$COMBAWA_FETCH_DB_DUMP${NC}
 Reimport site:\t${LIGHT_CYAN}$COMBAWA_REIMPORT_REF_DUMP${NC}
@@ -251,7 +251,7 @@ fi
 section_separator
 #################################
 
-if [ "$COMBAWA_BACKUP_BASE" == "1" ] ; then
+if [ "$COMBAWA_DB_BACKUP_FLAG" == "1" ] ; then
   # Store a security backup in case the update doesn't go right.
   DUMP_NAME="update-backup-script-$(date +%Y%m%d%H%M%S).sql";
   DUMP_PATH="$WEBROOT/../dumps/$DUMP_NAME"
