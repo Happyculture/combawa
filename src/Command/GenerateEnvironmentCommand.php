@@ -323,7 +323,7 @@ class GenerateEnvironmentCommand extends Command {
         if (!$ssh_config_name) {
           $ssh_config_name = $this->getIo()->ask(
             'What is the name for the dump remote server in your ~/.ssh/config file?',
-            array_key_exists('COMBAWA_SSH_CONFIG_NAME', $envVars) ? $envVars['COMBAWA_SSH_CONFIG_NAME'] : 'my_remote'
+            array_key_exists('COMBAWA_DB_FETCH_CNX_STRING', $envVars) ? $envVars['COMBAWA_DB_FETCH_CNX_STRING'] : 'my_remote'
           );
           $input->setOption('ssh-config-name', $ssh_config_name);
         }

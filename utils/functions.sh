@@ -143,13 +143,13 @@ notify_error()
 download_dump()
 {
   message_step "Updating the reference dump:"
-  if [ -z "$COMBAWA_SSH_CONFIG_NAME" ]; then
+  if [ -z "$COMBAWA_DB_FETCH_CNX_STRING" ]; then
     message_action "Copying locally the dump file..."
     cp $COMBAWA_PROD_DB_DUMP_PATH "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
     message_confirm "Done!"
   else
     message_action "Fetching the dump from remote source..."
-    scp $COMBAWA_SSH_CONFIG_NAME:$COMBAWA_PROD_DB_DUMP_PATH "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
+    scp $COMBAWA_DB_FETCH_CNX_STRING:$COMBAWA_PROD_DB_DUMP_PATH "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
     message_confirm "Done!"
   fi
   if [[ $? != 0 ]]; then
