@@ -3,7 +3,7 @@
 # It can be useful to enable specific modules for instance.
 # Available variables are defined in .combawa.
 
-case $COMBAWA_ENV in
+case $COMBAWA_BUILD_ENV in
   dev)
     # Rebuild search indexes.
 #    $DRUSH sapi-r
@@ -20,6 +20,6 @@ case $COMBAWA_ENV in
   prod)
     ;;
   *)
-    notify_error "Unknown environment: $COMBAWA_ENV. Please check your name."
+    notify_error "Unknown environment: $COMBAWA_BUILD_ENV. Please check your name."
 esac
 

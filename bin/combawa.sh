@@ -102,11 +102,11 @@ do
       -e | --env)
         case $2 in
           dev|testing|prod)
-            SOURCE_ENV=$COMBAWA_ENV
-            COMBAWA_ENV="$2"
+            SOURCE_BUILD_ENV=$COMBAWA_BUILD_ENV
+            COMBAWA_BUILD_ENV="$2"
 
             message_action "Environment overriden:"
-            message_override "$SOURCE_ENV" "$COMBAWA_ENV"
+            message_override "$SOURCE_BUILD_ENV" "$COMBAWA_BUILD_ENV"
             ;;
           *)
             notify_error "Unknown environment: $2. Please check your name."
@@ -230,7 +230,7 @@ source $UTILS_DIR/prerequisites.sh
 
 # Show the build config.
 USAGE=$(cat <<-END
-Environment built:\t${LIGHT_CYAN}$COMBAWA_ENV${NC}
+Environment built:\t${LIGHT_CYAN}$COMBAWA_BUILD_ENV${NC}
 Build mode:\t${LIGHT_CYAN}$COMBAWA_BUILD_MODE${NC}
 Generate a backup:\t${LIGHT_CYAN}$COMBAWA_BACKUP_BASE${NC}
 Environment URI:\t${LIGHT_CYAN}$COMBAWA_WEBSITE_URI${NC}

@@ -3,7 +3,7 @@
 # Available variables are defined in .combawa or .env files.
 
 # Clean files to avoid keeping old stuff.
-if [ $COMBAWA_ENV != "prod" ]; then
+if [ $COMBAWA_BUILD_ENV != "prod" ]; then
   # Catch errors if the removal of files breaks.
   {
     rm -rf $WEBROOT/sites/default/files/*
@@ -23,7 +23,7 @@ fi
 $DRUSH site-install --sites-subdir=default --locale=fr --existing-config {{ machine_name }}
 
 # Example post install task running only on dev environments.
-#if [ "$COMBAWA_ENV" == "dev" ]; then
+#if [ "$COMBAWA_BUILD_ENV" == "dev" ]; then
 #  $DRUSH en {{ machine_name }}_content_install
 #  $DRUSH pm-uninstall better_normalizers serialization hal default_content {{ machine_name }}_content_install
 #fi

@@ -252,7 +252,7 @@ class GenerateEnvironmentCommand extends Command {
       $environment = $this->getIo()->choice(
         'Which kind of environment is it?',
         ['dev', 'testing', 'prod'],
-        array_key_exists('COMBAWA_ENV', $envVars) ? $envVars['COMBAWA_ENV'] : 'prod'
+        array_key_exists('COMBAWA_BUILD_ENV', $envVars) ? $envVars['COMBAWA_BUILD_ENV'] : 'prod'
       );
       $input->setOption('environment', $environment);
     }
