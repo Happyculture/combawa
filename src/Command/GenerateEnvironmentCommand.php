@@ -339,7 +339,7 @@ class GenerateEnvironmentCommand extends Command {
         if (!$ssh_dump_path) {
           $ssh_dump_path = $this->getIo()->ask(
             'What is the full path of the dump file on the remote server?',
-            array_key_exists('COMBAWA_PROD_DB_DUMP_PATH', $envVars) ? $envVars['COMBAWA_PROD_DB_DUMP_PATH'] : '/home/dumps/my_dump.sql.gz'
+            array_key_exists('COMBAWA_DB_FETCH_PATH', $envVars) ? $envVars['COMBAWA_DB_FETCH_PATH'] : '/home/dumps/my_dump.sql.gz'
           );
           $input->setOption('ssh-dump-path', $ssh_dump_path);
         }
