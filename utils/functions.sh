@@ -163,7 +163,7 @@ load_dump()
       $DRUSH sqlc < "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME"
     fi
     message_confirm "Done!"
-    message_action "Removing tempory sql file..."
+    message_action "Removing temporary sql file..."
     rm -f $APP_ROOT/$COMBAWA_DUMP_FILE_NAME
     message_confirm "Done!"
     message_confirm "DB import... OK!"
