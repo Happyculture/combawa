@@ -156,10 +156,10 @@ load_dump()
     message_action "Decompressing file..."
     gzip -dkf $APP_ROOT/$COMBAWA_DUMP_FILE_NAME.gz
     message_confirm "Done!"
+    message_action "DB Import in progress..."
     if hash pv 2>/dev/null; then
-      pv --progress --name 'DB Import in progress' -tea "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME" | $DRUSH sqlc
+      pv --progress --name 'DB Import' -tea "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME" | $DRUSH sqlc
     else
-      message_action "DB Import in progress..."
       $DRUSH sqlc < "$APP_ROOT/$COMBAWA_DUMP_FILE_NAME"
     fi
     message_confirm "Done!"
