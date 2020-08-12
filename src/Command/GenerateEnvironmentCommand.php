@@ -162,12 +162,8 @@ class GenerateEnvironmentCommand extends Command {
       'backup_base' => 1,
       'reimport' => 0,
       'dump_always_update' => 0,
-      'dump_retrieval_tool' => $this->validateRetrievalTool($input->getOption('dump-retrieval-tool')),
-      'ssh_config_name' => '',
-      'scp_connection_info' => '',
       'fetch_source_path' => '',
-      'fetch_dest_path' => '',
-      'dump_file_name' => '',
+      'fetch_dest_path' => 'reference_dump.sql.gz',
     ];
 
     $generateParams = [];
@@ -177,31 +173,23 @@ class GenerateEnvironmentCommand extends Command {
         'backup_base' => $input->getOption('backup-db') ? 1 : 0,
         'reimport' => $input->getOption('reimport') ? 1 : 0,
         'dump_always_update' => $input->getOption('dump-always-update') ? 1 : 0,
-        'dump_retrieval_tool' => $input->getOption('dump-retrieval-tool'),
-        'dump_file_name' => $input->getOption('dump-file-name'),
       ];
 
       if ($input->getOption('dump-retrieval-tool') == 'scp') {
         if (!empty($input->getOption('ssh-config-name'))) {
-          $generateParams += [
-            'ssh_config_name' => $input->getOption('ssh-config-name'),
-          ];
           $scp_connection = $input->getOption('ssh-config-name');
         }
         else {
-          $generateParams += [
-            'scp_connection_info' => $input->getOption('scp-connection-info'),
-          ];
-
           $scp_connection = $input->getOption('scp-connection-info');
         }
-        $generateParams += [
-          'ssh_config_name' => $input->getOption('ssh-config-name'),
-        ];
+        $recap_fetch_command = 'scp ' . $scp_connection . ':' . $input->getOption('fetch-source-path') . ' ' . $this->generator->getCombawaRoot() . '/' . $input->getOption('fetch-dest-path');
+      }
+      else {
+        $recap_fetch_command = 'cp ' . $input->getOption('fetch-source-path') . ' ' . $this->generator->getCombawaRoot() . '/' . $input->getOption('fetch-dest-path');
       }
       $generateParams += [
-        'fetch_source_path' => $input->getOption('fetch-source-path'),
-        'fetch_dest_path' => $input->getOption('fetch-dest-path'),
+        'dump_fetch_command' => $recap_fetch_command,
+        'dump_file_name' => $this->extractDumpFileName($input->getOption('fetch-dest-path')),
       ];
     }
     $generateParams += $defaults;
@@ -211,13 +199,6 @@ class GenerateEnvironmentCommand extends Command {
     $recap_backup_base = $generateParams['backup_base'] ? 'Yes' : 'No';
     $recap_update_ref_dump = $generateParams['dump_always_update'] ? 'Yes' : 'No';
     $recap_reimport = $generateParams['reimport'] ? 'Yes' : 'No';
-
-    if ($generateParams['dump_retrieval_tool'] == 'scp') {
-      $recap_retrieval_tool = 'scp ' . $scp_connection . ':' . $generateParams['fetch_source_path'] . ' ' . $generateParams['fetch_dest_path'];
-    }
-    else {
-      $recap_retrieval_tool = 'cp ' . $generateParams['fetch_source_path'] . ' ' . $generateParams['fetch_dest_path'];
-    }
 
     $recap_params = [
       ['App root', $generateParams['app_root']],
@@ -231,7 +212,7 @@ class GenerateEnvironmentCommand extends Command {
       ['Site URL', $generateParams['environment_url']],
       ['Backup DB before build', $recap_backup_base],
       ['Update ref dump before build', $recap_update_ref_dump],
-      ['Retrieve dump', $recap_retrieval_tool],
+      ['Retrieve dump', $recap_fetch_command],
       ['Reference dump filename', $generateParams['dump_file_name']],
       ['Always reimport from reference dump', $recap_reimport],
     ];
@@ -404,8 +385,8 @@ class GenerateEnvironmentCommand extends Command {
 
         if (!$fetch_source_path) {
           $fetch_source_path = $this->getIo()->ask(
-            'What is the source path of the reference dump to copy?',
-            array_key_exists('COMBAWA_DB_CP_SOURCE', $envVars) ? $envVars['COMBAWA_DB_CP_SOURCE'] : '/home/dumps-source/my_dump.sql.gz'
+            'What is the source path of the reference dump to copy (only Gzipped file supported at the moment)?',
+            array_key_exists('COMBAWA_DB_FETCH_SOURCE', $envVars) ? $envVars['COMBAWA_DB_FETCH_SOURCE'] : '/home/dumps-source/my_dump.sql.gz'
           );
           $input->setOption('fetch-source-path', $fetch_source_path);
         }
@@ -420,26 +401,10 @@ class GenerateEnvironmentCommand extends Command {
 
         if (!$fetch_dest_path) {
           $fetch_dest_path = $this->getIo()->ask(
-            'Where should the reference dump be copied?',
-            array_key_exists('COMBAWA_DB_CP_DEST', $envVars) ? $envVars['COMBAWA_DB_CP_DEST'] : '/home/dumps-dest/my_dump.sql.gz'
+            'What should the destination reference dump path in this repo (include filename, only Gzipped files supported)?',
+            array_key_exists('COMBAWA_DB_FETCH_DEST', $envVars) ? $envVars['COMBAWA_DB_FETCH_DEST'] : 'dumps/reference_dump.sql.gz'
           );
           $input->setOption('fetch-dest-path', $fetch_dest_path);
-        }
-
-        try {
-          $dump_file_name = $input->getOption('dump-file-name');
-        } catch (\Exception $error) {
-          $this->getIo()->error($error->getMessage());
-
-          return 1;
-        }
-
-        if (!$dump_file_name) {
-          $dump_file_name = $this->getIo()->ask(
-            'What is the local name of the dump file to be loaded before the builds? Do not include the .gz extension.',
-            array_key_exists('COMBAWA_DUMP_FILE_NAME', $envVars) ? $envVars['COMBAWA_DUMP_FILE_NAME'] : 'reference_dump.sql'
-          );
-          $input->setOption('dump-file-name', $dump_file_name);
         }
 
         try {
@@ -618,6 +583,15 @@ class GenerateEnvironmentCommand extends Command {
       $core_version = $matches[1];
     }
     return $core_version;
+  }
+
+  protected function extractDumpFileName($path) {
+    // @TODO: verify extension supported.
+    $path = trim($path);
+    if (strrpos($path, '/')) {
+      $path = substr($path, strrpos($path, '/')+1);
+    }
+    return $path;
   }
 
 }

@@ -164,11 +164,11 @@ download_dump()
   message_step "Updating the reference dump:"
   if [ -z "$COMBAWA_DB_FETCH_CNX_STRING" ]; then
     message_action "Copying locally the dump file..."
-    cp $COMBAWA_DB_FETCH_PATH "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
+    $($COMBAWA_DB_FETCH_COMMAND);
     message_confirm "Done!"
   else
     message_action "Fetching the dump from remote source..."
-    scp $COMBAWA_DB_FETCH_CNX_STRING:$COMBAWA_DB_FETCH_PATH "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz"
+    $($COMBAWA_DB_FETCH_COMMAND);
     message_confirm "Done!"
   fi
   if [[ $? != 0 ]]; then
@@ -180,7 +180,7 @@ download_dump()
 # Load dump function.
 load_dump()
 {
-  if [ -f "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz" ]; then
+  if [ -f "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME" ]; then
     message_step "Let's import the reference dump:"
     echo -e ""
     $DRUSH sql-drop -y;
@@ -189,7 +189,7 @@ load_dump()
 
     message_step "Importing the new DB..."
     message_action "Decompressing file..."
-    gzip -dkf $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz
+    gzip -dkf $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME
     message_confirm "Done!"
     if hash pv 2>/dev/null; then
       pv --progress --name 'DB Import in progress' -tea "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME" | $DRUSH sqlc
@@ -204,7 +204,7 @@ load_dump()
     message_confirm "Reimporting the reference dump... OK!"
     echo -e ""
   else
-    message_error "Database reference dump $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME.gz not found."
+    message_error "Database reference dump $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME not found."
     exit 1;
   fi
 }
