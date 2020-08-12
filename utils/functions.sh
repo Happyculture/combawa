@@ -139,6 +139,25 @@ notify_error()
   notify "$_MESSAGE"
 }
 
+# Generates a backup of the current DB
+backup_db()
+{
+  message_step "Generating the backup DB dump:"
+  # Store a security backup in case the update doesn't go right.
+  DUMP_NAME="update-backup-script-$(date +%Y%m%d%H%M%S).sql";
+  DUMP_PATH="$WEBROOT/../dumps/$DUMP_NAME"
+  mkdir -p "$WEBROOT/../dumps/"
+  message_action "Dump generation in progress..."
+  $DRUSH sql-dump --result-file=$DUMP_PATH --gzip
+  # Remove older backups but keep the 10 youngest ones.
+  if [ "$(ls -l $WEBROOT/../dumps/*.sql.gz | wc -l)" -gt 10 ]; then
+    message_action "Cleaning up oldest backup dumps..."
+    ls -tp $WEBROOT/../dumps/*.sql.gz | grep -v '/$' | tail -n +10 | tr '\n' '\0' | xargs -0 rm --
+    message_confirm "Cleanup done!"
+  fi
+  message_confirm "Backup dump generated!"
+}
+
 # Download dump function.
 download_dump()
 {
