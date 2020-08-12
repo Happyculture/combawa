@@ -190,16 +190,19 @@ load_dump()
     message_step "Importing the new DB..."
     message_action "Decompressing file..."
     gzip -dkf $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME
+    # Extract the SQL file name to import it.
+    _OUTPUT_DUMP_FILENAME_GZ=$(basename -- "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME")
+    _OUTPUT_DUMP_FILENAME="${_OUTPUT_DUMP_FILENAME_GZ%.*}"
     message_confirm "Done!"
     if hash pv 2>/dev/null; then
-      pv --progress --name 'DB Import in progress' -tea "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME" | $DRUSH sqlc
+      pv --progress --name 'DB Import in progress' -tea "$COMBAWA_ROOT/$_OUTPUT_DUMP_FILENAME" | $DRUSH sqlc
     else
       message_action "DB Import in progress..."
-      $DRUSH sqlc < "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME"
+      $DRUSH sqlc < "$COMBAWA_ROOT/$_OUTPUT_DUMP_FILENAME"
     fi
     message_confirm "Done!"
     message_action "Removing tempory sql file..."
-    rm -f $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME
+    rm -f $COMBAWA_ROOT/$_OUTPUT_DUMP_FILENAME
     message_confirm "Done!"
     message_confirm "Reimporting the reference dump... OK!"
     echo -e ""
