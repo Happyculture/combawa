@@ -102,7 +102,7 @@ class GenerateEnvironmentCommand extends Command {
       ->addOption(
         'dump-file-name',
         null,
-        InputOption::VALUE_REQUIRED,
+        InputOption::VALUE_OPTIONAL,
         'The name of the local dump file to load before building.'
       )
       ->addOption(
@@ -375,6 +375,19 @@ class GenerateEnvironmentCommand extends Command {
           }
         }
 
+        $validateDumpExtension = function ($path) {
+          switch (pathinfo($path, PATHINFO_EXTENSION)) {
+            case 'gz':
+              return TRUE;
+            default:
+              throw new \InvalidArgumentException(
+                sprintf(
+                  'The file extension "%s" is not supported (only Gzipped files).',
+                  $path
+                )
+              );
+          }
+        };
         try {
           $fetch_source_path = $input->getOption('fetch-source-path');
         } catch (\Exception $error) {
@@ -386,7 +399,8 @@ class GenerateEnvironmentCommand extends Command {
         if (!$fetch_source_path) {
           $fetch_source_path = $this->getIo()->ask(
             'What is the source path of the reference dump to copy (only Gzipped file supported at the moment)?',
-            array_key_exists('COMBAWA_DB_FETCH_SOURCE', $envVars) ? $envVars['COMBAWA_DB_FETCH_SOURCE'] : '/home/dumps-source/my_dump.sql.gz'
+            array_key_exists('COMBAWA_DB_FETCH_SOURCE', $envVars) ? $envVars['COMBAWA_DB_FETCH_SOURCE'] : '/home/dumps-source/my_dump.sql.gz',
+            $validateDumpExtension
           );
           $input->setOption('fetch-source-path', $fetch_source_path);
         }
@@ -402,7 +416,8 @@ class GenerateEnvironmentCommand extends Command {
         if (!$fetch_dest_path) {
           $fetch_dest_path = $this->getIo()->ask(
             'What should the destination reference dump path in this repo (include filename, only Gzipped files supported)?',
-            array_key_exists('COMBAWA_DB_FETCH_DEST', $envVars) ? $envVars['COMBAWA_DB_FETCH_DEST'] : 'dumps/reference_dump.sql.gz'
+            array_key_exists('COMBAWA_DB_FETCH_DEST', $envVars) ? $envVars['COMBAWA_DB_FETCH_DEST'] : 'dumps/reference_dump.sql.gz',
+            $validateDumpExtension
           );
           $input->setOption('fetch-dest-path', $fetch_dest_path);
         }
