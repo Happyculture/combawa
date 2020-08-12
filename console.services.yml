@@ -10,10 +10,11 @@ services:
       - { name: drupal.command, bootstrap: uninstall }
   combawa.generator.environment:
     class: \Drupal\Console\Combawa\Generator\EnvironmentGenerator
+    arguments: ['@console.drupal_finder']
     tags:
       - { name: drupal.generator, bootstrap: uninstall }
   combawa.generate_environment:
     class: \Drupal\Console\Combawa\Command\GenerateEnvironmentCommand
-    arguments: ['@combawa.generator.environment', '@app.root']
+    arguments: ['@combawa.generator.environment']
     tags:
       - { name: drupal.command, bootstrap: uninstall }

@@ -21,23 +21,12 @@ class GenerateEnvironmentCommand extends Command {
   protected $generator;
 
   /**
-   * @var string The document root absolute path.
-   */
-  protected $appRoot;
-
-  /**
    * ProfileCommand constructor.
    *
    * @param EnvironmentGenerator $generator
-   * @param StringConverter  $stringConverter
-   * @param string           $app_root
    */
-  public function __construct(
-    EnvironmentGenerator $generator,
-    $app_root
-  ) {
+  public function __construct(EnvironmentGenerator $generator) {
     $this->generator = $generator;
-    $this->appRoot = $app_root;
     parent::__construct();
   }
 
@@ -142,7 +131,8 @@ class GenerateEnvironmentCommand extends Command {
   protected function execute(InputInterface $input, OutputInterface $output) {
 
     $defaults = [
-      'app_root' => $this->appRoot,
+      'app_root' => $this->generator->getCombawaRoot(),
+      'webroot' => $this->generator->getCombawaWeboot(),
       'environment' => $this->validateEnvironment($input->getOption('environment')),
       'db_host' => $input->getOption('db-host'),
       'db_port' => $input->getOption('db-port'),

@@ -84,6 +84,8 @@ if [ -f "$COMBAWA_ROOT/.env" ]; then
   source $COMBAWA_ROOT/.env
 fi
 
+WEBROOT="$COMBAWA_ROOT/$COMBAWA_WEBROOT_PATH"
+
 # Make drush a variable to use the one shipped with the repository.
 DRUSH="$COMBAWA_ROOT/vendor/bin/drush -y --root=$WEBROOT"
 if [ $COMBAWA_WEBSITE_URI ]; then

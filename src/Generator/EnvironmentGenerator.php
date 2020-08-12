@@ -3,6 +3,7 @@
 namespace Drupal\Console\Combawa\Generator;
 
 use Drupal\Console\Core\Generator\Generator;
+use Drupal\Console\Core\Utils\DrupalFinder;
 use Drupal\Console\Core\Utils\TwigRenderer;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -14,6 +15,27 @@ class EnvironmentGenerator extends Generator {
    * @var \Symfony\Component\Filesystem\Filesystem;
    */
   protected $fs;
+
+  /**
+   * @var DrupalFinder
+   */
+  protected $drupalFinder;
+
+  protected $combawaRoot;
+  protected $combawaWebroot;
+
+  public function __construct(DrupalFinder $drupalFinder) {
+    $this->drupalFinder = $drupalFinder;
+    $this->combawaRoot = $drupalFinder->getComposerRoot();
+    $this->combawaWebroot = $drupalFinder->getDrupalRoot();
+  }
+
+  public function getCombawaRoot() {
+    return $this->combawaRoot;
+  }
+  public function getCombawaWeboot() {
+    return $this->combawaWebroot;
+  }
 
   /**
    * {@inheritdoc}
