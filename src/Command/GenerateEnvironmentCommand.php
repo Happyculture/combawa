@@ -189,7 +189,7 @@ class GenerateEnvironmentCommand extends Command {
       }
       $generateParams += [
         'dump_fetch_command' => $recap_fetch_command,
-        'dump_file_name' => $this->extractDumpFileName($input->getOption('fetch-dest-path')),
+        'dump_file_name' => $input->getOption('fetch-dest-path'),
       ];
     }
     $generateParams += $defaults;
@@ -598,15 +598,6 @@ class GenerateEnvironmentCommand extends Command {
       $core_version = $matches[1];
     }
     return $core_version;
-  }
-
-  protected function extractDumpFileName($path) {
-    // @TODO: verify extension supported.
-    $path = trim($path);
-    if (strrpos($path, '/')) {
-      $path = substr($path, strrpos($path, '/')+1);
-    }
-    return $path;
   }
 
 }
