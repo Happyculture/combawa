@@ -1,3 +1,5 @@
 # When building a library, the version should not be locked.
 # If necessary, add constraints in the dependencies versions.
 composer.lock
+vendor/
+.idea
