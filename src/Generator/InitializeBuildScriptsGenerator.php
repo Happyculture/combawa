@@ -24,7 +24,7 @@ class InitializeBuildScriptsGenerator extends Generator {
       'production_url' => $parameters['url'],
     ];
 
-    $dir = opendir(self::TPL_DIR . '/combawa-build/' . $parameters['core'] . '');
+    $dir = opendir(self::TPL_DIR . '/combawa-build/');
     while ($file = readdir($dir)) {
       if ($file[0] === '.') {
         continue;

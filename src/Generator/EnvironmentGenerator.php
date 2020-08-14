@@ -69,21 +69,21 @@ class EnvironmentGenerator extends Generator {
     $drupalRoot = $parameters['app_root'];
 
     $this->renderFile(
-      'combawa-env/' . $parameters['core'] . '/env.twig',
+      'combawa-env/env.twig',
       '../.env',
       $parameters
     );
 
     if (!$this->getFs()->exists($drupalRoot . '/sites/default/settings.local.php')) {
       $this->renderFile(
-        'combawa-env/' . $parameters['core'] . '/settings.local.php.twig',
+        'combawa-env/settings.local.php.twig',
         'sites/default/settings.local.php',
         $parameters
       );
     }
     else {
       $content = $this->renderer->render(
-        'combawa-env/' . $parameters['core'] . '/settings.local.php.twig',
+        'combawa-env/settings.local.php.twig',
         $parameters
       );
       $this->getIo()->writeln('File sites/default/settings.local.php already exist. Skipping generation.');
