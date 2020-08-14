@@ -162,17 +162,15 @@ backup_db()
 download_dump()
 {
   message_step "Updating the reference dump:"
-  if [ -z "$COMBAWA_DB_FETCH_CNX_STRING" ]; then
-    message_action "Copying locally the dump file..."
+  if [ -z "$COMBAWA_DB_FETCH_COMMAND" ]; then
+    message_action "Copying the dump file..."
     $($COMBAWA_DB_FETCH_COMMAND);
     message_confirm "Done!"
   else
-    message_action "Fetching the dump from remote source..."
-    $($COMBAWA_DB_FETCH_COMMAND);
-    message_confirm "Done!"
+    message_error "No fetch command defined."
   fi
   if [[ $? != 0 ]]; then
-    message_error "Impossible to retrieve the dump file. Verify the file name."
+    message_error "Error when retrieving the reference dump file. Are your paths valid? Access opened?"
     exit 1
   fi
 }
