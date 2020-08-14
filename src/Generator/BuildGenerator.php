@@ -21,8 +21,6 @@ class BuildGenerator extends Generator {
     $scripts_folder = '../scripts';
 
     $buildParameters = [
-      'name' => $parameters['name'],
-      'machine_name' => $parameters['machine_name'],
       'production_url' => $parameters['url'],
     ];
 
