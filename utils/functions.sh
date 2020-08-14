@@ -192,10 +192,10 @@ load_dump()
     _OUTPUT_DUMP_FILENAME_GZ=$(basename -- "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME")
     _OUTPUT_DUMP_FILENAME="${_OUTPUT_DUMP_FILENAME_GZ%.*}"
     message_confirm "Done!"
+    message_action "DB Import in progress..."
     if hash pv 2>/dev/null; then
-      pv --progress --name 'DB Import in progress' -tea "$COMBAWA_ROOT/$_OUTPUT_DUMP_FILENAME" | $DRUSH sqlc
+      pv --progress -tea "$COMBAWA_ROOT/$_OUTPUT_DUMP_FILENAME" | $DRUSH sqlc
     else
-      message_action "DB Import in progress..."
       $DRUSH sqlc < "$COMBAWA_ROOT/$_OUTPUT_DUMP_FILENAME"
     fi
     message_confirm "Done!"
