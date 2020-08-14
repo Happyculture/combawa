@@ -583,7 +583,7 @@ class GenerateEnvironmentCommand extends Command {
   protected function validateDumpExtension($path) {
     switch (pathinfo($path, PATHINFO_EXTENSION)) {
       case 'gz':
-        return TRUE;
+        return $path;
       default:
         throw new \InvalidArgumentException(
           sprintf(
