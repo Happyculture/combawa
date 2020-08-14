@@ -375,19 +375,6 @@ class GenerateEnvironmentCommand extends Command {
           }
         }
 
-        $validateDumpExtension = function ($path) {
-          switch (pathinfo($path, PATHINFO_EXTENSION)) {
-            case 'gz':
-              return TRUE;
-            default:
-              throw new \InvalidArgumentException(
-                sprintf(
-                  'The file extension "%s" is not supported (only Gzipped files).',
-                  $path
-                )
-              );
-          }
-        };
         try {
           $fetch_source_path = $input->getOption('fetch-source-path');
         } catch (\Exception $error) {
@@ -400,7 +387,9 @@ class GenerateEnvironmentCommand extends Command {
           $fetch_source_path = $this->getIo()->ask(
             'What is the source path of the reference dump to copy (only Gzipped file supported at the moment)?',
             array_key_exists('COMBAWA_DB_FETCH_SOURCE', $envVars) ? $envVars['COMBAWA_DB_FETCH_SOURCE'] : '/home/dumps-source/my_dump.sql.gz',
-            $validateDumpExtension
+            function ($path) {
+              return $this->validateDumpExtension($path);
+            }
           );
           $input->setOption('fetch-source-path', $fetch_source_path);
         }
@@ -417,7 +406,9 @@ class GenerateEnvironmentCommand extends Command {
           $fetch_dest_path = $this->getIo()->ask(
             'What should the destination reference dump path in this repo (include filename, only Gzipped files supported)?',
             array_key_exists('COMBAWA_DB_FETCH_DEST', $envVars) ? $envVars['COMBAWA_DB_FETCH_DEST'] : 'dumps/reference_dump.sql.gz',
-            $validateDumpExtension
+            function ($path) {
+              return $this->validateDumpExtension($path);
+            }
           );
           $input->setOption('fetch-dest-path', $fetch_dest_path);
         }
@@ -579,6 +570,28 @@ class GenerateEnvironmentCommand extends Command {
       $core_version = $matches[1];
     }
     return $core_version;
+  }
+
+  /**
+   * Helper to validate that the dump filetype is supported.
+   *
+   * @param $path
+   *   Dump file path.
+   *
+   * @return bool
+   */
+  protected function validateDumpExtension($path) {
+    switch (pathinfo($path, PATHINFO_EXTENSION)) {
+      case 'gz':
+        return TRUE;
+      default:
+        throw new \InvalidArgumentException(
+          sprintf(
+            'The file extension "%s" is not supported (only Gzipped files).',
+            $path
+          )
+        );
+    }
   }
 
 }
