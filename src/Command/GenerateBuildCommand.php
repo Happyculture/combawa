@@ -14,6 +14,8 @@ class GenerateBuildCommand extends Command {
 
   use ConfirmationTrait;
 
+  const REGEX_MACHINE_NAME = '/^[a-z0-9_]+$/';
+
   /**
    * @var BuildGenerator
    */
@@ -63,6 +65,18 @@ class GenerateBuildCommand extends Command {
 	'Drupal core version built (Drupal 7, Drupal 8).'
       )
       ->addOption(
+        'name',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'The project readable name (ex: Happyculture).'
+      )
+      ->addOption(
+        'machine-name',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'The project (short) machine name (ex: hc).'
+      )
+      ->addOption(
         'url',
         null,
         InputOption::VALUE_REQUIRED,
@@ -74,11 +88,15 @@ class GenerateBuildCommand extends Command {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
+    $name = $this->validateName($input->getOption('name'));
+    $machine_name = $this->validateMachineName($input->getOption('machine-name'));
     $url = $this->validateUrl($input->getOption('url'));
     $core_version = $this->extractCoreVersion($input->getOption('core'));
 
     $recap_params = [
       ['Core Version', $core_version],
+      ['Name', $name],
+      ['Machine name', $machine_name],
       ['URL', $url],
     ];
 
@@ -93,6 +111,8 @@ class GenerateBuildCommand extends Command {
 
     $this->generator->generate([
       'core' => $core_version,
+      'name' => $name,
+      'machine_name' => $machine_name,
       'url' => $url,
     ]);
   }
@@ -121,6 +141,46 @@ class GenerateBuildCommand extends Command {
       $this->getIo()->error($error->getMessage());
       return 1;
     }
+	      
+    try {
+      // A profile is technically also a module, so we can use the same
+      // validator to check the name.
+      $name = $input->getOption('name') ? $this->validateName($input->getOption('name')) : null;
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$name) {
+      $name = $this->getIo()->ask(
+        'What is the human readable name of the project?',
+        array_key_exists('COMBAWA_PROJECT_NAME', $envVars) ? $envVars['COMBAWA_PROJECT_NAME'] : 'Happy Rocket',
+        function ($name) {
+          return $this->validateName($name);
+        }
+      );
+      $input->setOption('name', $name);
+    }
+
+    try {
+      $machine_name = $input->getOption('machine-name') ? $this->validateMachineName($input->getOption('machine-name')) : null;
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$machine_name) {
+      $machine_name = $this->getIo()->ask(
+        'What is the machine name of the project?',
+        array_key_exists('COMBAWA_PROJECT_MACHINE_NAME', $envVars) ? $envVars['COMBAWA_PROJECT_MACHINE_NAME'] : $this->stringConverter->createMachineName($name),
+        function ($machine_name) {
+          return $this->validateMachineName($machine_name);
+        }
+      );
+      $input->setOption('machine-name', $machine_name);
+    }
 
     try {
       $url = $input->getOption('url') ? $this->validateUrl($input->getOption('url')) : null;
@@ -139,6 +199,47 @@ class GenerateBuildCommand extends Command {
         }
       );
       $input->setOption('url', $url);
+    }
+  }
+
+  /**
+   * Validates a module name.
+   *
+   * @param string $module
+   *   The module name.
+   * @return string
+   *   The module name.
+   * @throws \InvalidArgumentException
+   */
+  protected function validateName($module) {
+    if (!empty($module)) {
+      return $module;
+    }
+    else {
+      throw new \InvalidArgumentException(sprintf('Name "%s" is invalid.', $module));
+    }
+  }
+
+  /**
+   * Validates a machine name.
+   *
+   * @param string $machine_name
+   *   The machine name.
+   * @return string
+   *   The machine name.
+   * @throws \InvalidArgumentException
+   */
+  protected function validateMachineName($machine_name) {
+    if (preg_match(self::REGEX_MACHINE_NAME, $machine_name)) {
+      return $machine_name;
+    }
+    else {
+      throw new \InvalidArgumentException(
+        sprintf(
+          'Machine name "%s" is invalid, it must contain only lowercase letters, numbers and underscores.',
+          $machine_name
+        )
+      );
     }
   }
 
