@@ -541,25 +541,6 @@ class GenerateEnvironmentCommand extends Command {
   }
 
   /**
-   * Validates a retrieval tool name.
-   *
-   * @param string $tool
-   *   The tool name.
-   * @return string
-   *   The tool name.
-   * @throws \InvalidArgumentException
-   */
-  protected function validateRetrievalTool($tool) {
-    $tool = strtolower($tool);
-    if (in_array($tool, ['cp', 'scp'])) {
-      return $tool;
-    }
-    else {
-      throw new \InvalidArgumentException(sprintf('The retrieval tool name "%s" is invalid (only cp or scp allowed).', $tool));
-    }
-  }
-
-  /**
    * Validates an url.
    *
    * @param string $url
