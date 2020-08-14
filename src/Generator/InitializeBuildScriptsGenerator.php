@@ -3,10 +3,8 @@
 namespace Drupal\Console\Combawa\Generator;
 
 use Drupal\Console\Core\Generator\Generator;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Yaml\Yaml;
 
-class BuildGenerator extends Generator {
+class InitializeBuildScriptsGenerator extends Generator {
 
   const TPL_DIR = __DIR__ . '/../../templates';
 

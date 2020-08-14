@@ -5,19 +5,19 @@ namespace Drupal\Console\Combawa\Command;
 use Drupal\Console\Command\Shared\ConfirmationTrait;
 use Drupal\Console\Core\Command\Command;
 use Drupal\Console\Core\Utils\StringConverter;
-use Drupal\Console\Combawa\Generator\BuildGenerator;
+use Drupal\Console\Combawa\Generator\InitializeBuildScriptsGenerator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateBuildCommand extends Command {
+class InitializeBuildScriptsCommand extends Command {
 
   use ConfirmationTrait;
 
   const REGEX_MACHINE_NAME = '/^[a-z0-9_]+$/';
 
   /**
-   * @var BuildGenerator
+   * @var InitializeBuildScriptsGenerator
    */
   protected $generator;
 
@@ -34,15 +34,11 @@ class GenerateBuildCommand extends Command {
   /**
    * ProfileCommand constructor.
    *
-   * @param BuildGenerator $generator
+   * @param InitializeBuildScriptsGenerator $generator
    * @param StringConverter  $stringConverter
    * @param string           $app_root
    */
-  public function __construct(
-    BuildGenerator $generator,
-    StringConverter $stringConverter,
-    $app_root
-  ) {
+  public function __construct(InitializeBuildScriptsGenerator $generator, StringConverter $stringConverter, $app_root) {
     $this->generator = $generator;
     $this->stringConverter = $stringConverter;
     $this->appRoot = $app_root;
@@ -52,12 +48,11 @@ class GenerateBuildCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function configure()
-  {
+  protected function configure() {
     $this
-      ->setName('combawa:generate-build')
-      ->setAliases(['cgb'])
-      ->setDescription('Generate build scripts.')
+      ->setName('combawa:initialize-build-scripts')
+      ->setAliases(['ibs'])
+      ->setDescription('Initialize build scripts.')
       ->addOption(
         'core',
         null,

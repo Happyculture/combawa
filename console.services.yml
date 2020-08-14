@@ -1,10 +1,10 @@
 services:
   combawa.generator.build:
-    class: \Drupal\Console\Combawa\Generator\BuildGenerator
+    class: \Drupal\Console\Combawa\Generator\InitializeBuildScriptsGenerator
     tags:
       - { name: drupal.generator, bootstrap: uninstall }
   combawa.generate_build:
-    class: \Drupal\Console\Combawa\Command\GenerateBuildCommand
+    class: \Drupal\Console\Combawa\Command\InitializeBuildScriptsCommand
     arguments: ['@combawa.generator.build', '@console.string_converter', '@app.root']
     tags:
       - { name: drupal.command, bootstrap: uninstall }
