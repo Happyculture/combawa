@@ -3,22 +3,10 @@
 # It can be useful to backup, import databases or doing something similar.
 # Available variables are defined in .combawa.
 
-if [ "$COMBAWA_DB_FETCH_FLAG" == "1" ] ; then
-  download_dump
-fi
-
 case $COMBAWA_BUILD_ENV in
   dev)
-    # In update mode, load the reference dump if it exists.
-    if [ "$COMBAWA_BUILD_MODE" == "update" ]; then
-      load_dump
-    fi
     ;;
   testing)
-    # In update mode, load the reference dump if it exists.
-    if [ "$COMBAWA_BUILD_MODE" == "update" ]; then
-      load_dump
-    fi
     ;;
   prod)
     ;;
