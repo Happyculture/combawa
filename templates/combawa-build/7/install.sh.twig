@@ -4,7 +4,7 @@
 
 # Clean files to avoid keeping old stuff.
 if [ $COMBAWA_BUILD_ENV != "prod" ]; then
-  # Catch errors if the removal of files breaks.
+  # Catch errors if the removal of files breaks.
   {
     rm -rf $WEBROOT/sites/default/files/*
   } || {
