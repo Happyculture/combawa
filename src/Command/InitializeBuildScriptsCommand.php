@@ -52,7 +52,7 @@ class InitializeBuildScriptsCommand extends Command {
     $this
       ->setName('combawa:initialize-build-scripts')
       ->setAliases(['ibs'])
-      ->setDescription('Initialize build scripts.')
+      ->setDescription('Initialize Combawa required scripts.')
       ->addOption(
         'name',
         null,
