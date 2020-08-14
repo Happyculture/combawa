@@ -199,7 +199,7 @@ load_dump()
       $DRUSH sqlc < "$COMBAWA_ROOT/$_OUTPUT_DUMP_FILENAME"
     fi
     message_confirm "Done!"
-    message_action "Removing tempory sql file..."
+    message_action "Removing temporary sql file..."
     rm -f $COMBAWA_ROOT/$_OUTPUT_DUMP_FILENAME
     message_confirm "Done!"
     message_confirm "Reimporting the reference dump... OK!"
