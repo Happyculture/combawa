@@ -165,7 +165,8 @@ backup_db()
 download_dump()
 {
   message_step "Updating the reference dump:"
-  if [ -z "$COMBAWA_DB_FETCH_COMMAND" ]; then
+  echo -e "$COMBAWA_DB_FETCH_COMMAND"
+  if [ ! -z "$COMBAWA_DB_FETCH_COMMAND" ]; then
     message_action "Copying the dump file..."
     $($COMBAWA_DB_FETCH_COMMAND);
     message_confirm "Done!"
