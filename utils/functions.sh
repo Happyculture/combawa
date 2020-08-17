@@ -124,6 +124,9 @@ notify()
 notify_error()
 {
   _MESSAGE="$1"
+  if hash notify-send 2>/dev/null; then
+    notify-send "$1"
+  fi
   message_error "$_MESSAGE"
   # Test if we have a suggestion message and display it if so.
   # Bash is weird, we must test if the second argument is empty (the opposite
@@ -136,7 +139,7 @@ notify_error()
   else
     message_warning "$2"
   fi
-  notify "$_MESSAGE"
+
 }
 
 # Generates a backup of the current DB
