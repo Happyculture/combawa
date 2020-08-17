@@ -144,6 +144,7 @@ do
 
         if [ $2 != "0" ] && [ $2 != "1" ] ; then
           notify_error "Invalid reimport flag." "Only 0 or 1 is valid."
+          exit -1
         fi
 
         message_action "Reimport reference dump flag overriden:"
