@@ -25,26 +25,6 @@ Because Combawa is very cool, you can also use it when you bootstrap your projec
 
 Check the below section [Drupal 7 installation steps](#drupal-7).
 
-You must also add DB credentials environment variables to your Apache configuration.
-Add the following lines within your `VirtualHost` to do so :
-
-```
-<VirtualHost *:80>
-  # [...] Other directives.
-  
-  # Combawa variables configuration.
-  SetEnv COMBAWA_DB_HOSTNAME <DB_HOSTNAME>
-  SetEnv COMBAWA_DB_PORT <DB_PORT>
-  SetEnv COMBAWA_DB_DATABASE <DB_NAME>
-  SetEnv COMBAWA_DB_USER <DB_USERNAME>
-  SetEnv COMBAWA_DB_PASSWORD <DB_PASSWORD>
-  
-  # [...] Other directives.
-  
-</VirtualHost>
-```
-This is due to the fact that there is no native autoload for Drupal 7.
-
 ### Recommanded
 
 #### Combawa wrapper as a global command
