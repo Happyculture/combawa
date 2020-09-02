@@ -194,6 +194,23 @@ Add the following lines within your `VirtualHost` to do so :
   
 </VirtualHost>
 ```
+
+The Nginx version is the following: 
+
+```
+location ~ \.php$ {
+  include snippets/fastcgi-php.conf;
+  # With php-fpm (or other unix sockets):
+  fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+  fastcgi_param COMBAWA_DB_HOSTNAME "localhost";
+  fastcgi_param COMBAWA_DB_PORT 3306;
+  fastcgi_param COMBAWA_DB_DATABASE "colibris_universite_dev";
+  fastcgi_param COMBAWA_DB_USER "artusamak";
+  fastcgi_param COMBAWA_DB_PASSWORD "";
+  include fastcgi_params;
+}
+```
+
 With that you should be good to go.
 
 If you want to have your `settings.php` file and `files` directory automatically added when running composer install command, add this code portion into your composer.json file:
