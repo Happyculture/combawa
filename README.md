@@ -202,11 +202,11 @@ location ~ \.php$ {
   include snippets/fastcgi-php.conf;
   # With php-fpm (or other unix sockets):
   fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
-  fastcgi_param COMBAWA_DB_HOSTNAME "localhost";
-  fastcgi_param COMBAWA_DB_PORT 3306;
-  fastcgi_param COMBAWA_DB_DATABASE "colibris_universite_dev";
-  fastcgi_param COMBAWA_DB_USER "artusamak";
-  fastcgi_param COMBAWA_DB_PASSWORD "";
+  fastcgi_param COMBAWA_DB_HOSTNAME "<DB_HOSTNAME>";
+  fastcgi_param COMBAWA_DB_PORT <DB_PORT>;
+  fastcgi_param COMBAWA_DB_DATABASE "<DB_NAME>";
+  fastcgi_param COMBAWA_DB_USER "<DB_USERNAME>";
+  fastcgi_param COMBAWA_DB_PASSWORD "<DB_PASSWORD>";
   include fastcgi_params;
 }
 ```
