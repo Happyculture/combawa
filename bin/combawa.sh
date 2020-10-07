@@ -72,26 +72,25 @@ echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
 echo -e ""
 
 # Check project settings are set.
-if [ ! -f "$COMBAWA_ROOT/.combawa" ]; then
-  message_error "There is no settings file at the moment or its not readable."
-  message_warning "You should run the following command to initialize it: 'drupal combawa:generate-project'."
+if [[ "" == "$(composer config extra.combawa)" ]]; then
+  message_error "Base settings has not been defined yet."
+  message_warning "You should run the following command to initialize it: 'drupal combawa:initialize-build-scripts'."
   exit -1
 fi
 
 # Set default variables.
+COMBAWA_BUILD_MODE=`composer config extra.combawa.build_mode`
+COMBAWA_BUILD_ENV="prod"
 COMBAWA_DB_BACKUP_FLAG=1
 COMBAWA_REIMPORT_REF_DUMP=0
 COMBAWA_DB_FETCH_FLAG=0
-# Build variables and their overrides.
-source $COMBAWA_ROOT/.combawa
+# Load local overrides.
 if [ -f "$COMBAWA_ROOT/.env" ]; then
   source $COMBAWA_ROOT/.env
 fi
 
-WEBROOT="$COMBAWA_ROOT/$COMBAWA_WEBROOT_PATH"
-
 # Make drush a variable to use the one shipped with the repository.
-DRUSH="$COMBAWA_ROOT/vendor/bin/drush -y --root=$WEBROOT"
+DRUSH="$COMBAWA_ROOT/vendor/bin/drush -y"
 
 # Set the arguments value.
 set +u
