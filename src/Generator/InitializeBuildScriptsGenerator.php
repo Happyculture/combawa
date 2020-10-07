@@ -21,7 +21,6 @@ class InitializeBuildScriptsGenerator extends Generator {
     $buildParameters = [
       'name' => $parameters['name'],
       'machine_name' => $parameters['machine_name'],
-      'production_url' => $parameters['url'],
     ];
 
     $dir = opendir(self::TPL_DIR . '/combawa-build/');

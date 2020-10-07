@@ -258,7 +258,7 @@ class GenerateEnvironmentCommand extends Command {
       if (!$environment_url) {
         $environment_url = $this->getIo()->ask(
           'What is the URL of the project for the ' . $environment . ' environment?',
-          array_key_exists('COMBAWA_WEBSITE_URI', $envVars) ? $envVars['COMBAWA_WEBSITE_URI'] : 'https://' . $environment . '.happyculture.coop',
+          array_key_exists('DRUSH_OPTIONS_URI', $envVars) ? $envVars['DRUSH_OPTIONS_URI'] : 'https://' . $environment . '.happyculture.coop',
           function ($environment_url) {
             return $this->validateUrl($environment_url);
           }

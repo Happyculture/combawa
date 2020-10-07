@@ -64,12 +64,6 @@ class InitializeBuildScriptsCommand extends Command {
         null,
         InputOption::VALUE_REQUIRED,
         'The project (short) machine name (ex: hc).'
-      )
-      ->addOption(
-        'url',
-        null,
-        InputOption::VALUE_REQUIRED,
-        'The project production URL.'
       );
   }
 
@@ -79,12 +73,10 @@ class InitializeBuildScriptsCommand extends Command {
   protected function execute(InputInterface $input, OutputInterface $output) {
     $name = $this->validateName($input->getOption('name'));
     $machine_name = $this->validateMachineName($input->getOption('machine-name'));
-    $url = $this->validateUrl($input->getOption('url'));
 
     $recap_params = [
       ['Name', $name],
       ['Machine name', $machine_name],
-      ['URL', $url],
     ];
 
     $this->getIo()->newLine(1);
@@ -99,7 +91,6 @@ class InitializeBuildScriptsCommand extends Command {
     $this->generator->generate([
       'name' => $name,
       'machine_name' => $machine_name,
-      'url' => $url,
     ]);
   }
 
@@ -149,24 +140,6 @@ class InitializeBuildScriptsCommand extends Command {
       $input->setOption('machine-name', $machine_name);
     }
 
-    try {
-      $url = $input->getOption('url') ? $this->validateUrl($input->getOption('url')) : null;
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
-
-      return 1;
-    }
-
-    if (!$url) {
-      $url = $this->getIo()->ask(
-        'What is the production URL of the project?',
-        array_key_exists('COMBAWA_WEBSITE_URI', $envVars) ? $envVars['COMBAWA_WEBSITE_URI'] : 'https://happyculture.coop',
-        function ($url) {
-          return $this->validateUrl($url);
-        }
-      );
-      $input->setOption('url', $url);
-    }
   }
 
   /**
@@ -208,36 +181,6 @@ class InitializeBuildScriptsCommand extends Command {
         )
       );
     }
-  }
-
-  /**
-   * Validates an url.
-   *
-   * @param string $url
-   *   The url to validate.
-   *
-   * @return string
-   *   The url.
-   */
-  protected function validateUrl($url) {
-    $parts = parse_url($url);
-    if ($parts === FALSE) {
-      throw new \InvalidArgumentException(
-        sprintf(
-          '"%s" is a malformed url.',
-          $url
-        )
-      );
-    }
-    elseif (empty($parts['scheme']) || empty($parts['host'])) {
-      throw new \InvalidArgumentException(
-        sprintf(
-          'Please specify a full URL with scheme and host instead of "%s".',
-          $url
-        )
-      );
-    }
-    return $url;
   }
 
 }

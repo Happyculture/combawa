@@ -92,9 +92,6 @@ WEBROOT="$COMBAWA_ROOT/$COMBAWA_WEBROOT_PATH"
 
 # Make drush a variable to use the one shipped with the repository.
 DRUSH="$COMBAWA_ROOT/vendor/bin/drush -y --root=$WEBROOT"
-if [ $COMBAWA_WEBSITE_URI ]; then
-  DRUSH="$DRUSH --uri=$COMBAWA_WEBSITE_URI"
-fi
 
 # Set the arguments value.
 set +u
@@ -153,18 +150,6 @@ do
 
         message_action "Reimport reference dump flag overriden:"
         message_override "$SOURCE_REIMPORT" "$COMBAWA_REIMPORT_REF_DUMP"
-        shift
-        ;;
-      -u|--uri)
-        SOURCE_URI=$COMBAWA_WEBSITE_URI
-        COMBAWA_WEBSITE_URI="$2"
-
-        if [ ! $2 ]; then
-          notify_error "URI parameter can not be empty."
-        fi
-
-        message_action "URI overriden:"
-        message_override "$SOURCE_URI" "$COMBAWA_WEBSITE_URI"
         shift
         ;;
       -h|--help)
@@ -240,7 +225,7 @@ USAGE=$(cat <<-END
 Environment built:\t${LIGHT_CYAN}$COMBAWA_BUILD_ENV${NC}
 Build mode:\t${LIGHT_CYAN}$COMBAWA_BUILD_MODE${NC}
 Generate a backup:\t${LIGHT_CYAN}$COMBAWA_DB_BACKUP_FLAG${NC}
-Environment URI:\t${LIGHT_CYAN}$COMBAWA_WEBSITE_URI${NC}
+Environment URI:\t${LIGHT_CYAN}${DRUSH_OPTIONS_URI:-undefined}${NC}
 Retrieve DB from prod:\t${LIGHT_CYAN}$COMBAWA_DB_FETCH_FLAG${NC}
 Reimport site:\t${LIGHT_CYAN}$COMBAWA_REIMPORT_REF_DUMP${NC}
 END
