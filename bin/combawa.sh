@@ -78,6 +78,10 @@ if [ ! -f "$COMBAWA_ROOT/.combawa" ]; then
   exit -1
 fi
 
+# Set default variables.
+COMBAWA_DB_BACKUP_FLAG=1
+COMBAWA_REIMPORT_REF_DUMP=0
+COMBAWA_DB_FETCH_FLAG=0
 # Build variables and their overrides.
 source $COMBAWA_ROOT/.combawa
 if [ -f "$COMBAWA_ROOT/.env" ]; then
