@@ -19,7 +19,6 @@ class InitializeBuildScriptsGenerator extends Generator {
     $scripts_folder = '../scripts';
 
     $buildParameters = [
-      'name' => $parameters['name'],
       'machine_name' => $parameters['machine_name'],
     ];
 

@@ -54,12 +54,6 @@ class InitializeBuildScriptsCommand extends Command {
       ->setAliases(['ibs'])
       ->setDescription('Initialize Combawa required scripts.')
       ->addOption(
-        'name',
-        null,
-        InputOption::VALUE_REQUIRED,
-        'The project readable name (ex: Happyculture).'
-      )
-      ->addOption(
         'machine-name',
         null,
         InputOption::VALUE_REQUIRED,
@@ -71,11 +65,9 @@ class InitializeBuildScriptsCommand extends Command {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $name = $this->validateName($input->getOption('name'));
     $machine_name = $this->validateMachineName($input->getOption('machine-name'));
 
     $recap_params = [
-      ['Name', $name],
       ['Machine name', $machine_name],
     ];
 
@@ -89,7 +81,6 @@ class InitializeBuildScriptsCommand extends Command {
     }
 
     $this->generator->generate([
-      'name' => $name,
       'machine_name' => $machine_name,
     ]);
   }
@@ -98,28 +89,6 @@ class InitializeBuildScriptsCommand extends Command {
    * {@inheritdoc}
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
-    $envVars = getenv();
-	      
-    try {
-      // A profile is technically also a module, so we can use the same
-      // validator to check the name.
-      $name = $input->getOption('name') ? $this->validateName($input->getOption('name')) : null;
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
-
-      return 1;
-    }
-
-    if (!$name) {
-      $name = $this->getIo()->ask(
-        'What is the human readable name of the project?',
-        array_key_exists('COMBAWA_PROJECT_NAME', $envVars) ? $envVars['COMBAWA_PROJECT_NAME'] : 'Happy Rocket',
-        function ($name) {
-          return $this->validateName($name);
-        }
-      );
-      $input->setOption('name', $name);
-    }
 
     try {
       $machine_name = $input->getOption('machine-name') ? $this->validateMachineName($input->getOption('machine-name')) : null;
@@ -132,7 +101,7 @@ class InitializeBuildScriptsCommand extends Command {
     if (!$machine_name) {
       $machine_name = $this->getIo()->ask(
         'What is the machine name of the project?',
-        array_key_exists('COMBAWA_PROJECT_MACHINE_NAME', $envVars) ? $envVars['COMBAWA_PROJECT_MACHINE_NAME'] : $this->stringConverter->createMachineName($name),
+        'new_project',
         function ($machine_name) {
           return $this->validateMachineName($machine_name);
         }
@@ -140,24 +109,6 @@ class InitializeBuildScriptsCommand extends Command {
       $input->setOption('machine-name', $machine_name);
     }
 
-  }
-
-  /**
-   * Validates a module name.
-   *
-   * @param string $module
-   *   The module name.
-   * @return string
-   *   The module name.
-   * @throws \InvalidArgumentException
-   */
-  protected function validateName($module) {
-    if (!empty($module)) {
-      return $module;
-    }
-    else {
-      throw new \InvalidArgumentException(sprintf('Name "%s" is invalid.', $module));
-    }
   }
 
   /**
