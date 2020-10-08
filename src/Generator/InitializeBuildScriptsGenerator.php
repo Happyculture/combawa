@@ -17,7 +17,7 @@ class InitializeBuildScriptsGenerator extends Generator {
    * @param array $parameters
    */
   public function generate(array $parameters) {
-    $scripts_folder = '../scripts';
+    $scripts_folder = '../scripts/combawa';
 
     $buildParameters = [
       'machine_name' => $parameters['machine_name'],
