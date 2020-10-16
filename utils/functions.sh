@@ -73,7 +73,7 @@ usage()
   normal=$(tput sgr0)
 
   echo -e "Usage:"
-  echo -e "Long version: ./build.sh --env dev --mode install --backup 1 --uri http://hc.fun --fetch-db-dump"
+  echo -e "Long version: ./build.sh --env dev --mode install --backup 1 --fetch-db-dump"
   echo -e "Short version: ./build.sh -e dev -m install -b 1 -u http://hc.fun -f"
   echo ''
   echo -e "Available arguments are:"
@@ -94,9 +94,6 @@ usage()
   echo -e "${bold}\t--backup, -b: Generates a backup before building the project.${normal}"
   echo -e '\t\tAllowed values are: 0: does not generate a backup, 1: generates a backup.'
   echo -e '\t\tDefault value: 1'
-  echo ''
-  echo -e "${bold}\t--uri, -u: Local URL of your project${normal}"
-  echo -e '\t\tUsed when the final drush uli command is runned.'
   echo ''
   echo -e "${bold}\t--fetch-db-dump, -f: Fetch a fresh DB dump from the production site.${normal}"
   echo -e '\t\tUsed when the reference dump should be updated.'

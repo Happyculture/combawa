@@ -115,7 +115,7 @@ Combawa ships with template files for each mode, you can update them when you ne
 
 #### Combawa options
 
-You can use more arguments such as : `./vendor/bin/combawa.sh --env dev --mode install --backup 1 --uri http://hc.fun --fetch-db-dump`
+You can use more arguments such as : `./vendor/bin/combawa.sh --env dev --mode install --backup 1 --fetch-db-dump`
 
 Here is the list of available arguments:
 * `--env`, `-e`: Environment to build. Allowed values are: dev, testing, prod
@@ -126,7 +126,6 @@ Here is the list of available arguments:
 * `--no-postdeploy`: Do not execute the postdeploy actions.
 * `--reimport`, `-r`: Reimports the site from the reference dump (DB drop and replace). 
 * `--backup`, `-e`: Generates a backup before building the project. Allowed values are: 0: does not generate a backup, 1: generates a backup.
-* `--uri`, `-u`: Local URL of your project. Used when the final drush uli command is runned.
 * `--fetch-db-dump`, `-f`: Fetches a fresh DB dump from the production site. Used when the reference dump should be updated.
 * `--stop-after-reimport`: Flag to stop building after reimporting the DB. Useful to version config from prod. 
 
