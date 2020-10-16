@@ -21,6 +21,25 @@ Because Combawa is very cool, you can also use it when you bootstrap your projec
 - Use `drupal combawa:generate-build` to initiate your build files.
 - Use `drupal combawa:generate-environment` to setup your environment.
 
+If you don't want to the DB settings file to be written, you will have to include in your settings the following snippet to connect to the DB:
+
+```
+<?php
+
+// Environment variables are defined in the .env file at the project root.
+$databases['default']['default'] = [
+  'host' => $_SERVER['COMBAWA_DB_HOSTNAME'],
+  'port' => $_SERVER['COMBAWA_DB_PORT'],
+  'database' => $_SERVER['COMBAWA_DB_DATABASE'],
+  'password' => $_SERVER['COMBAWA_DB_PASSWORD'],
+  'username' => $_SERVER['COMBAWA_DB_USER'],
+  'prefix' => '',
+  'driver' => 'mysql',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+];
+
+```
+
 **Drupal 7 users**
 
 You must also add DB credentials environment variables to your Apache configuration.
