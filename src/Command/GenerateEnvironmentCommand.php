@@ -447,7 +447,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$db_name) {
       $db_name = $this->getIo()->ask(
         'What is the name of your database?',
-        array_key_exists('COMBAWA_DB_NAME', $envVars) ? $envVars['COMBAWA_DB_NAME'] : 'drupal8'
+        array_key_exists('COMBAWA_DB_DATABASE', $envVars) ? $envVars['COMBAWA_DB_DATABASE'] : 'drupal8'
       );
       $input->setOption('db-name', $db_name);
     }
