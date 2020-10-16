@@ -226,7 +226,7 @@ class GenerateEnvironmentCommand extends Command {
    * {@inheritdoc}
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
-    $envVars = getenv();
+    $envVars = $_SERVER;
 
     try {
       $environment = $input->getOption('environment') ? $this->validateEnvironment($input->getOption('environment')) : null;
