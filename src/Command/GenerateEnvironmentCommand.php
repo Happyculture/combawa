@@ -397,7 +397,7 @@ class GenerateEnvironmentCommand extends Command {
         if (!$reimport) {
           $reimport = $this->getIo()->confirm(
             'Do you want the site to be reimported from the reference dump on each build?',
-            array_key_exists('COMBAWA_REIMPORT_REF_DUMP', $envVars) ? $envVars['COMBAWA_REIMPORT_REF_DUMP'] : FALSE
+            array_key_exists('COMBAWA_REIMPORT_REF_DUMP_FLAG', $envVars) ? $envVars['COMBAWA_REIMPORT_REF_DUMP_FLAG'] : FALSE
           );
           $input->setOption('reimport', $reimport);
         }

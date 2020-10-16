@@ -82,7 +82,7 @@ fi
 COMBAWA_BUILD_MODE=`composer config extra.combawa.build_mode`
 COMBAWA_BUILD_ENV="prod"
 COMBAWA_DB_BACKUP_FLAG=1
-COMBAWA_REIMPORT_REF_DUMP=0
+COMBAWA_REIMPORT_REF_DUMP_FLAG=0
 COMBAWA_DB_FETCH_FLAG=0
 # Load local overrides.
 if [ -f "$COMBAWA_ROOT/.env" ]; then
@@ -139,8 +139,8 @@ do
         shift
         ;;
       -r|--reimport)
-        SOURCE_REIMPORT=$COMBAWA_REIMPORT_REF_DUMP
-        COMBAWA_REIMPORT_REF_DUMP="$2"
+        SOURCE_REIMPORT=$COMBAWA_REIMPORT_REF_DUMP_FLAG
+        COMBAWA_REIMPORT_REF_DUMP_FLAG="$2"
 
         if [ $2 != "0" ] && [ $2 != "1" ] ; then
           notify_error "Invalid reimport flag." "Only 0 or 1 is valid."
@@ -148,7 +148,7 @@ do
         fi
 
         message_action "Reimport reference dump flag overriden:"
-        message_override "$SOURCE_REIMPORT" "$COMBAWA_REIMPORT_REF_DUMP"
+        message_override "$SOURCE_REIMPORT" "$COMBAWA_REIMPORT_REF_DUMP_FLAG"
         shift
         ;;
       -h|--help)
@@ -226,7 +226,7 @@ Build mode:\t${LIGHT_CYAN}$COMBAWA_BUILD_MODE${NC}
 Generate a backup:\t${LIGHT_CYAN}$COMBAWA_DB_BACKUP_FLAG${NC}
 Environment URI:\t${LIGHT_CYAN}${DRUSH_OPTIONS_URI:-undefined}${NC}
 Retrieve DB from prod:\t${LIGHT_CYAN}$COMBAWA_DB_FETCH_FLAG${NC}
-Reimport site:\t${LIGHT_CYAN}$COMBAWA_REIMPORT_REF_DUMP${NC}
+Reimport site:\t${LIGHT_CYAN}$COMBAWA_REIMPORT_REF_DUMP_FLAG${NC}
 END
 )
 
@@ -251,13 +251,13 @@ if [ "$COMBAWA_DB_FETCH_FLAG" == "1" ] ; then
 fi
 
 # Reimport the SQL reference dump.
-if [ "$COMBAWA_REIMPORT_REF_DUMP" == "1" ] ; then
+if [ "$COMBAWA_REIMPORT_REF_DUMP_FLAG" == "1" ] ; then
   load_dump
 fi
 
 # Exit if the force exit flag has been raised. It's interesting to check if the prod dump doesn't have config to export.
 if [ "$_COMBAWA_REIMPORT_FORCE_EXIT" == 1 ]; then
-  if [ "$COMBAWA_REIMPORT_REF_DUMP" == "1" ] ; then
+  if [ "$COMBAWA_REIMPORT_REF_DUMP_FLAG" == "1" ] ; then
     message_action "Exiting now that the reference dump has been reimported and the force exit flag has been raised!"
     else
       message_action "Build stopped as requested but no dump has been reimported. Didn't you forget to add the --reimport flag? ;-)."
