@@ -74,7 +74,7 @@ class EnvironmentGenerator extends Generator {
       $parameters
     );
 
-    if (!$this->getFs()->exists($drupalRoot . '/sites/default/settings.local.php')) {
+    if (!$this->getFs()->exists($drupalRoot . '/sites/default/settings.local.php') && $parameters['write_db_settings'] == 1) {
       $this->renderFile(
         'combawa-env/settings.local.php.twig',
         'sites/default/settings.local.php',

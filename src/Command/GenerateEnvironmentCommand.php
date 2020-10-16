@@ -134,6 +134,12 @@ class GenerateEnvironmentCommand extends Command {
         null,
         InputOption::VALUE_OPTIONAL,
         'The password of the local database.'
+      )
+      ->addOption(
+        'write-db-settings',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'Flag to write the DB settings code.'
       );
   }
 
@@ -157,6 +163,7 @@ class GenerateEnvironmentCommand extends Command {
       'dump_always_update' => 0,
       'fetch_source_path' => '',
       'fetch_dest_path' => 'reference_dump.sql.gz',
+      'write_db_settings' => $input->getOption('write-db-settings'),
     ];
 
     $generateParams = [];
@@ -192,6 +199,7 @@ class GenerateEnvironmentCommand extends Command {
     $recap_backup_base = $generateParams['backup_base'] ? 'Yes' : 'No';
     $recap_update_ref_dump = $generateParams['dump_always_update'] ? 'Yes' : 'No';
     $recap_reimport = $generateParams['reimport'] ? 'Yes' : 'No';
+    $recap_write_settings = $generateParams['write_db_settings'] ? 'Yes' : 'No';
 
     $recap_params = [
       ['App root', $generateParams['app_root']],
@@ -207,6 +215,7 @@ class GenerateEnvironmentCommand extends Command {
       ['Retrieve dump', $recap_fetch_command],
       ['Reference dump filename', $generateParams['dump_file_name']],
       ['Always reimport from reference dump', $recap_reimport],
+      ['Write code to connect to DB', $recap_write_settings],
     ];
 
     $this->getIo()->newLine(1);
@@ -482,6 +491,22 @@ class GenerateEnvironmentCommand extends Command {
         array_key_exists('COMBAWA_DB_PASSWORD', $envVars) ? $envVars['COMBAWA_DB_PASSWORD'] : ''
       );
       $input->setOption('db-password', $db_password);
+    }
+
+    try {
+      $db_write = $input->getOption('write-db-settings');
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$db_write) {
+      $db_write = $this->getIo()->confirm(
+        'Do you want Combawa to create a settings.local.php file that will ease your DB connection or do you want to do it yourself? (The code to copy/paste will be prompted in the next steps).',
+        TRUE
+      );
+      $input->setOption('write-db-settings', $db_write);
     }
   }
 
