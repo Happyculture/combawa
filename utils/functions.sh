@@ -48,6 +48,13 @@ message_error()
   message_color "${_MESSAGE}" "${RED}"
 }
 
+# Displays an error message and exits.
+message_fatal()
+{
+  message_error "$1"
+  return -1
+}
+
 # Display a variable override.
 # Arg 1 is the source value.
 # Arg 2 is the new value.
@@ -231,7 +238,6 @@ load_dump()
     message_confirm "Reimporting the reference dump... OK!"
     echo -e ""
   else
-    message_error "Database reference dump $_DUMP_PATH_GZ not found."
-    exit 1;
+    message_fatal "Database reference dump $COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH not found."
   fi
 }
