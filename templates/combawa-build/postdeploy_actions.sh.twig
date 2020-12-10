@@ -25,6 +25,6 @@ case $COMBAWA_BUILD_ENV in
     $DRUSH locale:update
     ;;
   *)
-    notify_error "Unknown environment: $COMBAWA_BUILD_ENV. Please check your name."
+    notify_fatal "Unknown environment: $COMBAWA_BUILD_ENV. Please check your name."
 esac
 

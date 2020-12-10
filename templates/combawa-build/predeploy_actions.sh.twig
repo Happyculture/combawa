@@ -10,5 +10,5 @@ case $COMBAWA_BUILD_ENV in
   prod)
     ;;
   *)
-    notify_error "Unknown environment: $COMBAWA_BUILD_ENV. Please check your name."
+    notify_fatal "Unknown environment: $COMBAWA_BUILD_ENV. Please check your name."
 esac
