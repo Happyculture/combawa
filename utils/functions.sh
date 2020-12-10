@@ -192,24 +192,30 @@ backup_db()
 download_dump()
 {
   message_step "Updating the reference dump:"
-  echo -e "$COMBAWA_DB_FETCH_COMMAND"
-  if [ ! -z "$COMBAWA_DB_FETCH_COMMAND" ]; then
-    message_action "Copying the dump file..."
-    $($COMBAWA_DB_FETCH_COMMAND);
-    message_confirm "Done!"
-  else
-    message_error "No fetch command defined."
-  fi
+  # Create the dumps dir if necessary.
+  $(mkdir -p $(dirname -- "$COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH"))
+
+  case $COMBAWA_DB_FETCH_METHOD in
+    "cp" )
+      message_action "Copying reference dump with 'cp'."
+      cp $COMBAWA_DB_FETCH_PATH_SOURCE $COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH
+      message_confirm "Reference dump update... OK!"
+      ;;
+    "scp" )
+      message_action "Copying reference dump with 'scp'."
+      scp -P $COMBAWA_DB_FETCH_SCP_PORT $COMBAWA_DB_FETCH_SCP_USER@$COMBAWA_DB_FETCH_SCP_SERVER:$COMBAWA_DB_FETCH_PATH_SOURCE $COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH
+      message_confirm "Reference dump update... OK!"
+      ;;
+  esac
   if [[ $? != 0 ]]; then
-    message_error "Error when retrieving the reference dump file. Are your paths valid? Access opened?"
-    exit 1
+    message_fatal "Error when retrieving the reference dump file. Are your paths valid? Access opened?"
   fi
 }
 
 # Load dump function.
 load_dump()
 {
-  if [ -f "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME" ]; then
+  if [ -f "$COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH" ]; then
     message_step "Let's import the reference dump:"
     echo -e ""
     $DRUSH sql-drop -y;
@@ -218,9 +224,9 @@ load_dump()
 
     message_step "Importing the new DB..."
     message_action "Decompressing file..."
-    gzip -dkf $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME
+    gzip -dkf $COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH
     # Extract the SQL file name to import it.
-    _OUTPUT_DUMP_FILENAME_GZ=$(basename -- "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME")
+    _OUTPUT_DUMP_FILENAME_GZ=$(basename -- "$COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH")
     _OUTPUT_DUMP_FILENAME="${_OUTPUT_DUMP_FILENAME_GZ%.*}"
     message_confirm "Done!"
     message_action "DB Import in progress..."
