@@ -196,7 +196,9 @@ class GenerateEnvironmentCommand extends Command {
         $recap_fetch_command = 'cp ' . $input->getOption('fetch-source-path') . ' ' . $this->generator->getCombawaRoot() . '/' . $input->getOption('fetch-dest-path');
       }
       $generateParams += [
-        'dump_fetch_command' => $recap_fetch_command,
+        'dump_fetch_method' => $recap_fetch_command,
+        'dump_fetch_path_source' => $recap_fetch_path_source,
+        'dump_fetch_path_dest' => $recap_fetch_path_dest,
         'dump_file_name' => $input->getOption('fetch-dest-path'),
       ];
     }
