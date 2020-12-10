@@ -161,18 +161,6 @@ do
         message_action "Fetch DB dump from prod overriden:"
         message_override "$SOURCE_DB_FETCH_FLAG" "$COMBAWA_DB_FETCH_FLAG"
         echo -e ""
-
-        if [ "$COMBAWA_DB_FETCH_FLAG" == "1" ] ; then
-          if [[ ! -z "$COMBAWA_DB_FETCH_CNX_STRING" ]]; then
-            message_step "Testing connection with remote SSH server from which the dump will be retrieved:"
-            ssh -q $COMBAWA_DB_FETCH_CNX_STRING echo > /dev/null
-            if [ "$?" != "0" ] ; then
-              notify_error "Impossible to connect to the production server." "Check your SSH config file. Should you connect through a VPN?"
-            else
-              message_confirm "SSH connection OK."
-            fi
-          fi
-        fi
         shift
         ;;
       --only-predeploy)
