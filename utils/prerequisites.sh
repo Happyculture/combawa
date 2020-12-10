@@ -76,6 +76,55 @@ message_confirm "DB connection... OK!"
 section_separator
 #################################
 
+if [ $COMBAWA_DB_FETCH_FLAG == 1 ]; then
+  # Test DB fetch method parameters.
+  message_step "Verifying reference dump fetching method."
+
+  # Verify that the fetch method is supported.
+  case $COMBAWA_DB_FETCH_METHOD in
+    "cp" )
+      message_action "Verifying 'cp' dump fetching parameters."
+      # Are our variables defined?
+      if [ -z ${COMBAWA_DB_FETCH_PATH_SOURCE+x} ] || [ -z ${COMBAWA_DB_DUMP_PATH+x} ]; then
+        notify_fatal "The parameter COMBAWA_DB_FETCH_PATH_SOURCE or COMBAWA_DB_DUMP_PATH is empty. We will not be able to copy a reference dump."
+      fi
+      message_action "Verifying 'cp' files are accessible."
+      # Is the source file accessible/readable?
+      if [ ! -f $COMBAWA_DB_FETCH_PATH_SOURCE ]; then
+        notify_fatal "There is no $COMBAWA_DB_FETCH_PATH_SOURCE source file at the moment or its not readable." "Is your path correct or accessible?."
+      fi
+      message_confirm "'cp' dump fetching parameters check... OK!"
+      ;;
+    "scp" )
+      message_action "Verifying 'scp' dump fetching parameters."
+      # Are our variables defined?
+      if [ -z ${COMBAWA_DB_FETCH_SCP_USER+x} ] || [ -z ${COMBAWA_DB_FETCH_SCP_PORT+x} ] || [ -z ${COMBAWA_DB_FETCH_SCP_SERVER+x} ] || [ -z ${COMBAWA_DB_FETCH_PATH_SOURCE+x} ] || [ -z ${COMBAWA_DB_DUMP_PATH+x} ]; then
+        notify_fatal "One of the parameters COMBAWA_DB_FETCH_SCP_USER, COMBAWA_DB_FETCH_SCP_PORT, COMBAWA_DB_FETCH_SCP_SERVER, COMBAWA_DB_FETCH_PATH_SOURCE or COMBAWA_DB_DUMP_PATH is empty. We will not be able to copy a reference dump."
+      fi
+      message_step "Testing connection with remote SSH server from which the dump will be retrieved:"
+      set +e
+      ssh -q -p $COMBAWA_DB_FETCH_SCP_PORT $COMBAWA_DB_FETCH_SCP_USER@$COMBAWA_DB_FETCH_SCP_SERVER -o ConnectTimeout=5 echo > /dev/null
+      if [ "$?" != "0" ] ; then
+        notify_fatal "Impossible to connect to the SSH server." "Check your SSH connection parameters. Should you connect through a VPN?"
+      else
+        message_confirm "SSH connection OK."
+      fi
+      set -e
+      message_confirm "'scp' dump fetching parameters check... OK!"
+      ;;
+    * )
+      notify_fatal "Dump fetching '$COMBAWA_DB_FETCH_METHOD' method unsupported."
+      ;;
+  esac
+  message_confirm "Reference dump fetching method... OK!"
+else
+  message_action "Do not fetch the reference dump for this build."
+fi
+
+#################################
+section_separator
+#################################
+
 # Test incompatible parameters.
 if [[ $COMBAWA_BUILD_MODE == "install" ]] && [[ $COMBAWA_REIMPORT_REF_DUMP_FLAG == 1 ]]; then
   notify_error "Reimport DB is not available in install build mode.\nYou should either change your build mode (-m) to 'update' or disable the reimport mode (-r 0)."

@@ -176,7 +176,7 @@ do
             message_step "Testing connection with remote SSH server from which the dump will be retrieved:"
             ssh -q $COMBAWA_DB_FETCH_CNX_STRING echo > /dev/null
             if [[ $? != 0 ]]; then
-              notify_error "Impossible to connect to the production server." "Check your SSH config file. Should you connect through a VPN?"
+              notify_fatal "Impossible to connect to the production server." "Check your SSH config file. Should you connect through a VPN?"
             else
               message_confirm "SSH connection OK."
             fi
