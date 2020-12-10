@@ -115,7 +115,7 @@ do
             message_override "$SOURCE_BUILD_ENV" "$COMBAWA_BUILD_ENV"
             ;;
           *)
-            notify_error "Unknown environment: $2. Please check your name."
+            notify_fatal "Unknown environment: $2. Please check your name."
         esac
         shift
         ;;
@@ -124,7 +124,7 @@ do
         COMBAWA_BUILD_MODE="$2"
 
         if [[ $2 != "install" ]] && [[ $2 != "update" ]]; then
-          notify_error "Invalid build mode." "Only install or update is valid"
+          notify_fatal "Invalid build mode." "Only install or update is valid"
         fi;
 
         message_action "Build mode overriden:"
@@ -136,7 +136,7 @@ do
         COMBAWA_DB_BACKUP_FLAG="$2"
 
         if [[ $2 != "0" ]] && [[ $2 != "1" ]]; then
-          notify_error "Invalid backup flag." "Only 0 or 1 is valid."
+          notify_fatal "Invalid backup flag." "Only 0 or 1 is valid."
         fi
 
         message_action "Backup base overriden:"
@@ -148,7 +148,7 @@ do
         COMBAWA_REIMPORT_REF_DUMP_FLAG="$2"
 
         if [[ $2 != "0" ]] && [[ $2 != "1" ]]; then
-          notify_error "Invalid reimport flag." "Only 0 or 1 is valid."
+          notify_fatal "Invalid reimport flag." "Only 0 or 1 is valid."
         fi
 
         message_action "Reimport reference dump flag overriden:"

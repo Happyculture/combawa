@@ -142,6 +142,29 @@ notify_error()
   exit -1
 }
 
+# Notify fatal.
+notify_fatal()
+{
+
+  _MESSAGE="$1"
+  if hash notify-send 2>/dev/null; then
+    notify-send "$1"
+  fi
+  message_error "$_MESSAGE"
+  # Test if we have a suggestion message and display it if so.
+  # Bash is weird, we must test if the second argument is empty (the opposite
+  # test doesn't exist). It means that when we enter in the if, we don't want
+  # to do anything.
+  if [ -z ${2+x} ]; then
+    # We need to use ":" to do nothing (an empty string generates a syntax
+    # error)
+    :
+  else
+    message_warning "$2"
+  fi
+  exit -10
+}
+
 # Generates a backup of the current DB
 backup_db()
 {
