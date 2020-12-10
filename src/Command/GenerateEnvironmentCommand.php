@@ -412,7 +412,7 @@ class GenerateEnvironmentCommand extends Command {
 
         if (!$fetch_dest_path) {
           $fetch_dest_path = $this->getIo()->ask(
-            'What should the destination reference dump path in this repo (include filename, only Gzipped files supported)?',
+            'What will be the path of the fetched dump in this repo? (ex: dumps/reference_dump.sql.gz - include filename, only Gzipped files are supported)',
             array_key_exists('COMBAWA_DB_FETCH_DEST', $envVars) ? $envVars['COMBAWA_DB_FETCH_DEST'] : 'dumps/reference_dump.sql.gz',
             function ($path) {
               return $this->validateDumpExtension($path);
@@ -529,7 +529,7 @@ class GenerateEnvironmentCommand extends Command {
 
     if (!$db_write) {
       $db_write = $this->getIo()->confirm(
-        'Do you want Combawa to create a settings.local.php file that will ease your DB connection or do you want to do it yourself? (The code to copy/paste will be prompted in the next steps).',
+        'Do you want Combawa to create a settings.local.php file that will ease your DB connection? You can do it yourself later on, the code to copy/paste will be prompted in the next step.',
         TRUE
       );
       $input->setOption('write-db-settings', $db_write);
