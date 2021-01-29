@@ -1,5 +1,5 @@
 {
-    "name": "happyculture/combawa",
+    "name": "happyculture/combawa-local",
     "description": "Projects builder",
     "bin": ["bin/combawa.sh"],
     "type": "drupal-console-library",
