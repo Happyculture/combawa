@@ -66,7 +66,7 @@ class GenerateEnvironmentCommand extends Command {
       ->addOption(
         'dump-retrieval-tool',
         null,
-        InputOption::VALUE_NONE,
+        InputOption::VALUE_REQUIRED,
         'Tool used to retrieve the reference dump.'
       )
       ->addOption(
