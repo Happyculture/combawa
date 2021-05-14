@@ -5,6 +5,7 @@
     "type": "drupal-console-library",
     "licence": "GPL-3.0-or-later",
     "autoload": {
+        "files": ["load.environment.php"],
         "psr-4": {"Drupal\\Console\\Combawa\\": "src"}
     },
     "require-dev": {
@@ -12,7 +13,8 @@
     },
     "require": {
         "drupal/console-extend-plugin": "^0.9",
-        "drush/drush": "^9 || ^10"
+        "drush/drush": "^9 || ^10",
+        "vlucas/phpdotenv": "^5.3"
     },
     "suggest": {
         "happyculture/combawa-wrapper": "Lets you run combawa from anywhere without naming explicitely vendor/bin/combawa.sh.",
