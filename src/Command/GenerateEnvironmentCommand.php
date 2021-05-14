@@ -4,7 +4,8 @@ namespace Drupal\Console\Combawa\Command;
 
 use Drupal\Console\Command\Shared\ConfirmationTrait;
 use Drupal\Console\Core\Command\Command;
-use Drupal\Console\Combawa\Generator\EnvironmentGenerator;
+use Drupal\Console\Core\Utils\StringConverter;
+use Drupal\Console\Combawa\Generator\EnvironmentInstallGenerator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,16 +15,16 @@ class GenerateEnvironmentCommand extends Command {
   use ConfirmationTrait;
 
   /**
-   * @var EnvironmentGenerator
+   * @var EnvironmentInstallGenerator
    */
   protected $generator;
 
   /**
    * ProfileCommand constructor.
    *
-   * @param EnvironmentGenerator $generator
+   * @param EnvironmentInstallGenerator $generator
    */
-  public function __construct(EnvironmentGenerator $generator) {
+  public function __construct(EnvironmentInstallGenerator $generator) {
     $this->generator = $generator;
     parent::__construct();
   }
@@ -152,10 +153,11 @@ class GenerateEnvironmentCommand extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
 
-    $defaults = [
+    $generateParams = [
       'app_root' => $this->generator->getCombawaRoot(),
       'webroot' => $this->generator->getCombawaWeboot(),
       'environment' => $this->validateEnvironment($input->getOption('environment')),
+      'environment_url' => $this->validateUrl($input->getOption('environment-url')),
       'db_host' => $input->getOption('db-host'),
       'db_port' => $input->getOption('db-port'),
       'db_name' => $input->getOption('db-name'),
@@ -207,8 +209,6 @@ class GenerateEnvironmentCommand extends Command {
     // Improve attributes readibility.
     $recap_db_password = empty($generateParams['db_password']) ? 'No password' : 'Your secret password';
     $recap_backup_base = $generateParams['backup_base'] ? 'Yes' : 'No';
-    $recap_update_ref_dump = $generateParams['dump_always_update'] ? 'Yes' : 'No';
-    $recap_reimport = $generateParams['reimport'] ? 'Yes' : 'No';
     $recap_write_settings = $generateParams['write_db_settings'] ? 'Yes' : 'No';
     $enable_splits = implode(', ', $generateParams['enable_splits']);
 
@@ -222,14 +222,9 @@ class GenerateEnvironmentCommand extends Command {
       ['DB password', $recap_db_password],
       ['Site URL', $generateParams['environment_url']],
       ['Backup DB before build', $recap_backup_base],
-      ['Update ref dump before build', $recap_update_ref_dump],
-      ['Retrieve dump', $recap_fetch_command],
-      ['Reference dump filename', $generateParams['dump_file_name']],
-      ['Always reimport from reference dump', $recap_reimport],
       ['Write code to connect to DB', $recap_write_settings],
       ['Config splits to enable', $enable_splits],
     ];
-
     $this->getIo()->newLine(1);
     $this->getIo()->commentBlock('Settings recap');
     $this->getIo()->table(['Parameter', 'Value'], $recap_params);
@@ -281,7 +276,6 @@ class GenerateEnvironmentCommand extends Command {
       );
       $input->setOption('environment', $environment);
     }
-
     try {
       $environment_url = $input->getOption('environment-url') ? $this->validateUrl($input->getOption('environment-url')) : null;
     } catch (\Exception $error) {
@@ -519,6 +513,22 @@ class GenerateEnvironmentCommand extends Command {
         array_key_exists('COMBAWA_DB_PASSWORD', $envVars) ? $envVars['COMBAWA_DB_PASSWORD'] : ''
       );
       $input->setOption('db-password', $db_password);
+    }
+
+    try {
+      $backup_db = $input->getOption('backup-db') ? (bool) $input->getOption('backup-db') : null;
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$backup_db) {
+      $backup_db = $this->getIo()->confirm(
+        'Do you want the database to be backed up before each build?',
+        array_key_exists('COMBAWA_DB_BACKUP_FLAG', $envVars) ? $envVars['COMBAWA_DB_BACKUP_FLAG'] : TRUE
+      );
+      $input->setOption('backup-db', $backup_db);
     }
 
     try {

@@ -7,7 +7,7 @@ use Drupal\Console\Core\Utils\DrupalFinder;
 use Drupal\Console\Core\Utils\TwigRenderer;
 use Symfony\Component\Filesystem\Filesystem;
 
-class EnvironmentGenerator extends Generator {
+class EnvironmentInstallGenerator extends Generator {
 
   const TPL_DIR = __DIR__ . '/../../templates';
 
@@ -69,7 +69,7 @@ class EnvironmentGenerator extends Generator {
     $drupalRoot = $parameters['webroot'];
 
     $this->renderFile(
-      'combawa-env/env.twig',
+      'combawa-env/env-install.twig',
       '../.env',
       $parameters
     );

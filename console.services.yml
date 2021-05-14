@@ -18,7 +18,7 @@ services:
     tags:
       - { name: drupal.command, bootstrap: uninstall }
   combawa.generator.environment:
-    class: \Drupal\Console\Combawa\Generator\EnvironmentGenerator
+    class: \Drupal\Console\Combawa\Generator\EnvironmentInstallGenerator
     arguments: ['@console.drupal_finder']
     tags:
       - { name: drupal.generator, bootstrap: uninstall }
