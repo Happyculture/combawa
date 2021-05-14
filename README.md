@@ -19,8 +19,8 @@ Because Combawa is very cool, you can also use it when you bootstrap your projec
 ## <a name="installation"></a>Installation
 
 - `composer require happyculture/combawa drupal/console`
-- Use `drupal combawa:generate-build` to initiate your build files.
-- Use `drupal combawa:generate-environment` to setup your environment.
+- Use `drupal combawa:initialize-build-scripts` to initiate the project build files from a template (actions run when the project is installed or updated).
+- Use `drupal combawa:generate-environment` to setup your environment (configuring the project variables).
 
 If you don't want to the DB settings file to be written, you will have to include in your settings the following snippet to connect to the DB:
 
