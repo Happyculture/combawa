@@ -5,6 +5,7 @@
     "type": "drupal-console-library",
     "licence": "GPL-3.0-or-later",
     "autoload": {
+        "files": ["load.environment.php"],
         "psr-4": {"Drupal\\Console\\Combawa\\": "src"}
     },
     "require-dev": {
