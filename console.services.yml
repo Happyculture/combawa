@@ -27,3 +27,13 @@ services:
     arguments: ['@combawa.generator.environment']
     tags:
       - { name: drupal.command, bootstrap: uninstall }
+  combawa.generator.update.environment:
+    class: \Drupal\Console\Combawa\Generator\EnvironmentUpdateGenerator
+    arguments: ['@console.drupal_finder']
+    tags:
+      - { name: drupal.generator, bootstrap: uninstall }
+  combawa.generate_update_environment:
+    class: \Drupal\Console\Combawa\Command\SwitchToUpdateCommand
+    arguments: ['@combawa.generator.update.environment']
+    tags:
+      - { name: drupal.command, bootstrap: uninstall }
