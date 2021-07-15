@@ -43,7 +43,7 @@ class InitializeBuildScriptsGenerator extends Generator {
       $destination_file = substr($file, 0, -1 * strlen('.twig'));
 
       $this->renderFile(
-        'combawa-build/' . $parameters['core'] . '/' . $file,
+        'combawa-build/' . $file,
         $scripts_folder . '/' . $destination_file,
         $buildParameters
       );
