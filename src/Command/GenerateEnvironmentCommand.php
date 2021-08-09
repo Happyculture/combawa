@@ -157,7 +157,7 @@ class GenerateEnvironmentCommand extends Command {
       'db_name' => $input->getOption('db-name'),
       'db_user' => $input->getOption('db-user'),
       'db_password' => $input->getOption('db-password'),
-      'environment_url' => '',
+      'environment_url' => $this->validateUrl($input->getOption('environment-url')),
       'backup_base' => 1,
       'reimport' => 0,
       'dump_always_update' => 0,
@@ -169,7 +169,6 @@ class GenerateEnvironmentCommand extends Command {
     $generateParams = [];
     if ($defaults['environment'] != 'prod') {
       $generateParams += [
-        'environment_url' => $this->validateUrl($input->getOption('environment-url')),
         'backup_base' => $input->getOption('backup-db') ? 1 : 0,
         'reimport' => $input->getOption('reimport') ? 1 : 0,
         'dump_always_update' => $input->getOption('dump-always-update') ? 1 : 0,
@@ -254,26 +253,26 @@ class GenerateEnvironmentCommand extends Command {
       $input->setOption('environment', $environment);
     }
 
+    try {
+      $environment_url = $input->getOption('environment-url') ? $this->validateUrl($input->getOption('environment-url')) : null;
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$environment_url) {
+      $environment_url = $this->getIo()->ask(
+        'What is the URL of the project for the ' . $environment . ' environment?',
+        array_key_exists('DRUSH_OPTIONS_URI', $envVars) ? $envVars['DRUSH_OPTIONS_URI'] : 'https://' . $environment . '.happyculture.coop',
+        function ($environment_url) {
+          return $this->validateUrl($environment_url);
+        }
+      );
+      $input->setOption('environment-url', $environment_url);
+    }
+
     if ($environment != 'prod') {
-
-      try {
-        $environment_url = $input->getOption('environment-url') ? $this->validateUrl($input->getOption('environment-url')) : null;
-      } catch (\Exception $error) {
-        $this->getIo()->error($error->getMessage());
-
-        return 1;
-      }
-
-      if (!$environment_url) {
-        $environment_url = $this->getIo()->ask(
-          'What is the URL of the project for the ' . $environment . ' environment?',
-          array_key_exists('DRUSH_OPTIONS_URI', $envVars) ? $envVars['DRUSH_OPTIONS_URI'] : 'https://' . $environment . '.happyculture.coop',
-          function ($environment_url) {
-            return $this->validateUrl($environment_url);
-          }
-        );
-        $input->setOption('environment-url', $environment_url);
-      }
 
       try {
         $backup_db = $input->getOption('backup-db') ? (bool) $input->getOption('backup-db') : null;
