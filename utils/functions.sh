@@ -190,7 +190,7 @@ load_dump()
     message_action "Decompressing file..."
     gzip -dkf $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME
     # Extract the SQL file name to import it.
-    _OUTPUT_DUMP_FILENAME_GZ=$(basename -- "$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME")
+    _OUTPUT_DUMP_FILENAME_GZ="$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME"
     _OUTPUT_DUMP_FILENAME="${_OUTPUT_DUMP_FILENAME_GZ%.*}"
     message_confirm "Done!"
     message_action "DB Import in progress..."
