@@ -188,25 +188,24 @@ load_dump()
 
     message_step "Importing the new DB..."
     message_action "Decompressing file..."
-    gzip -dkf $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME
-    # Extract the SQL file name to import it.
-    _OUTPUT_DUMP_FILENAME_GZ="$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME"
-    _OUTPUT_DUMP_FILENAME="${_OUTPUT_DUMP_FILENAME_GZ%.*}"
+    _DUMP_PATH_GZ="$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME"
+    _DUMP_PATH="${_DUMP_PATH_GZ%.*}"
+    gzip -dkf $_DUMP_PATH_GZ
     message_confirm "Done!"
     message_action "DB Import in progress..."
     if hash pv 2>/dev/null; then
-      pv --progress -tea "$COMBAWA_ROOT/$_OUTPUT_DUMP_FILENAME" | $DRUSH sqlc
+      pv --progress -tea "$_DUMP_PATH" | $DRUSH sqlc
     else
-      $DRUSH sqlc < "$COMBAWA_ROOT/$_OUTPUT_DUMP_FILENAME"
+      $DRUSH sqlc < "$_DUMP_PATH"
     fi
     message_confirm "Done!"
     message_action "Removing temporary sql file..."
-    rm -f $COMBAWA_ROOT/$_OUTPUT_DUMP_FILENAME
+    rm -f $_DUMP_PATH
     message_confirm "Done!"
     message_confirm "Reimporting the reference dump... OK!"
     echo -e ""
   else
-    message_error "Database reference dump $COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME not found."
+    message_error "Database reference dump $_DUMP_PATH_GZ not found."
     exit 1;
   fi
 }
