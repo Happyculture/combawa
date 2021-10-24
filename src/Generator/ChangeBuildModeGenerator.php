@@ -18,6 +18,7 @@ class ChangeBuildModeGenerator extends Generator {
     $prevDir = getcwd();
     chdir($this->drupalFinder->getComposerRoot());
     exec('/usr/bin/env composer config extra.combawa.build_mode ' . $parameters['mode']);
+    exec('/usr/bin/env composer update --lock');
     chdir($prevDir);
     $this->fileQueue->addFile('../composer.json');
     $this->countCodeLines->addCountCodeLines(1);

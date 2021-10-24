@@ -28,6 +28,7 @@ class InitializeBuildScriptsGenerator extends Generator {
     exec('/usr/bin/env composer config name ' . $parameters['machine_name'] . '/' . $parameters['machine_name']);
     exec('/usr/bin/env composer config extra.combawa.machine_name ' . $parameters['machine_name']);
     exec('/usr/bin/env composer config extra.combawa.build_mode install');
+    exec('/usr/bin/env composer update --lock');
     chdir($prevDir);
     $this->fileQueue->addFile('../composer.json');
     $this->countCodeLines->addCountCodeLines(5);
