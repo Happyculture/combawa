@@ -3,7 +3,6 @@
 namespace Drupal\Console\Combawa\Generator;
 
 use Drupal\Console\Core\Generator\Generator;
-use Drupal\Console\Core\Utils\DrupalFinder;
 
 class InitializeBuildScriptsGenerator extends Generator {
 
