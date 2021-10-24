@@ -106,7 +106,7 @@ class ChangeBuildModeCommand extends Command {
    */
   protected function validateBuildMode($mode) {
     $mode = strtolower($mode);
-    if (in_array($mode, ['isntall', 'update'])) {
+    if (in_array($mode, ['install', 'update'])) {
       return $mode;
     }
     else {
