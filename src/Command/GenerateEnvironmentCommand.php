@@ -423,7 +423,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!$db_host) {
       $db_host = $this->getIo()->ask(
         'What is the hostname of your database server?',
-        array_key_exists('COMBAWA_DB_HOST', $envVars) ? $envVars['COMBAWA_DB_HOST'] : 'localhost'
+        array_key_exists('COMBAWA_DB_HOSTNAME', $envVars) ? $envVars['COMBAWA_DB_HOSTNAME'] : 'localhost'
       );
       $input->setOption('db-host', $db_host);
     }
