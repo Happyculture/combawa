@@ -140,6 +140,12 @@ class GenerateEnvironmentCommand extends Command {
         null,
         InputOption::VALUE_REQUIRED,
         'Flag to write the DB settings code.'
+      )
+      ->addOption(
+        'enable-splits',
+        null,
+        InputOption::VALUE_OPTIONAL,
+        'Config splits to enable separated by a comma.'
       );
   }
 
@@ -164,7 +170,12 @@ class GenerateEnvironmentCommand extends Command {
       'fetch_source_path' => '',
       'fetch_dest_path' => 'reference_dump.sql.gz',
       'write_db_settings' => $input->getOption('write-db-settings'),
+      'enable_splits' => $input->getOption('enable-splits'),
     ];
+    if (!is_array($defaults['enable_splits'])) {
+      $defaults['enable_splits'] = explode(',', $defaults['enable_splits']);
+    }
+    $defaults['enable_splits'] = array_filter($defaults['enable_splits']);
 
     $generateParams = [];
     if ($defaults['environment'] != 'prod') {
@@ -199,6 +210,7 @@ class GenerateEnvironmentCommand extends Command {
     $recap_update_ref_dump = $generateParams['dump_always_update'] ? 'Yes' : 'No';
     $recap_reimport = $generateParams['reimport'] ? 'Yes' : 'No';
     $recap_write_settings = $generateParams['write_db_settings'] ? 'Yes' : 'No';
+    $enable_splits = implode(', ', $generateParams['enable_splits']);
 
     $recap_params = [
       ['App root', $generateParams['app_root']],
@@ -215,6 +227,7 @@ class GenerateEnvironmentCommand extends Command {
       ['Reference dump filename', $generateParams['dump_file_name']],
       ['Always reimport from reference dump', $recap_reimport],
       ['Write code to connect to DB', $recap_write_settings],
+      ['Config splits to enable', $enable_splits],
     ];
 
     $this->getIo()->newLine(1);
@@ -506,6 +519,26 @@ class GenerateEnvironmentCommand extends Command {
         TRUE
       );
       $input->setOption('write-db-settings', $db_write);
+    }
+
+    try {
+      $enable_splits = $input->getOption('enable-splits');
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$enable_splits) {
+      // todo List available splits in the config sync directory of the project.
+      $available_splits = ['dev', 'testing', 'preprod'];
+      $enable_splits = $this->getIo()->choice(
+        'Which config splits do you want to enable? (comma separated keys)',
+        $available_splits,
+        NULL,
+        TRUE
+      );
+      $input->setOption('enable-splits', $enable_splits);
     }
   }
 

@@ -11,3 +11,11 @@ $databases['default']['default'] = [
   'driver' => 'mysql',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
 ];
+
+{% if enable_splits is not empty %}
+// Enable config splits.
+{% for split in enable_splits %}
+$config['config_split.config_split.{{ split }}']['status'] = TRUE;
+{% endfor %}
+{% endif %}
+
