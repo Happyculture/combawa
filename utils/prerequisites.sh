@@ -66,7 +66,7 @@ section_separator
 # Test DB connection.
 message_step "Verifying database connectivity."
 {
-  $DRUSH sql-connect
+  $DRUSH sql:query "SHOW TABLES;"
 } &> /dev/null || { # catch
   notify_error "The connection to the database is impossible."
 }
