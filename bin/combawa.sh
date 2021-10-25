@@ -72,7 +72,7 @@ echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
 echo -e ""
 
 # Check project settings are set.
-if [[ "" == "$(composer config extra.combawa)" ]]; then
+if [[ "" == "$(composer config extra.combawa.build_mode)" ]]; then
   message_error "Base settings has not been defined yet."
   message_warning "You should run the following command to initialize it: 'drupal combawa:initialize-build-scripts'."
   exit -1
