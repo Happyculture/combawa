@@ -136,7 +136,8 @@ notify_error()
   else
     message_warning "$2"
   fi
-
+  
+  exit -1
 }
 
 # Generates a backup of the current DB
