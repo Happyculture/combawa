@@ -8,7 +8,6 @@ use Drupal\Console\Combawa\Generator\EnvironmentGenerator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class GenerateEnvironmentCommand extends Command {
 
@@ -240,6 +239,22 @@ class GenerateEnvironmentCommand extends Command {
 
     $this->generator->setIo($this->getIo());
     $this->generator->generate($generateParams);
+
+    // Display the command to run in non-interactive mode to get the same
+    // result.
+    $command = './vendor/bin/drupal ' . $input->getFirstArgument() . ' \\';
+    foreach ($input->getOptions() as $key => $value) {
+      if (empty($value) || $key === 'uri') {
+        continue;
+      }
+      if (is_array($value)) {
+        $value = implode(',', $value);
+      }
+      $command .= "\n" . '  --' . $key . ' ' . $value . ' \\';
+    }
+    $command .= "\n" . '  --no-interaction';
+    $this->getIo()->simple('Next time you could just use:');
+    $this->getIo()->comment($command);
   }
 
   /**
