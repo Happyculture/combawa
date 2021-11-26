@@ -151,7 +151,7 @@ backup_db()
   message_action "Dump generation in progress..."
   $DRUSH sql-dump --structure-tables-list=cache_* --result-file=$DUMP_PATH --gzip
   # Remove older backups but keep the 10 youngest ones.
-  if [ "$(ls -l $WEBROOT/../dumps/*.sql.gz | wc -l)" -gt 10 ]; then
+  if [[ $(ls -l $WEBROOT/../dumps/*.sql.gz | wc -l) -gt 10 ]]; then
     message_action "Cleaning up oldest backup dumps..."
     ls -tp $WEBROOT/../dumps/*.sql.gz | grep -v '/$' | tail -n +10 | tr '\n' '\0' | xargs -0 rm --
     message_confirm "Cleanup done!"

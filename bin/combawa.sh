@@ -119,9 +119,10 @@ do
         SOURCE_BUILD_MODE=$COMBAWA_BUILD_MODE
         COMBAWA_BUILD_MODE="$2"
 
-        if [ $2 != "install" ] && [ $2 != "update" ] ; then
+        if [[ $2 != "install" ]] && [[ $2 != "update" ]]; then
           notify_error "Invalid build mode."
         fi;
+
         message_action "Build mode overriden:"
         message_override "$SOURCE_BUILD_MODE" "$COMBAWA_BUILD_MODE"
         shift
@@ -130,7 +131,7 @@ do
         SOURCE_DB_BACKUP_FLAG=$COMBAWA_DB_BACKUP_FLAG
         COMBAWA_DB_BACKUP_FLAG="$2"
 
-        if [ $2 != "0" ] && [ $2 != "1" ] ; then
+        if [[ $2 != "0" ]] && [[ $2 != "1" ]]; then
           notify_error "Invalid backup flag." "Only 0 or 1 is valid."
         fi
 
@@ -142,7 +143,7 @@ do
         SOURCE_REIMPORT=$COMBAWA_REIMPORT_REF_DUMP_FLAG
         COMBAWA_REIMPORT_REF_DUMP_FLAG="$2"
 
-        if [ $2 != "0" ] && [ $2 != "1" ] ; then
+        if [[ $2 != "0" ]] && [[ $2 != "1" ]]; then
           notify_error "Invalid reimport flag." "Only 0 or 1 is valid."
         fi
 
@@ -162,11 +163,11 @@ do
         message_override "$SOURCE_DB_FETCH_FLAG" "$COMBAWA_DB_FETCH_FLAG"
         echo -e ""
 
-        if [ "$COMBAWA_DB_FETCH_FLAG" == "1" ] ; then
+        if [[ $COMBAWA_DB_FETCH_FLAG == "1" ]]; then
           if [[ ! -z "$COMBAWA_DB_FETCH_CNX_STRING" ]]; then
             message_step "Testing connection with remote SSH server from which the dump will be retrieved:"
             ssh -q $COMBAWA_DB_FETCH_CNX_STRING echo > /dev/null
-            if [ "$?" != "0" ] ; then
+            if [[ $? != 0 ]]; then
               notify_error "Impossible to connect to the production server." "Check your SSH config file. Should you connect through a VPN?"
             else
               message_confirm "SSH connection OK."
@@ -208,11 +209,11 @@ done
 set -u
 
 # Compute steps to run. By default, every steps are run.
-if [ "$_COMBAWA_ONLY_PREDEPLOY" == 1 ]; then
+if [[ $_COMBAWA_ONLY_PREDEPLOY == 1 ]]; then
   _COMBAWA_RUN_MAIN_BUILD_STEP=0
   _COMBAWA_RUN_POSTDEPLOY=0
 fi
-if [ "$_COMBAWA_ONLY_POSTDEPLOY" == 1 ]; then
+if [[ $_COMBAWA_ONLY_POSTDEPLOY == 1 ]]; then
   _COMBAWA_RUN_PREDEPLOY=0
   _COMBAWA_RUN_MAIN_BUILD_STEP=0
 fi
@@ -241,23 +242,23 @@ fi
 #################################
 section_separator
 #################################
-if [ "$COMBAWA_DB_BACKUP_FLAG" == "1" ] ; then
+if [[ $COMBAWA_DB_BACKUP_FLAG == "1" ]]; then
   backup_db
 fi
 
 # Download the reference dump file.
-if [ "$COMBAWA_DB_FETCH_FLAG" == "1" ] ; then
+if [[ $COMBAWA_DB_FETCH_FLAG == "1" ]]; then
   download_dump
 fi
 
 # Reimport the SQL reference dump.
-if [ "$COMBAWA_REIMPORT_REF_DUMP_FLAG" == "1" ] ; then
+if [[ $COMBAWA_REIMPORT_REF_DUMP_FLAG == "1" ]]; then
   load_dump
 fi
 
 # Exit if the force exit flag has been raised. It's interesting to check if the prod dump doesn't have config to export.
-if [ "$_COMBAWA_REIMPORT_FORCE_EXIT" == 1 ]; then
-  if [ "$COMBAWA_REIMPORT_REF_DUMP_FLAG" == "1" ] ; then
+if [[ $_COMBAWA_REIMPORT_FORCE_EXIT == "1" ]]; then
+  if [[ $COMBAWA_REIMPORT_REF_DUMP_FLAG == "1" ]]; then
     message_action "Exiting now that the reference dump has been reimported and the force exit flag has been raised!"
     else
       message_action "Build stopped as requested but no dump has been reimported. Didn't you forget to add the --reimport flag? ;-)."
@@ -265,7 +266,7 @@ if [ "$_COMBAWA_REIMPORT_FORCE_EXIT" == 1 ]; then
   exit
 fi
 
-if [ "$_COMBAWA_RUN_PREDEPLOY" == 1 ]; then
+if [[ $_COMBAWA_RUN_PREDEPLOY == "1" ]]; then
   message_step "Running predeploy actions."
   # Return error codes if they happen.
   set -xe
@@ -275,14 +276,14 @@ if [ "$_COMBAWA_RUN_PREDEPLOY" == 1 ]; then
 
   message_confirm "Predeploy actions... Done!"
 
-  if [ "$_COMBAWA_ONLY_PREDEPLOY" == "1" ] ; then
+  if [[ $_COMBAWA_ONLY_PREDEPLOY == "1" ]]; then
     message_action "Exiting now that predeploy actions have been run!"
   fi
 fi
 
-if [ "$_COMBAWA_RUN_MAIN_BUILD_STEP" == 1 ]; then
+if [[ $_COMBAWA_RUN_MAIN_BUILD_STEP == "1" ]]; then
   # Run the build content.
-  if [ "$COMBAWA_BUILD_MODE" == "install" ]; then
+  if [[ $COMBAWA_BUILD_MODE == "install" ]]; then
     message_step "Running install."
     # Return error codes if they happen.
     set -xe
@@ -293,7 +294,7 @@ if [ "$_COMBAWA_RUN_MAIN_BUILD_STEP" == 1 ]; then
       exit $?
     fi
     message_confirm "Install... OK!"
-  elif [ "$COMBAWA_BUILD_MODE" == "update" ]; then
+  elif [[ $COMBAWA_BUILD_MODE == "update" ]]; then
     message_step "Running update."
     # Return error codes if they happen.
     set -xe
@@ -307,7 +308,7 @@ if [ "$_COMBAWA_RUN_MAIN_BUILD_STEP" == 1 ]; then
   fi
 fi
 
-if [ "$_COMBAWA_RUN_POSTDEPLOY" == 1 ]; then
+if [[ $_COMBAWA_RUN_POSTDEPLOY == 1 ]]; then
   message_step "Running postdeploy actions."
   # Run the potential actions to do post deployment.
   # Return error codes if they happen.
@@ -317,7 +318,7 @@ if [ "$_COMBAWA_RUN_POSTDEPLOY" == 1 ]; then
 
   message_confirm "Postdeploy actions... Done!"
 
-  if [ "$_COMBAWA_ONLY_POSTDEPLOY" == "1" ] ; then
+  if [[ $_COMBAWA_ONLY_POSTDEPLOY == "1" ]]; then
     message_action "Exiting now that postdeploy actions have been run!"
   fi
 fi
