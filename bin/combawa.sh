@@ -120,7 +120,7 @@ do
         COMBAWA_BUILD_MODE="$2"
 
         if [[ $2 != "install" ]] && [[ $2 != "update" ]]; then
-          notify_error "Invalid build mode."
+          notify_error "Invalid build mode." "Only install or update is valid"
         fi;
 
         message_action "Build mode overriden:"
@@ -158,6 +158,10 @@ do
       -f|--fetch-db-dump)
         SOURCE_DB_FETCH_FLAG=$COMBAWA_DB_FETCH_FLAG
         COMBAWA_DB_FETCH_FLAG="$2"
+
+        if [[ $2 != "0" ]] && [[ $2 != "1" ]]; then
+          notify_error "Invalid fetch-db-dump flag." "Only 0 or 1 is valid."
+        fi
 
         message_action "Fetch DB dump from prod overriden:"
         message_override "$SOURCE_DB_FETCH_FLAG" "$COMBAWA_DB_FETCH_FLAG"
