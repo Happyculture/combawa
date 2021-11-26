@@ -199,6 +199,7 @@ do
         shift
         ;;
       *) # No more options
+        notify_error "Argument $key does not exist."
         ;;
     esac
     shift
