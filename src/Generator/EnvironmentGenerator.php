@@ -66,7 +66,7 @@ class EnvironmentGenerator extends Generator {
    * @param array $parameters
    */
   public function generate(array $parameters) {
-    $drupalRoot = $parameters['app_root'];
+    $drupalRoot = $parameters['webroot'];
 
     $this->renderFile(
       'combawa-env/env.twig',
