@@ -173,7 +173,7 @@ class GenerateEnvironmentCommand extends Command {
     if (!is_array($defaults['enable_splits'])) {
       $defaults['enable_splits'] = explode(',', $defaults['enable_splits']);
     }
-    $defaults['enable_splits'] = array_filter($defaults['enable_splits']);
+    $defaults['enable_splits'] = $this->validateConfigSplits(array_filter($defaults['enable_splits']));
 
     $generateParams = [];
     if ($defaults['environment'] != 'prod') {
@@ -544,8 +544,7 @@ class GenerateEnvironmentCommand extends Command {
     }
 
     if (!$enable_splits) {
-      // todo List available splits in the config sync directory of the project.
-      $available_splits = ['dev', 'testing', 'preprod'];
+      $available_splits = $this->getAvailableConfigSplits();
       $enable_splits = $this->getIo()->choice(
         'Which config splits do you want to enable? (comma separated keys)',
         $available_splits,
@@ -625,6 +624,50 @@ class GenerateEnvironmentCommand extends Command {
           )
         );
     }
+  }
+
+  /**
+   * Get available config splits from project's configuration.
+   *
+   * @return string[]
+   *   The list of available config splits.
+   */
+  protected function getAvailableConfigSplits() {
+    /** @var \Drupal\Core\Config\FileStorage $confiStorage */
+    $confiStorage = \Drupal\Core\Config\FileStorageFactory::getSync();
+    $availableSplits = $confiStorage->listAll('config_split.config_split.');
+    array_walk($availableSplits, function (&$split) {
+      $split = str_replace('config_split.config_split.', '', $split);
+    });
+    return $availableSplits;
+  }
+
+  /**
+   * Validate that all selected config splits are available for this project.
+   *
+   * @param array $splits
+   *   The selected configuration splits.
+   *
+   * @return array
+   *   The selected configuration splits.
+   */
+  protected function validateConfigSplits(array $splits) {
+    $available = $this->getAvailableConfigSplits();
+    $filteredSplits = array_filter($splits, function ($split) use ($available) {
+      return in_array($split, $available, TRUE);
+    });
+
+    if (count($filteredSplits) !== count($splits)) {
+      throw new \InvalidArgumentException(
+        sprintf(
+          'The "%s" configuration splits are not available in this project. (Available: %s)',
+          implode(', ', array_diff($splits, $filteredSplits)),
+          implode(', ', $available)
+        )
+      );
+    }
+
+    return $filteredSplits;
   }
 
 }
