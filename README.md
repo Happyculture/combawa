@@ -69,7 +69,7 @@ This is due to the fact that there is no native autoload for Drupal 7.
 If you are lazy as we are (you should), it is possible to use a global command `combawa` instead of `vendor/bin/combawa` in your projects.  
 In order to do that, you need to install the Combawa wrapper (https://github.com/Happyculture/combawa-wrapper). It works similarly as the Drush wrapper. 
 
-`composer require happyculture/combawa-wrapper`
+`composer global require happyculture/combawa-wrapper`
 
 #### Drupal console commands
 
