@@ -17,7 +17,7 @@ Because Combawa is very cool, you can also use it when you bootstrap your projec
 
 ## <a name="installation"></a>Installation
 
-- `composer require happyculture/combawa`
+- `composer require happyculture/combawa drupal/console`
 - Use `drupal combawa:generate-build` to initiate your build files.
 - Use `drupal combawa:generate-environment` to setup your environment.
 
