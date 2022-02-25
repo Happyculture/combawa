@@ -78,12 +78,6 @@ We recommand you to install Drupal console to benefit from scaffolding features 
 
 `composer require drupal/console`
 
-#### Kumquat scaffolder
-
-Formerly part of this package, kumquat allows to scaffold an install profile, a front theme and a back theme to help you start your project faster.
-
-`composer require happyculture/kumquat_scaffolder --dev`
-
 ## <a name="usage"></a>Usage
 
 ### Conception & philosophy 
