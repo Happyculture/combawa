@@ -77,6 +77,6 @@ section_separator
 #################################
 
 # Test incompatible parameters.
-if [[ $COMBAWA_BUILD_MODE == "install" ]] && [[ $COMBAWA_DB_FETCH_FLAG == 1 ]]; then
-  notify_error "Fetch DB is not available in install build mode.\nYou should either change your build mode (-m) to 'update' or disable the fetch DB (-f 0)."
+if [[ $COMBAWA_BUILD_MODE == "install" ]] && [[ $COMBAWA_REIMPORT_REF_DUMP_FLAG == 1 ]]; then
+  notify_error "Reimport DB is not available in install build mode.\nYou should either change your build mode (-m) to 'update' or disable the reimport mode (-r 0)."
 fi
