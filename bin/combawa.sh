@@ -31,6 +31,7 @@ CONFIG_DIR="$COMBAWA_ROOT/config"
 COMBAWA_SCRIPTS_DIR="$COMBAWA_ROOT/scripts/combawa"
 
 # State variables.
+_COMBAWA_BYPASS_CONFIRMATION=0
 _COMBAWA_ONLY_PREDEPLOY=0
 _COMBAWA_ONLY_POSTDEPLOY=0
 _COMBAWA_NO_PREDEPLOY=0
@@ -101,6 +102,9 @@ do
     shift
   else
     case $key in
+      -y | --yes)
+        _COMBAWA_BYPASS_CONFIRMATION=1
+        ;;
       -e | --env)
         case $2 in
           dev|testing|prod)
@@ -241,6 +245,18 @@ if hash column 2>/dev/null; then
   echo -e "$USAGE" | column -s $'\t' -t
 else
   echo -e "$USAGE"
+fi
+
+if [[ $_COMBAWA_BYPASS_CONFIRMATION == 0 ]]; then
+  #################################
+  section_separator
+  #################################
+
+  message_step "Confirmation:"
+  read -p "Are you sure that you want to run this build [yN]? " -n 1 -r
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+  fi
 fi
 
 #################################

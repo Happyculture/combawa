@@ -91,6 +91,8 @@ usage()
   echo -e "${bold}\t--only-predeploy:${normal} Only process predeploy actions."
   echo -e "${bold}\t--only-postdeploy:${normal} Only process postdeploy actions."
   echo ''
+  echo -e "${bold}\t--yes, -y: Bypass confirmation step.${normal}"
+  echo ''
   echo -e "${bold}\t--backup, -b: Generates a backup before building the project.${normal}"
   echo -e '\t\tAllowed values are: 0: does not generate a backup, 1: generates a backup.'
   echo -e '\t\tDefault value: 1'
