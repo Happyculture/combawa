@@ -6,9 +6,14 @@ case $COMBAWA_BUILD_ENV in
   dev)
     # Update translations.
     $DRUSH locale:update
+
+    # Example post install task running only on dev environments.
+    # $DRUSH en {{ machine_name }}_content_install
+    # $DRUSH pm-uninstall better_normalizers serialization hal default_content {{ machine_name }}_content_install
+
     # Rebuild search indexes.
-#    $DRUSH sapi-r
-#    $DRUSH sapi-i
+    # $DRUSH sapi-r
+    # $DRUSH sapi-i
 
     # Connect.
     $DRUSH uli
@@ -17,8 +22,8 @@ case $COMBAWA_BUILD_ENV in
     # Update translations.
     $DRUSH locale:update
     # Rebuild search indexes.
-#    $DRUSH sapi-r
-#    $DRUSH sapi-i
+    # $DRUSH sapi-r
+    # $DRUSH sapi-i
     ;;
   prod)
     # Update translations.

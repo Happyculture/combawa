@@ -4,12 +4,6 @@
 # Install the site.
 $DRUSH site-install --sites-subdir=default --locale=fr --existing-config {{ machine_name }}
 
-# Example post install task running only on dev environments.
-#if [ "$COMBAWA_BUILD_ENV" == "dev" ]; then
-#  $DRUSH en {{ machine_name }}_content_install
-#  $DRUSH pm-uninstall better_normalizers serialization hal default_content {{ machine_name }}_content_install
-#fi
-
 # Fix Drupal annoying need to change permissions.
 chmod u+w "$WEBROOT/sites/default"
 chmod u+w "$WEBROOT/sites/default/settings.php"
