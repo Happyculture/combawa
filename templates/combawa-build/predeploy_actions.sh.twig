@@ -2,6 +2,23 @@
 # Actions to run before the main and shared deployment actions.
 # It can be useful to backup, import databases or doing something similar.
 
+# Example to clean files to avoid keeping old stuff.
+{#if [[ $COMBAWA_BUILD_ENV != "prod" ]]; then#}
+{#  # Catch errors if the removal of files breaks.#}
+{#  {#}
+{#    rm -rf $WEBROOT/sites/default/files/*#}
+{#  } || {#}
+{#    if [[ $? != 0 ]]; then#}
+{#      # Send a notification to inform that the build is broken#}
+{#      # due to permissions errors.#}
+{#      if hash notify-send 2>/dev/null; then#}
+{#        notify-send  "Error purging files before reinstalling. Permissions may be incorrect."#}
+{#        exit -1#}
+{#      fi#}
+{#    fi#}
+{#  }#}
+{#fi#}
+
 case $COMBAWA_BUILD_ENV in
   dev)
     ;;
