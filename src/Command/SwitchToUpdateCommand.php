@@ -2,6 +2,7 @@
 
 namespace Drupal\Console\Combawa\Command;
 
+use Drupal\Console\Combawa\Generator\EnvironmentUpdateGenerator;
 use Drupal\Console\Command\Shared\ConfirmationTrait;
 use Drupal\Console\Core\Command\Command;
 use Drupal\Console\Core\Utils\StringConverter;
@@ -23,9 +24,9 @@ class SwitchToUpdateCommand extends Command {
   /**
    * ProfileCommand constructor.
    *
-   * @param EnvironmentInstallGenerator $generator
+   * @param EnvironmentUpdateGenerator $generator
    */
-  public function __construct(EnvironmentInstallGenerator $generator) {
+  public function __construct(EnvironmentUpdateGenerator $generator) {
     $this->generator = $generator;
     parent::__construct();
   }
