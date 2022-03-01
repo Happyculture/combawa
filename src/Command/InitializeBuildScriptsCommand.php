@@ -100,7 +100,7 @@ class InitializeBuildScriptsCommand extends Command {
 
     if (!$machine_name) {
       $machine_name = $this->getIo()->ask(
-        'What is the machine name of the project?',
+        'What is the machine name of your install profile?',
         'new_project',
         function ($machine_name) {
           return $this->validateMachineName($machine_name);
