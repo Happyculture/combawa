@@ -57,7 +57,7 @@ class GenerateEnvironmentCommand extends Command {
         'Backup the database on each build.'
       )
       ->addOption(
-        'dump-always-update',
+        'dump-fetch-update',
         null,
         InputOption::VALUE_NONE,
         'Always update the reference dump before building.'
@@ -166,7 +166,7 @@ class GenerateEnvironmentCommand extends Command {
       'environment_url' => $this->validateUrl($input->getOption('environment-url')),
       'backup_base' => 1,
       'reimport' => 0,
-      'dump_always_update' => 0,
+      'dump_fetch_update' => 0,
       'fetch_source_path' => '',
       'fetch_dest_path' => 'reference_dump.sql.gz',
       'write_db_settings' => $input->getOption('write-db-settings'),
@@ -182,7 +182,7 @@ class GenerateEnvironmentCommand extends Command {
       $generateParams += [
         'backup_base' => $input->getOption('backup-db') ? 1 : 0,
         'reimport' => $input->getOption('reimport') ? 1 : 0,
-        'dump_always_update' => $input->getOption('dump-always-update') ? 1 : 0,
+        'dump_fetch_update' => $input->getOption('dump-fetch-update') ? 1 : 0,
       ];
 
       if ($input->getOption('dump-retrieval-tool') == 'scp') {
@@ -319,10 +319,10 @@ class GenerateEnvironmentCommand extends Command {
           'Do you want to update the reference dump before each build?',
           array_key_exists('COMBAWA_DB_FETCH_FLAG', $envVars) ? $envVars['COMBAWA_DB_FETCH_FLAG'] : TRUE
         );
-        $input->setOption('dump-always-update', $always_update_ref_dump);
+        $input->setOption('dump-fetch-update', $always_update_ref_dump);
 
         try {
-          $always_update_ref_dump = $input->getOption('dump-always-update') ? (bool) $input->getOption('dump-always-update') : FALSE;
+          $always_update_ref_dump = $input->getOption('dump-fetch-update') ? (bool) $input->getOption('dump-fetch-update') : FALSE;
         } catch (\Exception $error) {
           $this->getIo()->error($error->getMessage());
 
