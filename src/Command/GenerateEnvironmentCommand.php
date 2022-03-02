@@ -251,10 +251,14 @@ class GenerateEnvironmentCommand extends Command {
         else {
           $scp_connection = $input->getOption('scp-connection-info');
         }
-        $recap_fetch_command = 'scp ' . $scp_connection . ':' . $input->getOption('fetch-source-path') . ' ' . $this->generator->getCombawaRoot() . '/' . $input->getOption('fetch-dest-path');
+        $recap_fetch_command = 'scp';
+        $recap_fetch_path_source = $scp_connection . ':' . $input->getOption('fetch-source-path');
+        $recap_fetch_path_dest = $this->generator->getCombawaRoot() . '/' . $input->getOption('fetch-dest-path');
       }
       else {
-        $recap_fetch_command = 'cp ' . $input->getOption('fetch-source-path') . ' ' . $this->generator->getCombawaRoot() . '/' . $input->getOption('fetch-dest-path');
+        $recap_fetch_command = 'cp';
+        $recap_fetch_path_source = $input->getOption('fetch-source-path');
+        $recap_fetch_path_dest = $this->generator->getCombawaRoot() . '/' . $input->getOption('fetch-dest-path');
       }
       $generateParams += [
         'dump_fetch_method' => $recap_fetch_command,
@@ -262,6 +266,9 @@ class GenerateEnvironmentCommand extends Command {
         'dump_fetch_path_dest' => $recap_fetch_path_dest,
         'dump_file_name' => $input->getOption('fetch-dest-path'),
       ];
+      $recap_params[] = ['Fetch method', $recap_fetch_command];
+      $recap_params[] = ['Source path', $recap_fetch_path_source];
+      $recap_params[] = ['Dest path', $recap_fetch_path_dest];
     }
 
     $this->getIo()->newLine(1);
