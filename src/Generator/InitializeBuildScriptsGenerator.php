@@ -20,6 +20,7 @@ class InitializeBuildScriptsGenerator extends Generator {
 
     $buildParameters = [
       'machine_name' => $parameters['machine_name'],
+      'build_mode' => $parameters['build_mode'],
     ];
 
     // Alter composer.json file.
@@ -27,7 +28,7 @@ class InitializeBuildScriptsGenerator extends Generator {
     chdir($this->drupalFinder->getComposerRoot());
     exec('/usr/bin/env composer config name ' . $parameters['machine_name'] . '/' . $parameters['machine_name']);
     exec('/usr/bin/env composer config extra.combawa.machine_name ' . $parameters['machine_name']);
-    exec('/usr/bin/env composer config extra.combawa.build_mode install');
+    exec('/usr/bin/env composer config extra.combawa.build_mode ' . $parameters['build_mode']);
     exec('/usr/bin/env composer update --lock');
     chdir($prevDir);
     $this->fileQueue->addFile('../composer.json');
