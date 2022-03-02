@@ -206,7 +206,25 @@ download_dump()
       ;;
     "scp" )
       message_action "Copying reference dump with 'scp'."
-      scp -P $COMBAWA_DB_FETCH_SCP_PORT $COMBAWA_DB_FETCH_SCP_USER@$COMBAWA_DB_FETCH_SCP_SERVER:$COMBAWA_DB_FETCH_PATH_SOURCE $COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH
+      # Login with SSH config name or ssh info?
+      if [ -z ${COMBAWA_DB_FETCH_SCP_CONFIG_NAME+x} ]; then
+        # Determine if we have a username to use to login.
+        if [ -z ${COMBAWA_DB_FETCH_SCP_USER} ]; then
+            # SCP login via servername and current user.
+          scp -P $COMBAWA_DB_FETCH_SCP_PORT $COMBAWA_DB_FETCH_SCP_SERVER:$COMBAWA_DB_FETCH_PATH_SOURCE $COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH
+        else
+          # Also determine if we have a password to use.
+          if [ -z ${COMBAWA_DB_FETCH_SCP_PASSWORD} ]; then
+            # SCP login via username.
+            scp -P $COMBAWA_DB_FETCH_SCP_PORT $COMBAWA_DB_FETCH_SCP_USER@$COMBAWA_DB_FETCH_SCP_SERVER:$COMBAWA_DB_FETCH_PATH_SOURCE $COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH
+          else
+            # SCP login via username and password.
+            scp -P $COMBAWA_DB_FETCH_SCP_PORT $COMBAWA_DB_FETCH_SCP_USER:$COMBAWA_DB_FETCH_SCP_PASSWORD@$COMBAWA_DB_FETCH_SCP_SERVER:$COMBAWA_DB_FETCH_PATH_SOURCE $COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH
+          fi
+        fi
+      else
+        scp $COMBAWA_DB_FETCH_SCP_CONFIG_NAME:$COMBAWA_DB_FETCH_PATH_SOURCE $COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH
+      fi
       message_confirm "Reference dump update... OK!"
       ;;
   esac

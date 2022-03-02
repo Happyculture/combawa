@@ -97,20 +97,37 @@ if [ $COMBAWA_DB_FETCH_FLAG == 1 ]; then
       ;;
     "scp" )
       message_action "Verifying 'scp' dump fetching parameters."
-      # Are our variables defined?
-      if [ -z ${COMBAWA_DB_FETCH_SCP_USER+x} ] || [ -z ${COMBAWA_DB_FETCH_SCP_PORT+x} ] || [ -z ${COMBAWA_DB_FETCH_SCP_SERVER+x} ] || [ -z ${COMBAWA_DB_FETCH_PATH_SOURCE+x} ] || [ -z ${COMBAWA_DB_DUMP_PATH+x} ]; then
-        notify_fatal "One of the parameters COMBAWA_DB_FETCH_SCP_USER, COMBAWA_DB_FETCH_SCP_PORT, COMBAWA_DB_FETCH_SCP_SERVER, COMBAWA_DB_FETCH_PATH_SOURCE or COMBAWA_DB_DUMP_PATH is empty. We will not be able to copy a reference dump."
-      fi
-      message_step "Testing connection with remote SSH server from which the dump will be retrieved:"
       set +e
-      ssh -q -p $COMBAWA_DB_FETCH_SCP_PORT $COMBAWA_DB_FETCH_SCP_USER@$COMBAWA_DB_FETCH_SCP_SERVER -o ConnectTimeout=5 echo > /dev/null
+      # Login with SSH config name or ssh info?
+      if [ -z ${COMBAWA_DB_FETCH_SCP_CONFIG_NAME+x} ]; then
+        # Are our variables defined?
+        if [ -z ${COMBAWA_DB_FETCH_SCP_SERVER+x} ] || [ -z ${COMBAWA_DB_FETCH_SCP_PORT+x} ] || [ -z ${COMBAWA_DB_FETCH_PATH_SOURCE+x} ] || [ -z ${COMBAWA_DB_FETCH_PATH_DEST+x} ]; then
+          notify_fatal "One of the parameters COMBAWA_DB_FETCH_SCP_SERVER, COMBAWA_DB_FETCH_SCP_PORT, COMBAWA_DB_FETCH_PATH_SOURCE or COMBAWA_DB_FETCH_PATH_DEST is empty. We will not be able to copy a reference dump."
+        fi
+        message_step "Testing connection with remote SSH server from which the dump will be retrieved:"
+        # Determine if we have a username to use to login.
+        if [ -z ${COMBAWA_DB_FETCH_SCP_USER} ]; then
+            # SCP login via servername and current user.
+          ssh -q -p $COMBAWA_DB_FETCH_SCP_PORT $COMBAWA_DB_FETCH_SCP_SERVER -o ConnectTimeout=5 echo > /dev/null
+        else
+          # Also determine if we have a password to use.
+          if [ -z ${COMBAWA_DB_FETCH_SCP_PASSWORD} ]; then
+            # SCP login via username.
+            ssh -q -p $COMBAWA_DB_FETCH_SCP_PORT $COMBAWA_DB_FETCH_SCP_USER@$COMBAWA_DB_FETCH_SCP_SERVER -o ConnectTimeout=5 echo > /dev/null
+          else
+            # SCP login via username and password.
+            ssh -q -p $COMBAWA_DB_FETCH_SCP_PORT $COMBAWA_DB_FETCH_SCP_USER:$COMBAWA_DB_FETCH_SCP_PASSWORD@$COMBAWA_DB_FETCH_SCP_SERVER -o ConnectTimeout=5 echo > /dev/null
+          fi
+        fi
+      else
+        ssh -q $COMBAWA_DB_FETCH_SCP_CONFIG_NAME -o ConnectTimeout=5 echo > /dev/null
+      fi
       if [ "$?" != "0" ] ; then
         notify_fatal "Impossible to connect to the SSH server." "Check your SSH connection parameters. Should you connect through a VPN?"
       else
-        message_confirm "SSH connection OK."
+        message_confirm "'scp' dump fetching parameters check... OK!"
       fi
       set -e
-      message_confirm "'scp' dump fetching parameters check... OK!"
       ;;
     * )
       notify_fatal "Dump fetching '$COMBAWA_DB_FETCH_METHOD' method unsupported."
