@@ -58,6 +58,12 @@ class InitializeBuildScriptsCommand extends Command {
         null,
         InputOption::VALUE_REQUIRED,
         'The project (short) machine name (ex: hc).'
+      )
+      ->addOption(
+        'build-mode',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'The build module to use (install or update) if wanted.',
       );
   }
 
@@ -66,9 +72,11 @@ class InitializeBuildScriptsCommand extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $machine_name = $this->validateMachineName($input->getOption('machine-name'));
+    $build_mode = $this->validateBuildMode($input->getOption('build-mode'));
 
     $recap_params = [
       ['Machine name', $machine_name],
+      ['Build mode', $build_mode],
     ];
 
     $this->getIo()->newLine(1);
@@ -82,6 +90,7 @@ class InitializeBuildScriptsCommand extends Command {
 
     $this->generator->generate([
       'machine_name' => $machine_name,
+      'build_mode' => $build_mode,
     ]);
   }
 
@@ -109,6 +118,25 @@ class InitializeBuildScriptsCommand extends Command {
       $input->setOption('machine-name', $machine_name);
     }
 
+    try {
+      $build_mode = $input->getOption('build-mode') ? $this->validateBuildMode($input->getOption('build-mode')) : NULL;
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$build_mode) {
+      $build_mode = $this->getIo()->ask(
+        'What is the build mode to use (install or update)?',
+        'install',
+        function ($build_mode) {
+          return $this->validateBuildMode($build_mode);
+        }
+      );
+      $input->setOption('build-mode', $build_mode);
+    }
+
   }
 
   /**
@@ -129,6 +157,29 @@ class InitializeBuildScriptsCommand extends Command {
         sprintf(
           'Machine name "%s" is invalid, it must contain only lowercase letters, numbers and underscores.',
           $machine_name
+        )
+      );
+    }
+  }
+
+  /**
+   * Validates the build mode input.
+   *
+   * @param string $build_mode
+   *   The build mode.
+   * @return string
+   *   The build mode.
+   * @throws \InvalidArgumentException
+   */
+  protected function validateBuildMode($build_mode) {
+    if (in_array($build_mode, ['install', 'update'])) {
+      return $build_mode;
+    }
+    else {
+      throw new \InvalidArgumentException(
+        sprintf(
+          'Build mode "%s" is invalid, it must either be install or update.',
+          $build_mode
         )
       );
     }
