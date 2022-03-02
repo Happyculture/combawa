@@ -149,7 +149,7 @@ class InitializeBuildScriptsCommand extends Command {
    * @throws \InvalidArgumentException
    */
   protected function validateMachineName($machine_name) {
-    if (preg_match(self::REGEX_MACHINE_NAME, $machine_name)) {
+    if (preg_match(static::REGEX_MACHINE_NAME, $machine_name)) {
       return $machine_name;
     }
     else {

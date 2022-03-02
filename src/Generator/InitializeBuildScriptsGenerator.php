@@ -35,7 +35,7 @@ class InitializeBuildScriptsGenerator extends Generator {
     $this->countCodeLines->addCountCodeLines(5);
 
     // Create scripts files.
-    $dir = opendir(self::TPL_DIR . '/combawa-build/');
+    $dir = opendir(static::TPL_DIR . '/combawa-build/');
     while ($file = readdir($dir)) {
       if ($file[0] === '.') {
         continue;
