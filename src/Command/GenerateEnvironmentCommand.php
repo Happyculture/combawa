@@ -86,7 +86,7 @@ class GenerateEnvironmentCommand extends Command {
         'Tool used to retrieve the reference dump.'
       )
       ->addOption(
-        'ssh-config-name',
+        'scp-config-name',
         null,
         InputOption::VALUE_REQUIRED,
         'The remote server name where to find the dump.'
@@ -95,7 +95,31 @@ class GenerateEnvironmentCommand extends Command {
         'scp-connection-info',
         null,
         InputOption::VALUE_REQUIRED,
-        'Connection string to the remote server (user@host.com).'
+        'SSH Connection string from your SSH Config file..'
+      )
+      ->addOption(
+        'scp-connection-username',
+        null,
+        InputOption::VALUE_OPTIONAL,
+        'SCP connection username.'
+      )
+      ->addOption(
+        'scp-connection-password',
+        null,
+        InputOption::VALUE_OPTIONAL,
+        'SCP connection password.'
+      )
+      ->addOption(
+        'scp-connection-servername',
+        null,
+        InputOption::VALUE_OPTIONAL,
+        'SCP connection server name.'
+      )
+      ->addOption(
+        'scp-connection-port',
+        null,
+        InputOption::VALUE_OPTIONAL,
+        'SCP connection port.'
       )
       ->addOption(
         'fetch-source-path',
@@ -244,21 +268,44 @@ class GenerateEnvironmentCommand extends Command {
         'dump_fetch_update' => $input->getOption('dump-fetch-update') ? 1 : 0,
       ];
 
+      $recap_fetch_path_source = $input->getOption('fetch-source-path');
+      $recap_fetch_path_dest = $this->generator->getCombawaRoot() . '/' . $input->getOption('fetch-dest-path');
+
       if ($input->getOption('dump-retrieval-tool') == 'scp') {
-        if (!empty($input->getOption('ssh-config-name'))) {
-          $scp_connection = $input->getOption('ssh-config-name');
+        $recap_fetch_command = 'scp';
+        if (!empty($input->getOption('scp-config-name'))) {
+          $scp_connection = $input->getOption('scp-config-name');
+          $generateParams['dump_scp_config_name'] = $scp_connection;
+          $connection_string_recap = 'scp ' . $scp_connection . ':' . $recap_fetch_path_source . ' ' . $recap_fetch_path_dest;
+          $recap_params[] = ['Fetch command', $connection_string_recap];
         }
         else {
-          $scp_connection = $input->getOption('scp-connection-info');
+          $scp_username = $input->getOption('scp-connection-username');
+          $scp_password = $input->getOption('scp-connection-password');
+          $scp_server = $input->getOption('scp-connection-servername');
+          $scp_port = $input->getOption('scp-connection-port');
+          $generateParams['dump_scp_user'] = $scp_username;
+          $generateParams['dump_scp_password'] = $scp_password;
+          $generateParams['dump_scp_servername'] = $scp_server;
+          $generateParams['dump_scp_port'] = $scp_port;
+          $connection_string_recap = 'scp ';
+          if (!empty($generateParams['dump_scp_user'])) {
+            if (!empty($generateParams['dump_scp_password'])) {
+              $connection_string_recap .= $generateParams['dump_scp_user'] . ':' . $generateParams['dump_scp_password'] . '@';
+            }
+            else {
+              $connection_string_recap .= $generateParams['dump_scp_user'] . '@';
+            }
+          }
+          $connection_string_recap .= $generateParams['dump_scp_servername'];
+          $connection_string_recap .= ':' . $recap_fetch_path_source . ' ' . $recap_fetch_path_dest;
+          $recap_params[] = ['Fetch command', $connection_string_recap];
         }
-        $recap_fetch_command = 'scp';
-        $recap_fetch_path_source = $scp_connection . ':' . $input->getOption('fetch-source-path');
-        $recap_fetch_path_dest = $this->generator->getCombawaRoot() . '/' . $input->getOption('fetch-dest-path');
       }
       else {
         $recap_fetch_command = 'cp';
-        $recap_fetch_path_source = $input->getOption('fetch-source-path');
-        $recap_fetch_path_dest = $this->generator->getCombawaRoot() . '/' . $input->getOption('fetch-dest-path');
+        $cp_string_recap = 'cp ' . $recap_fetch_path_source . ' ' . $recap_fetch_path_dest;
+        $recap_params[] = ['Fetch command', $cp_string_recap];
       }
       $generateParams += [
         'dump_fetch_method' => $recap_fetch_command,
@@ -266,9 +313,6 @@ class GenerateEnvironmentCommand extends Command {
         'dump_fetch_path_dest' => $recap_fetch_path_dest,
         'dump_file_name' => $input->getOption('fetch-dest-path'),
       ];
-      $recap_params[] = ['Fetch method', $recap_fetch_command];
-      $recap_params[] = ['Source path', $recap_fetch_path_source];
-      $recap_params[] = ['Dest path', $recap_fetch_path_dest];
     }
 
     $this->getIo()->newLine(1);
@@ -290,10 +334,15 @@ class GenerateEnvironmentCommand extends Command {
       if (empty($value) || $key === 'uri') {
         continue;
       }
-      if (is_array($value)) {
-        $value = implode(',', $value);
+      else if ($key == 'backup-db') {
+        $command .= "\n" . '  --' . $key . ' \\';
       }
-      $command .= "\n" . '  --' . $key . ' ' . $value . ' \\';
+      else {
+        if (is_array($value)) {
+          $value = implode(',', $value);
+        }
+        $command .= "\n" . '  --' . $key . ' ' . $value . ' \\';
+      }
     }
     $command .= "\n" . '  --no-interaction';
     $this->getIo()->simple('Next time you could just use:');
@@ -360,18 +409,19 @@ class GenerateEnvironmentCommand extends Command {
 
       $build_mode = exec('/usr/bin/env composer config extra.combawa.build_mode  -d ' . $this->drupalFinder->getComposerRoot());
       if ($build_mode == 'update') {
-        $always_update_ref_dump = $this->getIo()->confirm(
-          'Do you want to update the reference dump before each build?',
-          array_key_exists('COMBAWA_DB_FETCH_FLAG', $envVars) ? $envVars['COMBAWA_DB_FETCH_FLAG'] : TRUE
-        );
-        $input->setOption('dump-fetch-update', $always_update_ref_dump);
-
         try {
           $always_update_ref_dump = $input->getOption('dump-fetch-update') ? (bool) $input->getOption('dump-fetch-update') : FALSE;
         } catch (\Exception $error) {
           $this->getIo()->error($error->getMessage());
 
           return 1;
+        }
+        if (!$always_update_ref_dump) {
+          $always_update_ref_dump = $this->getIo()->confirm(
+            'Do you want to update the reference dump before each build?',
+            array_key_exists('COMBAWA_DB_FETCH_FLAG', $envVars) ? $envVars['COMBAWA_DB_FETCH_FLAG'] : TRUE
+          );
+          $input->setOption('dump-fetch-update', $always_update_ref_dump);
         }
 
         $retrieval_tool = $this->getIo()->choice(
@@ -387,39 +437,87 @@ class GenerateEnvironmentCommand extends Command {
             'Do you have an SSH config name from your ~/.ssh/config to use to retrieve the dump?',
             FALSE
           );
-
           if ($use_ssh_config_name) {
             try {
-              $ssh_config_name = $input->getOption('ssh-config-name');
+              $ssh_config_name = $input->getOption('scp-config-name');
             } catch (\Exception $error) {
               $this->getIo()->error($error->getMessage());
 
               return 1;
             }
-
             if (!$ssh_config_name) {
               $ssh_config_name = $this->getIo()->ask(
-                'What is the name of you config entry in your ~/.ssh/config file?',
+                '[SCP] What is the name of you config entry in your ~/.ssh/config file?',
                 array_key_exists('COMBAWA_DB_FETCH_SSH_CONFIG_NAME', $envVars) ? $envVars['COMBAWA_DB_FETCH_SSH_CONFIG_NAME'] : 'my_remote'
               );
-              $input->setOption('ssh-config-name', $ssh_config_name);
+              $input->setOption('scp-config-name', $ssh_config_name);
             }
           }
           else {
             try {
-              $ssh_connection_info = $input->getOption('scp-connection-info');
+              $scp_username = $input->getOption('scp-connection-username');
+            } catch (\Exception $error) {
+              $this->getIo()->error($error->getMessage());
+
+              return 1;
+            }
+            if (!$scp_username) {
+              $scp_username = $this->getIo()->askEmpty(
+                '[SCP] What is the connection username?',
+                array_key_exists('COMBAWA_DB_FETCH_SCP_USER', $envVars) ? $envVars['COMBAWA_DB_FETCH_SCP_USER'] : 'myusername',
+              );
+              $input->setOption('scp-connection-username', $scp_username);
+            }
+
+            try {
+              $scp_password = $input->getOption('scp-connection-password');
             } catch (\Exception $error) {
               $this->getIo()->error($error->getMessage());
 
               return 1;
             }
 
-            if (!$ssh_connection_info) {
-              $ssh_connection_info = $this->getIo()->ask(
-                'What is the connection string to the remote server?',
-                array_key_exists('COMBAWA_DB_FETCH_SCP_CONNECTION', $envVars) ? $envVars['COMBAWA_DB_FETCH_SCP_CONNECTION'] : 'user@server.org'
+            if (!$scp_password) {
+              $scp_password = $this->getIo()->askEmpty(
+                '[SCP] What is the connection password?',
+                array_key_exists('COMBAWA_DB_FETCH_SCP_PASSWORD', $envVars) ? $envVars['COMBAWA_DB_FETCH_SCP_PASSWORD'] : ''
               );
-              $input->setOption('scp-connection-info', $ssh_connection_info);
+              $input->setOption('scp-connection-password', $scp_password);
+            }
+
+            try {
+              $scp_servername = $input->getOption('scp-connection-servername');
+            } catch (\Exception $error) {
+              $this->getIo()->error($error->getMessage());
+
+              return 1;
+            }
+
+            if (!$scp_servername) {
+              $scp_servername = $this->getIo()->ask(
+                '[SCP] What is the connection server name or IP?',
+                array_key_exists('COMBAWA_DB_FETCH_SCP_SERVER', $envVars) ? $envVars['COMBAWA_DB_FETCH_SCP_SERVER'] : '',
+                function ($scp_servername) {
+                  return $this->validateDomainOrIPFormat($this->validateOptionalValueWhenRequested($scp_servername, 'scp-connection-servername'));
+                }
+              );
+              $input->setOption('scp-connection-servername', $scp_servername);
+            }
+
+            try {
+              $scp_port = $input->getOption('scp-connection-port');
+            } catch (\Exception $error) {
+              $this->getIo()->error($error->getMessage());
+
+              return 1;
+            }
+
+            if (!$scp_port) {
+              $scp_port = $this->getIo()->ask(
+                '[SCP] What is the connection server port?',
+                array_key_exists('COMBAWA_DB_FETCH_SCP_PORT', $envVars) ? $envVars['COMBAWA_DB_FETCH_SCP_PORT'] : 22
+              );
+              $input->setOption('scp-connection-port', $scp_port);
             }
           }
         }
@@ -725,6 +823,45 @@ class GenerateEnvironmentCommand extends Command {
     }
 
     return $filteredSplits;
+  }
+
+
+  /**
+   * Validates a domain name format.
+   *
+   * @param string $connection_str
+   *   The string to validate.
+   *
+   * @return string
+   *   The domain or IP address.
+   */
+  protected function validateDomainOrIPFormat($connection_str) {
+    // Format an IP address.
+    if (preg_match('/^[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}$/', $connection_str)) {
+      return $connection_str;
+    }
+    // Or a domain.
+    else if (preg_match('/[-\w.]+\.[-\w.]+$/', $connection_str)) {
+      return $connection_str;
+    }
+    throw new \InvalidArgumentException(sprintf('The connection string "%s" does not look like a valid domain or IP address.', $connection_str));
+  }
+
+  /**
+   * Validator for empty arguments that may be optionnel from the CLI command.
+   *
+   * @param $value
+   *   Value to evaluate.
+   * @param $param_name
+   *   Value's param name to prompt for when the field is empty.
+   *
+   * @return mixed
+   */
+  protected function validateOptionalValueWhenRequested($value, $param_name) {
+    if (empty($value)) {
+      throw new \InvalidArgumentException(sprintf('Option "%s" value can not be empty.', $param_name));
+    }
+    return $value;
   }
 
 }
