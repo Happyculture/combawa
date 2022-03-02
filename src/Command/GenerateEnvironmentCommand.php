@@ -313,7 +313,7 @@ class GenerateEnvironmentCommand extends Command {
         $input->setOption('backup-db', $backup_db);
       }
 
-      $build_mode = array_key_exists('COMBAWA_BUILD_MODE', $envVars) ? $envVars['COMBAWA_BUILD_MODE'] : 'install';
+      $build_mode = exec('/usr/bin/env composer config extra.combawa.build_mode  -d ' . $this->drupalFinder->getComposerRoot());
       if ($build_mode == 'update') {
         $always_update_ref_dump = $this->getIo()->confirm(
           'Do you want to update the reference dump before each build?',
