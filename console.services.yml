@@ -24,7 +24,7 @@ services:
       - { name: drupal.generator, bootstrap: uninstall }
   combawa.generate_environment:
     class: \Drupal\Console\Combawa\Command\GenerateEnvironmentCommand
-    arguments: ['@combawa.generator.environment']
+    arguments: ['@console.renderer', '@console.file_queue', '@console.count_code_lines']
     tags:
       - { name: drupal.command, bootstrap: uninstall }
   combawa.generator.update.environment:
