@@ -191,10 +191,11 @@ class GenerateEnvironmentCommand extends Command {
   protected function execute(InputInterface $input, OutputInterface $output) {
     $this->setGenerator();
 
+    $environment = $this->validateEnvironment($input->getOption('environment'));
     $generateParams = [
       'app_root' => $this->generator->getCombawaRoot(),
       'webroot' => $this->generator->getCombawaWeboot(),
-      'environment' => $this->validateEnvironment($input->getOption('environment')),
+      'environment' => $environment,
       'environment_url' => $this->validateUrl($input->getOption('environment-url')),
       'db_host' => $input->getOption('db-host'),
       'db_port' => $input->getOption('db-port'),
@@ -210,13 +211,33 @@ class GenerateEnvironmentCommand extends Command {
       'write_db_settings' => $input->getOption('write-db-settings'),
       'enable_splits' => $input->getOption('enable-splits'),
     ];
-    if (!is_array($defaults['enable_splits'])) {
-      $defaults['enable_splits'] = explode(',', $defaults['enable_splits']);
+    $splits = $input->getOption('enable-splits');
+    if (!is_array($splits)) {
+      $splits = explode(',', $splits);
     }
-    $defaults['enable_splits'] = $this->validateConfigSplits(array_filter($defaults['enable_splits']));
+    $generateParams['enable_splits'] = $this->validateConfigSplits(array_filter($splits));
 
-    $generateParams = [];
-    if ($defaults['environment'] != 'prod') {
+    // Improve attributes readibility.
+    $recap_db_password = empty($generateParams['db_password']) ? 'No password' : 'Your secret password';
+    $recap_backup_base = $generateParams['backup_base'] ? 'Yes' : 'No';
+    $recap_write_settings = $generateParams['write_db_settings'] ? 'Yes' : 'No';
+    $enable_splits = implode(', ', $generateParams['enable_splits']);
+
+    $recap_params = [
+      ['App root', $generateParams['app_root']],
+      ['Environment', $generateParams['environment']],
+      ['DB Host', $generateParams['db_host']],
+      ['DB Port', $generateParams['db_port']],
+      ['DB name', $generateParams['db_user']],
+      ['DB Username', $generateParams['db_name']],
+      ['DB password', $recap_db_password],
+      ['Site URL', $generateParams['environment_url']],
+      ['Backup DB before build', $recap_backup_base],
+      ['Write code to connect to DB', $recap_write_settings],
+      ['Config splits to enable', $enable_splits],
+    ];
+
+    if ($environment != 'prod') {
       $generateParams += [
         'backup_base' => $input->getOption('backup-db') ? 1 : 0,
         'reimport' => $input->getOption('reimport') ? 1 : 0,
@@ -242,27 +263,7 @@ class GenerateEnvironmentCommand extends Command {
         'dump_file_name' => $input->getOption('fetch-dest-path'),
       ];
     }
-    $generateParams += $defaults;
 
-    // Improve attributes readibility.
-    $recap_db_password = empty($generateParams['db_password']) ? 'No password' : 'Your secret password';
-    $recap_backup_base = $generateParams['backup_base'] ? 'Yes' : 'No';
-    $recap_write_settings = $generateParams['write_db_settings'] ? 'Yes' : 'No';
-    $enable_splits = implode(', ', $generateParams['enable_splits']);
-
-    $recap_params = [
-      ['App root', $generateParams['app_root']],
-      ['Environment', $generateParams['environment']],
-      ['DB Host', $generateParams['db_host']],
-      ['DB Port', $generateParams['db_port']],
-      ['DB name', $generateParams['db_user']],
-      ['DB Username', $generateParams['db_name']],
-      ['DB password', $recap_db_password],
-      ['Site URL', $generateParams['environment_url']],
-      ['Backup DB before build', $recap_backup_base],
-      ['Write code to connect to DB', $recap_write_settings],
-      ['Config splits to enable', $enable_splits],
-    ];
     $this->getIo()->newLine(1);
     $this->getIo()->commentBlock('Settings recap');
     $this->getIo()->table(['Parameter', 'Value'], $recap_params);
@@ -334,7 +335,6 @@ class GenerateEnvironmentCommand extends Command {
     }
 
     if ($environment != 'prod') {
-
       try {
         $backup_db = $input->getOption('backup-db') ? (bool) $input->getOption('backup-db') : null;
       } catch (\Exception $error) {
