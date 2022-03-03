@@ -1,16 +1,17 @@
 <?php
 
-namespace Drupal\Console\Combawa;
+namespace Drupal\Console\Combawa\Generator;
 
 use Drupal\Console\Core\Generator\Generator;
 use Drupal\Console\Core\Utils\DrupalFinder;
 use Drupal\Console\Core\Utils\TwigRenderer;
 use Symfony\Component\Filesystem\Filesystem;
 
-abstract class EnvironmentGeneratorAbstract  extends Generator {
+class EnvironmentGenerator extends Generator {
 
-  const TPL_DIR = __DIR__ . '/../templates';
-  const SOURCE_ENV_TEMPLATE = NULL;
+  const TPL_DIR = __DIR__ . '/../../templates';
+
+  protected $env_build_mode_template = NULL;
 
   /**
    * @var \Symfony\Component\Filesystem\Filesystem;
@@ -31,6 +32,16 @@ abstract class EnvironmentGeneratorAbstract  extends Generator {
     $this->combawaWebroot = $drupalFinder->getDrupalRoot();
   }
 
+  /**
+   * Helper to determine the path to the env template file.
+   */
+  public function computeBuildModeTemplate() {
+    $build_mode = exec('/usr/bin/env composer config extra.combawa.build_mode  -d ' . $this->drupalFinder->getComposerRoot());
+    if (!in_array($build_mode, ['install', 'update'])) {
+      throw new \InvalidArgumentException('The build mode can not be determined or is not install or update.');
+    }
+    $this->env_build_mode_template = 'combawa-env/env-' . $build_mode . '.twig';
+  }
 
   /**
    * {@inheritdoc}
@@ -71,7 +82,7 @@ abstract class EnvironmentGeneratorAbstract  extends Generator {
     $drupalRoot = $parameters['app_root'];
 
     $this->renderFile(
-      static::SOURCE_ENV_TEMPLATE,
+      $this->env_build_mode_template,
       '../.env',
       $parameters
     );
