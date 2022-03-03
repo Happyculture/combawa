@@ -260,57 +260,57 @@ class GenerateEnvironmentCommand extends Command {
     ];
 
     if ($environment != 'prod') {
-      $generateParams += [
-        'backup_base' => $input->getOption('backup-db') ? 1 : 0,
-        'reimport' => $input->getOption('reimport') ? 1 : 0,
-        'dump_fetch_update' => $input->getOption('dump-fetch-update') ? 1 : 0,
-      ];
+      $generateParams['backup_base'] = $input->getOption('backup-db') ? 1 : 0;
+      $generateParams['reimport'] = $input->getOption('reimport') ? 1 : 0;
+      $generateParams['dump_fetch_update'] = $input->getOption('dump-fetch-update') ? 1 : 0;
 
       $recap_fetch_path_source = $input->getOption('fetch-source-path');
       $recap_fetch_path_dest = $this->generator->getCombawaRoot() . '/' . $input->getOption('fetch-dest-path');
 
-      if ($input->getOption('dump-retrieval-tool') == 'scp') {
-        $recap_fetch_command = 'scp';
-        if (!empty($input->getOption('scp-config-name'))) {
-          $scp_connection = $input->getOption('scp-config-name');
-          $generateParams['dump_scp_config_name'] = $scp_connection;
-          $connection_string_recap = 'scp ' . $scp_connection . ':' . $recap_fetch_path_source . ' ' . $recap_fetch_path_dest;
-          $recap_params[] = ['Fetch command', $connection_string_recap];
+      if ($generateParams['dump_fetch_update']) {
+        if ($input->getOption('dump-retrieval-tool') == 'scp') {
+          $recap_fetch_command = 'scp';
+          if (!empty($input->getOption('scp-config-name'))) {
+            $scp_connection = $input->getOption('scp-config-name');
+            $generateParams['dump_scp_config_name'] = $scp_connection;
+            $connection_string_recap = 'scp ' . $scp_connection . ':' . $recap_fetch_path_source . ' ' . $recap_fetch_path_dest;
+            $recap_params[] = ['Fetch command', $connection_string_recap];
+          }
+          else {
+            $scp_username = $input->getOption('scp-connection-username');
+            $scp_password = $input->getOption('scp-connection-password');
+            $scp_server = $input->getOption('scp-connection-servername');
+            $scp_port = $input->getOption('scp-connection-port');
+            $generateParams['dump_scp_user'] = $scp_username;
+            $generateParams['dump_scp_password'] = $scp_password;
+            $generateParams['dump_scp_servername'] = $scp_server;
+            $generateParams['dump_scp_port'] = $scp_port;
+            $connection_string_recap = 'scp ';
+            if (!empty($generateParams['dump_scp_user'])) {
+              if (!empty($generateParams['dump_scp_password'])) {
+                $connection_string_recap .= $generateParams['dump_scp_user'] . ':' . $generateParams['dump_scp_password'] . '@';
+              }
+              else {
+                $connection_string_recap .= $generateParams['dump_scp_user'] . '@';
+              }
+            }
+            $connection_string_recap .= $generateParams['dump_scp_servername'];
+            $connection_string_recap .= ':' . $recap_fetch_path_source . ' ' . $recap_fetch_path_dest;
+            $recap_params[] = ['Fetch command', $connection_string_recap];
+          }
         }
         else {
-          $scp_username = $input->getOption('scp-connection-username');
-          $scp_password = $input->getOption('scp-connection-password');
-          $scp_server = $input->getOption('scp-connection-servername');
-          $scp_port = $input->getOption('scp-connection-port');
-          $generateParams['dump_scp_user'] = $scp_username;
-          $generateParams['dump_scp_password'] = $scp_password;
-          $generateParams['dump_scp_servername'] = $scp_server;
-          $generateParams['dump_scp_port'] = $scp_port;
-          $connection_string_recap = 'scp ';
-          if (!empty($generateParams['dump_scp_user'])) {
-            if (!empty($generateParams['dump_scp_password'])) {
-              $connection_string_recap .= $generateParams['dump_scp_user'] . ':' . $generateParams['dump_scp_password'] . '@';
-            }
-            else {
-              $connection_string_recap .= $generateParams['dump_scp_user'] . '@';
-            }
-          }
-          $connection_string_recap .= $generateParams['dump_scp_servername'];
-          $connection_string_recap .= ':' . $recap_fetch_path_source . ' ' . $recap_fetch_path_dest;
-          $recap_params[] = ['Fetch command', $connection_string_recap];
+          $recap_fetch_command = 'cp';
+          $cp_string_recap = 'cp ' . $recap_fetch_path_source . ' ' . $recap_fetch_path_dest;
+          $recap_params[] = ['Fetch command', $cp_string_recap];
         }
+        $generateParams += [
+          'dump_fetch_method' => $recap_fetch_command,
+          'dump_fetch_path_source' => $recap_fetch_path_source,
+          'dump_fetch_path_dest' => $recap_fetch_path_dest,
+          'dump_file_name' => $input->getOption('fetch-dest-path'),
+        ];
       }
-      else {
-        $recap_fetch_command = 'cp';
-        $cp_string_recap = 'cp ' . $recap_fetch_path_source . ' ' . $recap_fetch_path_dest;
-        $recap_params[] = ['Fetch command', $cp_string_recap];
-      }
-      $generateParams += [
-        'dump_fetch_method' => $recap_fetch_command,
-        'dump_fetch_path_source' => $recap_fetch_path_source,
-        'dump_fetch_path_dest' => $recap_fetch_path_dest,
-        'dump_file_name' => $input->getOption('fetch-dest-path'),
-      ];
     }
 
     $this->getIo()->newLine(1);
