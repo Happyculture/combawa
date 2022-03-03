@@ -3,8 +3,6 @@
 namespace Drupal\Console\Combawa\Command;
 
 use Drupal\Console\Combawa\Generator\EnvironmentGenerator;
-use Drupal\Console\Combawa\Generator\EnvironmentInstallGenerator;
-use Drupal\Console\Combawa\Generator\EnvironmentUpdateGenerator;
 use Drupal\Console\Command\Shared\ConfirmationTrait;
 use Drupal\Console\Core\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
