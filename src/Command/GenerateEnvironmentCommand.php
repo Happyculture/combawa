@@ -464,7 +464,7 @@ class GenerateEnvironmentCommand extends Command {
             if (!$scp_username) {
               $scp_username = $this->getIo()->askEmpty(
                 '[SCP] What is the connection username?',
-                array_key_exists('COMBAWA_DB_FETCH_SCP_USER', $envVars) ? $envVars['COMBAWA_DB_FETCH_SCP_USER'] : 'myusername',
+                array_key_exists('COMBAWA_DB_FETCH_SCP_USER', $envVars) ? $envVars['COMBAWA_DB_FETCH_SCP_USER'] : '',
               );
               $input->setOption('scp-connection-username', $scp_username);
             }
