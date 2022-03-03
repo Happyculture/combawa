@@ -12,13 +12,6 @@ $databases['default']['default'] = [
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
 ];
 
-{% if enable_splits is not empty %}
-// Enable config splits.
-{% for split in enable_splits %}
-$config['config_split.config_split.{{ split }}']['status'] = TRUE;
-{% endfor %}
-{% endif %}
-
 {% if environment != 'prod' %}
 // Add common dev/testing environments to trusted hots patterns.
 $settings['trusted_host_patterns'][] = '^.*\.happyculture\.coop$';

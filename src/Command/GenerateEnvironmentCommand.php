@@ -191,17 +191,11 @@ class GenerateEnvironmentCommand extends Command {
       'fetch_dest_path' => 'reference_dump.sql.gz',
       'write_db_settings' => $input->getOption('write-db-settings'),
     ];
-    $splits = $input->getOption('enable-splits');
-    if (!is_array($splits)) {
-      $splits = explode(',', $splits);
-    }
-    $generateParams['enable_splits'] = $this->validateConfigSplits(array_filter($splits));
 
     // Improve attributes readibility.
     $recap_db_password = empty($generateParams['db_password']) ? 'No password' : 'Your secret password';
     $recap_backup_base = $generateParams['backup_base'] ? 'Yes' : 'No';
     $recap_write_settings = $generateParams['write_db_settings'] ? 'Yes' : 'No';
-    $enable_splits = implode(', ', $generateParams['enable_splits']);
 
     $recap_params = [
       ['App root', $generateParams['app_root']],
@@ -214,7 +208,6 @@ class GenerateEnvironmentCommand extends Command {
       ['Site URL', $generateParams['environment_url']],
       ['Backup DB before build', $recap_backup_base],
       ['Write code to connect to DB', $recap_write_settings],
-      ['Config splits to enable', $enable_splits],
     ];
 
     if ($environment != 'prod') {
@@ -625,25 +618,6 @@ class GenerateEnvironmentCommand extends Command {
       );
       $input->setOption('write-db-settings', $db_write);
     }
-
-    try {
-      $enable_splits = $input->getOption('enable-splits');
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
-
-      return 1;
-    }
-
-    if (!$enable_splits) {
-      $available_splits = $this->getAvailableConfigSplits();
-      $enable_splits = $this->getIo()->choice(
-        'Which config splits do you want to enable? (comma separated keys)',
-        $available_splits,
-        NULL,
-        TRUE
-      );
-      $input->setOption('enable-splits', $enable_splits);
-    }
   }
 
   /**
@@ -716,51 +690,6 @@ class GenerateEnvironmentCommand extends Command {
         );
     }
   }
-
-  /**
-   * Get available config splits from project's configuration.
-   *
-   * @return string[]
-   *   The list of available config splits.
-   */
-  protected function getAvailableConfigSplits() {
-    /** @var \Drupal\Core\Config\FileStorage $confiStorage */
-    $confiStorage = \Drupal\Core\Config\FileStorageFactory::getSync();
-    $availableSplits = $confiStorage->listAll('config_split.config_split.');
-    array_walk($availableSplits, function (&$split) {
-      $split = str_replace('config_split.config_split.', '', $split);
-    });
-    return $availableSplits;
-  }
-
-  /**
-   * Validate that all selected config splits are available for this project.
-   *
-   * @param array $splits
-   *   The selected configuration splits.
-   *
-   * @return array
-   *   The selected configuration splits.
-   */
-  protected function validateConfigSplits(array $splits) {
-    $available = $this->getAvailableConfigSplits();
-    $filteredSplits = array_filter($splits, function ($split) use ($available) {
-      return in_array($split, $available, TRUE);
-    });
-
-    if (count($filteredSplits) !== count($splits)) {
-      throw new \InvalidArgumentException(
-        sprintf(
-          'The "%s" configuration splits are not available in this project. (Available: %s)',
-          implode(', ', array_diff($splits, $filteredSplits)),
-          implode(', ', $available)
-        )
-      );
-    }
-
-    return $filteredSplits;
-  }
-
 
   /**
    * Validates a domain name format.
