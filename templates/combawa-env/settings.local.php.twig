@@ -11,28 +11,3 @@ $databases['default']['default'] = [
   'driver' => 'mysql',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
 ];
-
-{% if environment != 'prod' %}
-// Add common dev/testing environments to trusted hots patterns.
-$settings['trusted_host_patterns'][] = '^.*\.happyculture\.coop$';
-$settings['trusted_host_patterns'][] = '^.*\.lndo\.site$';
-$settings['trusted_host_patterns'][] = '^.*\.local(?:host)?$';
-$settings['trusted_host_patterns'][] = '^.*\.dev$';
-$settings['trusted_host_patterns'][] = '^.*\.fun$';
-{% endif %}
-
-{% if environment == 'dev' %}
-// Default dev settings. See web/sites/example.settings.local.php.
-$settings['container_yamls'][] = DRUPAL_ROOT . '/sites/development.services.yml';
-$settings['cache']['bins']['render'] = 'cache.backend.null';
-$settings['cache']['bins']['discovery_migration'] = 'cache.backend.memory';
-$settings['cache']['bins']['page'] = 'cache.backend.null';
-$settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.null';
-
-// Force verbose errors.
-$config['system.logging']['error_level'] = 'verbose';
-
-// Enable js/css preprocessing.
-//$config['system.performance']['css']['preprocess'] = TRUE;
-//$config['system.performance']['js']['preprocess'] = TRUE;
-{% endif %}
