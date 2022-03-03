@@ -14,15 +14,15 @@ It's compatible with Drupal 7, 8 and 9 and is meant to be used by developers and
 
 You are encouraged to use Combawa as a daily companion to reinstall/update your local installation.
 
-Because Combawa is very cool, you can also use it when you bootstrap your project. Combawa lands with 2 Drupal console commands to help you setup your environment variables and bootstrap your build files. See below for details.
+Because Combawa is very cool, you can use a Drupal console command to setup the required environment variables. See below for details.
 
 ## <a name="installation"></a>Installation
 
 - `composer require happyculture/combawa drupal/console`
-- Use `drupal combawa:initialize-build-scripts` to initiate the project build files from a template (actions run when the project is installed or updated).
-- Use `drupal combawa:generate-environment` to setup your environment (configuring the project variables).
+- Use `drupal combawa:initialize-build-scripts` to initiate the project build files from a template (actions run when the Drupal site is (re)installed or updated).
+- Use `drupal combawa:generate-environment` to setup your environment (configuring your site variables).
 
-If you don't want to the DB settings file to be written, you will have to include in your settings the following snippet to connect to the DB:
+If you don't want to use the generated `settings.local.php` file, you will have to add in your `settings.php` (or any other settings file) the following snippet:
 
 ```
 <?php
@@ -88,18 +88,18 @@ We recommand you to install Drupal console to benefit from scaffolding features 
 Combawa is the script that will ease your project reinstallation when you want to test your freshly baked feature.
 
 It's designed with an IC context in mind for the local station.
-When you will start using Combawa, you will initiate a build scenario (we suggest the production scenario) to set default values to the internal options (should you backup the site when building? Retrieve a reference dump...)
+When you will start using Combawa, you will initiate a build scenario (we suggest the production scenario) to set default values to the internal options (should my script backup the site before building? Retrieve a fresh reference dump from production...)
 You can build the project from an installation profile, from existing config or from a reference dump directly retrieved from your production server. 
 
 ### How to use Combawa
 
-Running Combawa to (re)build your project mostly resumes to run this command: `./vendor/bin/combawa`.
+Running Combawa to (re)build your project mostly resumes to running this command: `./vendor/bin/combawa`.
 
 When you are building a site, the following steps are followed:
 * Preflight checkup (system requirement + setup verifications)
 * Predeployment actions (fetch a remote DB, save a backup of the current install, drop the DB)
 * Build actions (install or update mode (differences below))
-* Postdeployment (rebuild caches, generate a connection link...)
+* Postdeployment (rebuild caches, generate a connection link, setup env specific modules, reindex...)
 
 Combawa takes the default settings when you run it with no extra arguments.
 You can override them on the fly (see arguments section below).
@@ -115,17 +115,17 @@ The valid environments (option `-e`) are the following:
 * Testing (testing)
 * Production (prod)
 
-When you are targeting a specific environment, you can edit `predeploy_actions.sh` or `postdeploy_actions.sh`. Each file is composed of a switch/case per environment.
+When you are targeting a specific environment, you can edit `predeploy_actions.sh` or `postdeploy_actions.sh`. Each file is composed of a switch/case per environment but you can specialize those files per project.
 
 #### Build mode
 
-When you build your projects, you are in three different scenarios:
+When you build your projects, you are in two different scenarios:
 - Install mode: You are initiating the project and build from an installation profile.
 - Update mode: You are advanced in your project life cycle and may have it in production. You want to rebuild from the configuration that you exported or a reference SQL dump.
 
-Each mode (option `-m`) is using a different build file since you don't run the same commands whether you are installing/updating.
+Each mode (option `-m`) is using a different build file since you don't run the same commands whether you are installing or updating.
 
-Combawa ships with template files for each mode, you can update them when you need to adjust to your constraints.
+Combawa ships with template files for each mode, you can update them when you need to adjust them to your constraints.
 
 #### Combawa options
 
@@ -134,13 +134,13 @@ You can use more arguments such as : `./vendor/bin/combawa.sh --env dev --mode i
 Here is the list of available arguments:
 * `--env`, `-e`: Environment to build. Allowed values are: dev, testing, prod
 * `--mode`, `-m`: Build mode. Allowed values are: install, update
-* `--only-predeploy`: Only execute the predeploy actions.
-* `--only-postdeploy`: Only execute the postdeploy actions.
-* `--no-predeploy`: Do not execute the predeploy actions.
-* `--no-postdeploy`: Do not execute the postdeploy actions.
-* `--reimport`, `-r`: Reimports the site from the reference dump (DB drop and replace). 
-* `--backup`, `-e`: Generates a backup before building the project. Allowed values are: 0: does not generate a backup, 1: generates a backup.
+* `--backup`, `-b`: Generates a backup before building the project. Allowed values are: 0: do not generate a backup, 1: generate a backup.
+* `--reimport`, `-r`: Reimports the site from the reference dump (DB drop and replace). Allowed values are: 0: do not reimport the reference database, 1: reimport the reference database.
 * `--fetch-db-dump`, `-f`: Fetches a fresh DB dump from the production site. Used when the reference dump should be updated.
+* `--only-predeploy`: Only execute the predeploy script.
+* `--only-postdeploy`: Only execute the postdeploy script.
+* `--no-predeploy`: Do not execute the predeploy script.
+* `--no-postdeploy`: Do not execute the postdeploy script.
 * `--stop-after-reimport`: Flag to stop building after reimporting the DB. Useful to version config from prod. 
 
 ## <a name="drupal-console-commands"></a>Drupal console commands
@@ -155,38 +155,41 @@ To generate those files in interactive mode, just run `drupal combawa:generate-e
 All interactive options are also available in non-interactive mode if you need this to be run by your CI server for example. See the integrated help using `drupal help combawa:generate-environment`.
 
 Eg:
+
 ```
-drupal combawa:generate-environment \
-    --environment=testing \
-    --environment-url=https://mysite.url \
-    --dump-file-name=reference_dump.sql \
-    --db-host=localhost \
-    --db-port=3306 \
-    --db-name=db_name \
-    --db-user=db_user \
-    --db-password=db_password \
-    --reimport=0 \
-    --backup=1 \
-    --fetch-dump=0 \
-    --no-interaction
+ ./vendor/bin/drupal combawa:generate-environment \
+  --environment dev \
+  --environment-url https://mydevsite.coop \
+  --backup-db \
+  --dump-fetch-update \
+  --dump-retrieval-tool scp \
+  --scp-connection-servername zerze.zerzer \
+  --scp-connection-port 22 \
+  --fetch-source-path /home/dumps-source/my_dump.sql.gz \
+  --db-host localhost \
+  --db-port 3306 \
+  --db-name test_db \
+  --db-user db_username \
+  --env prod \
+  --no-interaction
 ```
 
-### Build generator
+### Script templates generator
 
-This command creates the build scripts used by combawa to install/update the project.
+This command generates the build scripts used by combawa to install/update the project from templates. Once those files are generated, you can customize them to your needs and probably want to version them.
 
-To use it in interactive mode, just run `drupal combawa:generate-build`.
-
-The files generated by this command should be added to your git repository.
+To use it in interactive mode, just run `drupal combawa:initialize-build-scripts`.
 
 ## <a name="advanced"></a>Advanced usages
 
 ### Pulling changes from production
 
-If some of your users are able to change the configuration on the production environment, you might want to ensure your repository is up-to-date before shipping new features. Those settings being stored in the database, you need to retrieve it on your local environment then export the configuration to your repository.
+If some of your users are able to change the configuration on the production environment, you might want to ensure your repository is up-to-date before shipping new features. Those settings being stored in the database, you need to retrieve them on your local environment then export the configuration to your repository.
 
-Run combawa ton only replace your local database with your production dump: \
+Run combawa to only replace your local database with your production dump as follow: \
 `combawa -f 1 -r 1 --stop-after-reimport`
+
+You are now in the state where the database has been imported. Run `drush config:export -y` to export in code and version the config delta from prod.
 
 ## <a name="troubleshooting"></a>Troubleshooting
 
