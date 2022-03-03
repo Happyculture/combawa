@@ -9,6 +9,7 @@ use Drupal\Console\Combawa\Generator\InitializeBuildScriptsGenerator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
 class InitializeBuildScriptsCommand extends Command {
 
@@ -30,6 +31,8 @@ class InitializeBuildScriptsCommand extends Command {
    * @var string The document root absolute path.
    */
   protected $appRoot;
+
+  protected $run_gen_env_command = FALSE;
 
   /**
    * ProfileCommand constructor.
@@ -92,6 +95,11 @@ class InitializeBuildScriptsCommand extends Command {
       'machine_name' => $machine_name,
       'build_mode' => $build_mode,
     ]);
+    if ($this->run_gen_env_command) {
+      $process = new Process([$this->drupalFinder->getVendorDir() . '/bin/drupal', 'combawa:generate-environment']);
+      $process->setTty(true);
+      $process->run();
+    }
   }
 
   /**
@@ -137,6 +145,9 @@ class InitializeBuildScriptsCommand extends Command {
       $input->setOption('build-mode', $build_mode);
     }
 
+    $this->run_gen_env_command = $this->getIo()->confirm(
+      'Do you want to generate the environment file (.env) now?',
+      TRUE);
   }
 
   /**
