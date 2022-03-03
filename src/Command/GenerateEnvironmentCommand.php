@@ -332,7 +332,7 @@ class GenerateEnvironmentCommand extends Command {
       if (empty($value) || $key === 'uri') {
         continue;
       }
-      else if ($key == 'backup-db') {
+      else if (in_array($key, ['backup-db', 'reimport', 'dump-fetch-update'])) {
         $command .= "\n" . '  --' . $key . ' \\';
       }
       else {
