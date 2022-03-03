@@ -15,6 +15,8 @@ class GenerateEnvironmentCommand extends Command {
 
   use ConfirmationTrait;
 
+  const FETCH_DEST_PATH = 'dumps/reference_dump.sql.gz';
+
   /**
    * @var \Drupal\Console\Combawa\Generator\EnvironmentGenerator
    */
@@ -110,12 +112,6 @@ class GenerateEnvironmentCommand extends Command {
         null,
         InputOption::VALUE_REQUIRED,
         'Source path to copy the reference dump from.'
-      )
-      ->addOption(
-        'fetch-dest-path',
-        null,
-        InputOption::VALUE_REQUIRED,
-        'Destination path to copy the reference dump to.'
       )
       ->addOption(
         'dump-file-name',
@@ -229,7 +225,7 @@ class GenerateEnvironmentCommand extends Command {
       $generateParams['dump_fetch_update'] = $input->getOption('dump-fetch-update') ? 1 : 0;
 
       $recap_fetch_path_source = $input->getOption('fetch-source-path');
-      $recap_fetch_path_dest = $this->generator->getCombawaRoot() . '/' . $input->getOption('fetch-dest-path');
+      $recap_fetch_path_dest = $this->generator->getCombawaRoot() . '/' . static::FETCH_DEST_PATH;
 
       if ($generateParams['dump_fetch_update']) {
         if ($input->getOption('dump-retrieval-tool') == 'scp') {
@@ -272,7 +268,6 @@ class GenerateEnvironmentCommand extends Command {
           'dump_fetch_method' => $recap_fetch_command,
           'dump_fetch_path_source' => $recap_fetch_path_source,
           'dump_fetch_path_dest' => $recap_fetch_path_dest,
-          'dump_file_name' => $input->getOption('fetch-dest-path'),
         ];
       }
     }
@@ -501,25 +496,6 @@ class GenerateEnvironmentCommand extends Command {
             }
           );
           $input->setOption('fetch-source-path', $fetch_source_path);
-        }
-
-        try {
-          $fetch_dest_path = $input->getOption('fetch-dest-path');
-        } catch (\Exception $error) {
-          $this->getIo()->error($error->getMessage());
-
-          return 1;
-        }
-
-        if (!$fetch_dest_path) {
-          $fetch_dest_path = $this->getIo()->ask(
-            'What will be the path of the fetched dump in this repo? (ex: dumps/reference_dump.sql.gz - include filename, only Gzipped files are supported)',
-            array_key_exists('COMBAWA_DB_FETCH_DEST', $envVars) ? $envVars['COMBAWA_DB_FETCH_DEST'] : 'dumps/reference_dump.sql.gz',
-            function ($path) {
-              return $this->validateDumpExtension($path);
-            }
-          );
-          $input->setOption('fetch-dest-path', $fetch_dest_path);
         }
 
         try {

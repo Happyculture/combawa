@@ -29,6 +29,7 @@ COMBAWA_ROOT="$SCRIPTS_PATH/../../../.."
 WEBROOT="$COMBAWA_ROOT/web"
 CONFIG_DIR="$COMBAWA_ROOT/config"
 COMBAWA_SCRIPTS_DIR="$COMBAWA_ROOT/scripts/combawa"
+COMBAWA_DB_DUMP_PATH=dumps/reference_dump.sql.gz
 
 # State variables.
 _COMBAWA_BYPASS_CONFIRMATION=0

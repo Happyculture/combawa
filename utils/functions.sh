@@ -245,7 +245,7 @@ load_dump()
 
     message_step "Importing the new DB..."
     message_action "Decompressing file..."
-    _DUMP_PATH_GZ="$COMBAWA_ROOT/$COMBAWA_DUMP_FILE_NAME"
+    _DUMP_PATH_GZ="$COMBAWA_ROOT/$COMBAWA_DB_DUMP_PATH"
     _DUMP_PATH="${_DUMP_PATH_GZ%.*}"
     gzip -dkf $_DUMP_PATH_GZ
     message_confirm "Done!"

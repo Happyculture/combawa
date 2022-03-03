@@ -12,10 +12,6 @@ COMBAWA_REIMPORT_REF_DUMP_FLAG={{ reimport }}
 # Re-run the generate-environment script to change this value afterwards.
 COMBAWA_DB_FETCH_FLAG={{ dump_fetch_update }}
 
-# Name of the reference dump name in the repo.
-COMBAWA_DB_DUMP_PATH="{{ dump_file_name }}"
-# Rename with dump path
-
 # Command to update the reference dump.
 COMBAWA_DB_FETCH_METHOD={{ dump_fetch_method }}
 {% if dump_fetch_method == 'scp' %}
@@ -29,7 +25,6 @@ COMBAWA_DB_FETCH_SCP_PORT={{ dump_scp_port }}
 {% endif %}
 {% endif %}
 COMBAWA_DB_FETCH_PATH_SOURCE="{{ dump_fetch_path_source }}"
-COMBAWA_DB_FETCH_PATH_DEST="{{ dump_fetch_path_dest }}"
 {% endif %}
 
 # Internal path from the repo root pointing to the public document root.

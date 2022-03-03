@@ -101,8 +101,8 @@ if [ $COMBAWA_DB_FETCH_FLAG == 1 ]; then
       # Login with SSH config name or ssh info?
       if [ -z ${COMBAWA_DB_FETCH_SCP_CONFIG_NAME+x} ]; then
         # Are our variables defined?
-        if [ -z ${COMBAWA_DB_FETCH_SCP_SERVER+x} ] || [ -z ${COMBAWA_DB_FETCH_SCP_PORT+x} ] || [ -z ${COMBAWA_DB_FETCH_PATH_SOURCE+x} ] || [ -z ${COMBAWA_DB_FETCH_PATH_DEST+x} ]; then
-          notify_fatal "One of the parameters COMBAWA_DB_FETCH_SCP_SERVER, COMBAWA_DB_FETCH_SCP_PORT, COMBAWA_DB_FETCH_PATH_SOURCE or COMBAWA_DB_FETCH_PATH_DEST is empty. We will not be able to copy a reference dump."
+        if [ -z ${COMBAWA_DB_FETCH_SCP_SERVER+x} ] || [ -z ${COMBAWA_DB_FETCH_SCP_PORT+x} ] || [ -z ${COMBAWA_DB_FETCH_PATH_SOURCE+x} ] ; then
+          notify_fatal "One of the parameters COMBAWA_DB_FETCH_SCP_SERVER, COMBAWA_DB_FETCH_SCP_PORT or COMBAWA_DB_FETCH_PATH_SOURCE is empty. We will not be able to copy a reference dump."
         fi
         message_step "Testing connection with remote SSH server from which the dump will be retrieved:"
         # Determine if we have a username to use to login.
