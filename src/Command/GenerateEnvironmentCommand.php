@@ -226,14 +226,12 @@ class GenerateEnvironmentCommand extends Command {
       'db_name' => $input->getOption('db-name'),
       'db_user' => $input->getOption('db-user'),
       'db_password' => $input->getOption('db-password'),
-      'environment_url' => $this->validateUrl($input->getOption('environment-url')),
       'backup_base' => 1,
       'reimport' => 0,
       'dump_fetch_update' => 0,
       'fetch_source_path' => '',
       'fetch_dest_path' => 'reference_dump.sql.gz',
       'write_db_settings' => $input->getOption('write-db-settings'),
-      'enable_splits' => $input->getOption('enable-splits'),
     ];
     $splits = $input->getOption('enable-splits');
     if (!is_array($splits)) {
