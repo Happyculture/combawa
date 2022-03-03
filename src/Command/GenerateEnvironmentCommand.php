@@ -2,13 +2,11 @@
 
 namespace Drupal\Console\Combawa\Command;
 
+use Drupal\Console\Combawa\Generator\EnvironmentGenerator;
+use Drupal\Console\Combawa\Generator\EnvironmentInstallGenerator;
 use Drupal\Console\Combawa\Generator\EnvironmentUpdateGenerator;
 use Drupal\Console\Command\Shared\ConfirmationTrait;
 use Drupal\Console\Core\Command\Command;
-use Drupal\Console\Combawa\Generator\EnvironmentInstallGenerator;
-use Drupal\Console\Core\Utils\CountCodeLines;
-use Drupal\Console\Core\Utils\FileQueue;
-use Drupal\Console\Core\Utils\TwigRenderer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,31 +16,17 @@ class GenerateEnvironmentCommand extends Command {
   use ConfirmationTrait;
 
   /**
-   * @var \Drupal\Console\Combawa\EnvironmentGeneratorAbstract
+   * @var \Drupal\Console\Combawa\Generator\EnvironmentGenerator
    */
   protected $generator;
-  /**
-   * @var TwigRenderer
-   */
-  protected $renderer;
-  /**
-   * @var FileQueue
-   */
-  protected $fileQueue;
-  /**
-   * @var CountCodeLines
-   */
-  protected $countCodeLines;
 
   /**
    * ProfileCommand constructor.
    *
-   * @param EnvironmentInstallGenerator $generator
+   * @param EnvironmentGenerator $generator
    */
-  public function __construct(TwigRenderer $renderer, FileQueue $file_queue, CountCodeLines $count_code_lines) {
-    $this->renderer = $renderer;
-    $this->fileQueue = $file_queue;
-    $this->countCodeLines = $count_code_lines;
+  public function __construct(EnvironmentGenerator $generator) {
+    $this->generator = $generator;
     parent::__construct();
   }
 
@@ -190,30 +174,10 @@ class GenerateEnvironmentCommand extends Command {
   }
 
   /**
-   * Helper to set generator attribute and its contextual dependencies.
-   */
-  protected function setGenerator() {
-    $build_mode = exec('/usr/bin/env composer config extra.combawa.build_mode  -d ' . $this->drupalFinder->getComposerRoot());
-    if ($build_mode == 'install') {
-      $generator = new EnvironmentInstallGenerator($this->drupalFinder);
-    }
-    elseif ($build_mode == 'update') {
-      $generator = new EnvironmentUpdateGenerator($this->drupalFinder);
-    }
-    else {
-      throw new \InvalidArgumentException(sprintf('Build mode "%s" is invalid (only install or update supported).', $build_mode));
-    }
-    $generator->setRenderer($this->renderer);
-    $generator->setFileQueue($this->fileQueue);
-    $generator->setCountCodeLines($this->countCodeLines);
-    $this->generator = $generator;
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $this->setGenerator();
+    $this->generator->computeBuildModeTemplate();
 
     $environment = $this->validateEnvironment($input->getOption('environment'));
     $generateParams = [

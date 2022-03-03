@@ -9,17 +9,12 @@ services:
     tags:
       - { name: drupal.command, bootstrap: uninstall }
   combawa.generator.environment:
-    class: \Drupal\Console\Combawa\Generator\EnvironmentInstallGenerator
+    class: \Drupal\Console\Combawa\Generator\EnvironmentGenerator
     arguments: ['@console.drupal_finder']
     tags:
       - { name: drupal.generator, bootstrap: uninstall }
   combawa.generate_environment:
     class: \Drupal\Console\Combawa\Command\GenerateEnvironmentCommand
-    arguments: ['@console.renderer', '@console.file_queue', '@console.count_code_lines']
+    arguments: ['@combawa.generator.environment']
     tags:
       - { name: drupal.command, bootstrap: uninstall }
-  combawa.generator.update.environment:
-    class: \Drupal\Console\Combawa\Generator\EnvironmentUpdateGenerator
-    arguments: ['@console.drupal_finder']
-    tags:
-      - { name: drupal.generator, bootstrap: uninstall }
