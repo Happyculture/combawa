@@ -18,7 +18,17 @@ Because Combawa is very cool, you can use a Drupal console command to setup the 
 
 ## <a name="installation"></a>Installation
 
-- `composer require happyculture/combawa drupal/console`
+- Add the following config to your `composer.json` file:
+```
+  "extra": {
+    "installer-paths": {
+      "vendor/{$vendor}/{$name}": [
+        "type:drupal-console-library"
+      ]
+    }
+  }
+```
+- `composer require happyculture/combawa`
 - Use `drupal combawa:initialize-build-scripts` to initiate the project build files from a template (actions run when the Drupal site is (re)installed or updated).
 - Use `drupal combawa:generate-environment` to setup your environment (configuring your site variables).
 
@@ -71,13 +81,6 @@ If you are lazy as we are (you should), it is possible to use a global command `
 In order to do that, you need to install the Combawa wrapper (https://github.com/Happyculture/combawa-wrapper). It works similarly as the Drush wrapper. 
 
 `composer global require happyculture/combawa-wrapper`
-
-#### Drupal console commands
-
-We are able to generate the files needed to build the project and environment variables files.  
-We recommand you to install Drupal console to benefit from scaffolding features for environment variables and settings (see below).
-
-`composer require drupal/console`
 
 ## <a name="usage"></a>Usage
 
@@ -147,13 +150,13 @@ Here is the list of available arguments:
 
 ### Environment generator
 
+Command `drupal combawa:generate-environment`:
+
 Used once per environment, this command creates two files: 
-- `.env`: Used to override the default settings set in `.combawa`.
-- `settings.local.php`: Used to include the dynamic values of the variables set by the environment.
+- `.env`: Stores local values for the build script.
+- `settings.local.php`: Used to inject the local values into Drupal.
 
-To generate those files in interactive mode, just run `drupal combawa:generate-environment`.\
-All interactive options are also available in non-interactive mode if you need this to be run by your CI server for example. See the integrated help using `drupal help combawa:generate-environment`.
-
+By default the command is interactive. If you want to use it through CLI, you can pass all arguments with there value. If a required value is missing, the command will prompt to collect the missing values.
 Eg:
 
 ```
@@ -163,7 +166,7 @@ Eg:
   --backup-db \
   --dump-fetch-update \
   --dump-retrieval-tool scp \
-  --scp-connection-servername zerze.zerzer \
+  --scp-connection-servername myserver.org \
   --scp-connection-port 22 \
   --fetch-source-path /home/dumps-source/my_dump.sql.gz \
   --db-host localhost \
@@ -174,11 +177,13 @@ Eg:
   --no-interaction
 ```
 
+See the integrated help using `drupal help combawa:generate-environment` for arguments values.
+
 ### Script templates generator
 
-This command generates the build scripts used by combawa to install/update the project from templates. Once those files are generated, you can customize them to your needs and probably want to version them.
+Command `drupal combawa:initialize-build-scripts`:
 
-To use it in interactive mode, just run `drupal combawa:initialize-build-scripts`.
+This command generates the build scripts used by Combawa to install/update the project from templates. Once those files are generated, you can customize them to your needs and probably want to version them.
 
 ## <a name="advanced"></a>Advanced usages
 
