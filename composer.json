@@ -15,7 +15,6 @@
         "vlucas/phpdotenv": "^5.4"
     },
     "suggest": {
-        "happyculture/combawa-wrapper": "Lets you run combawa from anywhere without naming explicitely vendor/bin/combawa.sh.",
-        "happyculture/kumquat_scaffolder": "Lets you generate an installation profile, a font theme and an admin theme to fasten your project start."
+        "happyculture/combawa-wrapper": "Lets you run combawa from anywhere without naming explicitely vendor/bin/combawa.sh."
     }
 }
