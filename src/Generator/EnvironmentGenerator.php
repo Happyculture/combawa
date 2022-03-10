@@ -41,6 +41,7 @@ class EnvironmentGenerator extends Generator {
       throw new \InvalidArgumentException('The build mode can not be determined or is not install or update.');
     }
     $this->env_build_mode_template = 'combawa-env/env-' . $build_mode . '.twig';
+    return $build_mode;
   }
 
   /**

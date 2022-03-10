@@ -171,7 +171,7 @@ class GenerateEnvironmentCommand extends Command {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $this->generator->computeBuildModeTemplate();
+    $build_mode = $this->generator->computeBuildModeTemplate();
 
     $environment = $this->validateEnvironment($input->getOption('environment'));
     $generateParams = [
@@ -218,7 +218,7 @@ class GenerateEnvironmentCommand extends Command {
       $recap_fetch_path_source = $input->getOption('fetch-source-path');
       $recap_fetch_path_dest = $this->generator->getCombawaRoot() . '/' . static::FETCH_DEST_PATH;
 
-      if ($generateParams['dump_fetch_update']) {
+      if ($build_mode == 'update') {
         if ($input->getOption('dump-retrieval-tool') == 'scp') {
           $recap_fetch_command = 'scp';
           if (!empty($input->getOption('scp-config-name'))) {
