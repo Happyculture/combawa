@@ -9,9 +9,9 @@ use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidPathException;
 
 /**
- * Load any .env file. See /.env.example.
+ * Load repo root .env file.
  */
-$dotenv = Dotenv::createUnsafeMutable(__DIR__);
+$dotenv = Dotenv::createUnsafeMutable(__DIR__ . '/../../../');
 try {
   $dotenv->load();
 }
