@@ -10,7 +10,7 @@
     },
     "require": {
         "drupal/console-extend-plugin": "^0.9.2",
-        "drush/drush": "^9 || ^10 || ^11",
+        "drush/drush": "^10 || ^11",
         "drupal/console": "^1.9",
         "vlucas/phpdotenv": "^5.4"
     },
