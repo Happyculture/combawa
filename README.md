@@ -135,6 +135,7 @@ Combawa ships with template files for each mode, you can update them when you ne
 You can use more arguments such as : `./vendor/bin/combawa.sh --env dev --mode install --backup 1 --fetch-db-dump`
 
 Here is the list of available arguments:
+* `--yes`, `-y`: Do not ask for confirmation before running the build. Useful for CI integration.
 * `--env`, `-e`: Environment to build. Allowed values are: dev, testing, prod
 * `--mode`, `-m`: Build mode. Allowed values are: install, update
 * `--backup`, `-b`: Generates a backup before building the project. Allowed values are: 0: do not generate a backup, 1: generate a backup.
