@@ -16,6 +16,9 @@ case $COMBAWA_BUILD_ENV in
     # $DRUSH sapi-r
     # $DRUSH sapi-i
 
+    # Rebuild permissions
+    # $DRUSH php-eval 'node_access_rebuild();'
+
     # Connect.
     $DRUSH uli
     ;;
@@ -23,14 +26,21 @@ case $COMBAWA_BUILD_ENV in
     # Update translations.
     $DRUSH locale:check
     $DRUSH locale:update
+
     # Rebuild search indexes.
     # $DRUSH sapi-r
     # $DRUSH sapi-i
+
+    # Rebuild permissions
+    # $DRUSH php-eval 'node_access_rebuild();'
     ;;
   prod)
     # Update translations.
     $DRUSH locale:check
     $DRUSH locale:update
+
+    # Rebuild permissions
+    # $DRUSH php-eval 'node_access_rebuild();'
     ;;
   *)
     notify_fatal "Unknown environment: $COMBAWA_BUILD_ENV. Please check your name."
