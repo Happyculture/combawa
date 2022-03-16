@@ -9,8 +9,8 @@ case $COMBAWA_BUILD_ENV in
     $DRUSH locale:update
 
     # Example post install task running only on dev environments.
-    # $DRUSH en {{ machine_name }}_content_install
-    # $DRUSH pm-uninstall better_normalizers serialization hal default_content {{ machine_name }}_content_install
+    # $DRUSH en MYPROJECT_NAME_content_install
+    # $DRUSH pm-uninstall better_normalizers serialization hal default_content MYPROJECT_NAME_content_install
 
     # Rebuild search indexes.
     # $DRUSH sapi-r

@@ -722,7 +722,7 @@ class GenerateEnvironmentCommand extends Command {
    *
    * @return mixed
    */
-  protected function validateOptionalValueWhenRequested($value, $param_name) {
+  static public function validateOptionalValueWhenRequested($value, $param_name) {
     if (empty($value)) {
       throw new \InvalidArgumentException(sprintf('Option "%s" value can not be empty.', $param_name));
     }

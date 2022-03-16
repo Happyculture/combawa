@@ -18,19 +18,25 @@ class InitializeBuildScriptsGenerator extends Generator {
   public function generate(array $parameters) {
     $scripts_folder = '../scripts/combawa';
 
-    $buildParameters = [
-      'machine_name' => $parameters['machine_name'],
-      'build_mode' => $parameters['build_mode'],
-    ];
-
     // Alter composer.json file.
     $prevDir = getcwd();
     chdir($this->drupalFinder->getComposerRoot());
-    exec('/usr/bin/env composer config name ' . $parameters['machine_name'] . '/' . $parameters['machine_name']);
-    exec('/usr/bin/env composer config extra.combawa.machine_name ' . $parameters['machine_name']);
+
+    // Build mode.
+    $buildParameters['build_mode'] = $parameters['build_mode'];
     exec('/usr/bin/env composer config extra.combawa.build_mode ' . $parameters['build_mode']);
+
+    // Machine name.
+    if (!empty($parameters['machine_name'])) {
+      $buildParameters['machine_name'] = $parameters['machine_name'];
+      exec('/usr/bin/env composer config extra.combawa.machine_name ' . $parameters['machine_name']);
+    }
+
+    // Update the lock file.
     exec('/usr/bin/env composer update --lock');
     chdir($prevDir);
+
+    // Then finish the templates generation.
     $this->fileQueue->addFile('../composer.json');
     $this->countCodeLines->addCountCodeLines(5);
 

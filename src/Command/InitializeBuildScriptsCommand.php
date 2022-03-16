@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use Drupal\Console\Combawa\Command\GenerateEnvironmentCommand;
 
 class InitializeBuildScriptsCommand extends Command {
 
@@ -57,16 +58,16 @@ class InitializeBuildScriptsCommand extends Command {
       ->setAliases(['ibs'])
       ->setDescription('Initialize Combawa required scripts.')
       ->addOption(
-        'machine-name',
-        null,
-        InputOption::VALUE_REQUIRED,
-        'The project (short) machine name (ex: hc).'
-      )
-      ->addOption(
         'build-mode',
         null,
         InputOption::VALUE_REQUIRED,
         'The build module to use (install or update) if wanted.',
+      )
+      ->addOption(
+        'machine-name',
+        null,
+        InputOption::VALUE_OPTIONAL,
+        'The project (short) machine name (ex: hc).'
       );
   }
 
@@ -74,13 +75,15 @@ class InitializeBuildScriptsCommand extends Command {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $machine_name = $this->validateMachineName($input->getOption('machine-name'));
     $build_mode = $this->validateBuildMode($input->getOption('build-mode'));
-
     $recap_params = [
-      ['Machine name', $machine_name],
       ['Build mode', $build_mode],
     ];
+
+    if (!empty($input->getOption('machine-name'))) {
+      $machine_name = $this->validateMachineName(GenerateEnvironmentCommand::validateOptionalValueWhenRequested($input->getOption('machine-name'), 'machine-name'));
+      $recap_params[] = ['Machine name', $machine_name];
+    }
 
     $this->getIo()->newLine(1);
     $this->getIo()->commentBlock('Settings recap');
@@ -106,26 +109,6 @@ class InitializeBuildScriptsCommand extends Command {
    * {@inheritdoc}
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
-
-    try {
-      $machine_name = $input->getOption('machine-name') ? $this->validateMachineName($input->getOption('machine-name')) : null;
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
-
-      return 1;
-    }
-
-    if (!$machine_name) {
-      $machine_name = $this->getIo()->ask(
-        'What is the machine name of your install profile?',
-        'new_project',
-        function ($machine_name) {
-          return $this->validateMachineName($machine_name);
-        }
-      );
-      $input->setOption('machine-name', $machine_name);
-    }
-
     try {
       $build_mode = $input->getOption('build-mode') ? $this->validateBuildMode($input->getOption('build-mode')) : NULL;
     } catch (\Exception $error) {
@@ -143,6 +126,27 @@ class InitializeBuildScriptsCommand extends Command {
         }
       );
       $input->setOption('build-mode', $build_mode);
+    }
+
+    if ($build_mode == 'install') {
+      try {
+        $machine_name = $input->getOption('machine-name') ? $this->validateMachineName($input->getOption('machine-name')) : null;
+      } catch (\Exception $error) {
+        $this->getIo()->error($error->getMessage());
+
+        return 1;
+      }
+
+      if (!$machine_name) {
+        $machine_name = $this->getIo()->ask(
+          'What is the machine name of your install profile?',
+          'new_project',
+          function ($machine_name) {
+            return $this->validateMachineName(GenerateEnvironmentCommand::validateOptionalValueWhenRequested($machine_name, 'machine-name'));
+          }
+        );
+        $input->setOption('machine-name', $machine_name);
+      }
     }
 
     $this->run_gen_env_command = $this->getIo()->confirm(
