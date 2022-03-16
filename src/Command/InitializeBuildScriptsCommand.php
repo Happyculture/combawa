@@ -146,7 +146,7 @@ class InitializeBuildScriptsCommand extends Command {
     }
 
     $this->run_gen_env_command = $this->getIo()->confirm(
-      'Do you want to generate the environment file (.env) now?',
+      'Next, we will need you to generate the environment file (.env). Do you want to do it right after saving the previous settings?',
       TRUE);
   }
 
