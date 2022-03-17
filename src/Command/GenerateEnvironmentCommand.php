@@ -76,12 +76,6 @@ class GenerateEnvironmentCommand extends Command {
         'The remote server name where to find the dump.'
       )
       ->addOption(
-        'scp-connection-info',
-        null,
-        InputOption::VALUE_REQUIRED,
-        'SSH Connection string from your SSH Config file..'
-      )
-      ->addOption(
         'scp-connection-username',
         null,
         InputOption::VALUE_OPTIONAL,
@@ -110,12 +104,6 @@ class GenerateEnvironmentCommand extends Command {
         null,
         InputOption::VALUE_REQUIRED,
         'Source path to copy the reference dump from.'
-      )
-      ->addOption(
-        'dump-file-name',
-        null,
-        InputOption::VALUE_OPTIONAL,
-        'The name of the local dump file to load before building.'
       )
       ->addOption(
         'reimport',
@@ -158,12 +146,6 @@ class GenerateEnvironmentCommand extends Command {
         null,
         InputOption::VALUE_REQUIRED,
         'Flag to write the DB settings code.'
-      )
-      ->addOption(
-        'enable-splits',
-        null,
-        InputOption::VALUE_OPTIONAL,
-        'Config splits to enable separated by a comma.'
       );
   }
 
