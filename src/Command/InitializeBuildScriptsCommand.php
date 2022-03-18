@@ -64,10 +64,10 @@ class InitializeBuildScriptsCommand extends Command {
         'The build module to use (install or update) if wanted.',
       )
       ->addOption(
-        'machine-name',
+        'profile-name',
         null,
         InputOption::VALUE_OPTIONAL,
-        'The project (short) machine name (ex: hc).'
+        'The project (short) profile name (ex: hc).'
       );
   }
 
@@ -80,9 +80,9 @@ class InitializeBuildScriptsCommand extends Command {
       ['Build mode', $build_mode],
     ];
 
-    if (!empty($input->getOption('machine-name'))) {
-      $machine_name = $this->validateMachineName(GenerateEnvironmentCommand::validateOptionalValueWhenRequested($input->getOption('machine-name'), 'machine-name'));
-      $recap_params[] = ['Machine name', $machine_name];
+    if (!empty($input->getOption('profile-name'))) {
+      $profile_name = $this->validateMachineName(GenerateEnvironmentCommand::validateOptionalValueWhenRequested($input->getOption('profile-name'), 'profile-name'));
+      $recap_params[] = ['Profile name', $profile_name];
     }
 
     $this->getIo()->newLine(1);
@@ -95,7 +95,7 @@ class InitializeBuildScriptsCommand extends Command {
     }
 
     $this->generator->generate([
-      'machine_name' => $machine_name,
+      'profile_name' => $profile_name,
       'build_mode' => $build_mode,
     ]);
     if ($this->run_gen_env_command) {
@@ -130,22 +130,22 @@ class InitializeBuildScriptsCommand extends Command {
 
     if ($build_mode == 'install') {
       try {
-        $machine_name = $input->getOption('machine-name') ? $this->validateMachineName($input->getOption('machine-name')) : null;
+        $profile_name = $input->getOption('profile-name') ? $this->validateMachineName($input->getOption('profile-name')) : null;
       } catch (\Exception $error) {
         $this->getIo()->error($error->getMessage());
 
         return 1;
       }
 
-      if (!$machine_name) {
-        $machine_name = $this->getIo()->ask(
+      if (!$profile_name) {
+        $profile_name = $this->getIo()->ask(
           'What is the machine name of your install profile?',
           'new_project',
-          function ($machine_name) {
-            return $this->validateMachineName(GenerateEnvironmentCommand::validateOptionalValueWhenRequested($machine_name, 'machine-name'));
+          function ($profile_name) {
+            return $this->validateMachineName(GenerateEnvironmentCommand::validateOptionalValueWhenRequested($profile_name, 'profile-name'));
           }
         );
-        $input->setOption('machine-name', $machine_name);
+        $input->setOption('profile-name', $profile_name);
       }
     }
 

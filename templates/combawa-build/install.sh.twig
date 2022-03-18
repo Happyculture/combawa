@@ -2,8 +2,8 @@
 # Actions run when the script is in install mode.
 
 # Install the site.
-{% if machine_name is defined %}
-$DRUSH site-install --sites-subdir=default --locale=fr --existing-config {{ machine_name }}
+{% if profile_name is defined %}
+$DRUSH site-install --sites-subdir=default --locale=fr --existing-config {{ profile_name }}
 {% else %}
 # $DRUSH site-install --sites-subdir=default --locale=fr --existing-config YOUR_PROJECT_PROFILE
 {% endif %}
