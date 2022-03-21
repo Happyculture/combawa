@@ -18,6 +18,8 @@ class InitializeBuildScriptsCommand extends Command {
 
   const REGEX_MACHINE_NAME = '/^[a-z0-9_]+$/';
 
+  const SCRIPTS_FOLDER = '../scripts/combawa';
+
   /**
    * @var InitializeBuildScriptsGenerator
    */
@@ -68,6 +70,12 @@ class InitializeBuildScriptsCommand extends Command {
         null,
         InputOption::VALUE_OPTIONAL,
         'The project (short) profile name (ex: hc).'
+      )
+      ->addOption(
+        'overwrite-scripts',
+        null,
+        InputOption::VALUE_NONE,
+        'Overwrite existing scripts files.'
       );
   }
 
@@ -76,6 +84,7 @@ class InitializeBuildScriptsCommand extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $build_mode = $this->validateBuildMode($input->getOption('build-mode'));
+    $overwrite_scripts = (bool) $input->getOption('overwrite-scripts');
     $recap_params = [
       ['Build mode', $build_mode],
     ];
@@ -83,6 +92,10 @@ class InitializeBuildScriptsCommand extends Command {
     if (!empty($input->getOption('profile-name'))) {
       $profile_name = $this->validateMachineName(GenerateEnvironmentCommand::validateOptionalValueWhenRequested($input->getOption('profile-name'), 'profile-name'));
       $recap_params[] = ['Profile name', $profile_name];
+    }
+
+    if (is_file(self::SCRIPTS_FOLDER . '/' . $build_mode . '.sh')) {
+      $recap_params[] = ['Overwrite scripts files', $overwrite_scripts ? 'Yes' : 'No'];
     }
 
     $this->getIo()->newLine(1);
@@ -97,6 +110,7 @@ class InitializeBuildScriptsCommand extends Command {
     $this->generator->generate([
       'profile_name' => $profile_name,
       'build_mode' => $build_mode,
+      'overwrite_scripts' => $overwrite_scripts,
     ]);
     if ($this->run_gen_env_command) {
       $process = new Process([$this->drupalFinder->getVendorDir() . '/bin/drupal', 'combawa:generate-environment']);
@@ -146,6 +160,24 @@ class InitializeBuildScriptsCommand extends Command {
           }
         );
         $input->setOption('profile-name', $profile_name);
+      }
+    }
+
+    if (is_file(self::SCRIPTS_FOLDER . '/' . $build_mode . '.sh')) {
+      try {
+        $overwrite_scripts = $input->getOption('overwrite-scripts') ? (bool) $input->getOption('overwrite-scripts') : null;
+      } catch (\Exception $error) {
+        $this->getIo()->error($error->getMessage());
+
+        return 1;
+      }
+
+      if (null === $overwrite_scripts) {
+        $overwrite_scripts = $this->getIo()->confirm(
+          'Do you want to overwrite your existing scripts located in the scripts/combawa directory?',
+          FALSE
+        );
+        $input->setOption('overwrite-scripts', $overwrite_scripts);
       }
     }
 

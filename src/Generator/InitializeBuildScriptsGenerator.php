@@ -2,6 +2,7 @@
 
 namespace Drupal\Console\Combawa\Generator;
 
+use Drupal\Console\Combawa\Command\InitializeBuildScriptsCommand;
 use Drupal\Console\Core\Generator\Generator;
 
 class InitializeBuildScriptsGenerator extends Generator {
@@ -16,8 +17,6 @@ class InitializeBuildScriptsGenerator extends Generator {
    * @param array $parameters
    */
   public function generate(array $parameters) {
-    $scripts_folder = '../scripts/combawa';
-
     // Alter composer.json file.
     $prevDir = getcwd();
     chdir($this->drupalFinder->getComposerRoot());
@@ -36,24 +35,25 @@ class InitializeBuildScriptsGenerator extends Generator {
     exec('/usr/bin/env composer update --lock');
     chdir($prevDir);
 
-    // Then finish the templates generation.
     $this->fileQueue->addFile('../composer.json');
     $this->countCodeLines->addCountCodeLines(5);
 
-    // Create scripts files.
-    $dir = opendir(static::TPL_DIR . '/combawa-build/');
-    while ($file = readdir($dir)) {
-      if ($file[0] === '.') {
-        continue;
+    // Create scripts files if needed or forced.
+    if ($parameters['overwrite_scripts'] || !is_file(InitializeBuildScriptsCommand::SCRIPTS_FOLDER . '/' . $parameters['build_mode'] .'.sh')) {
+      $dir = opendir(static::TPL_DIR . '/combawa-build/');
+      while ($file = readdir($dir)) {
+        if ($file[0] === '.') {
+          continue;
+        }
+
+        $destination_file = substr($file, 0, -1 * strlen('.twig'));
+
+        $this->renderFile(
+          'combawa-build/' . $file,
+          InitializeBuildScriptsCommand::SCRIPTS_FOLDER . '/' . $destination_file,
+          $buildParameters
+        );
       }
-
-      $destination_file = substr($file, 0, -1 * strlen('.twig'));
-
-      $this->renderFile(
-        'combawa-build/' . $file,
-        $scripts_folder . '/' . $destination_file,
-        $buildParameters
-      );
     }
   }
 
