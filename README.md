@@ -30,6 +30,7 @@ Because Combawa is very cool, you can use a Drupal console command to setup the 
 ```
 - `composer require happyculture/combawa`
 - Use `drupal combawa:initialize-build-scripts` to initiate the project build files from a template (actions run when the Drupal site is (re)installed or updated).
+- If you are in `install` mode using an install profile different than `minimal`, you should update the combawa configuration as follow: `composer config extra.combawa.profile_name YOUR_PROFILE_MACHINE_NAME`.
 - Use `drupal combawa:generate-environment` to setup your environment (configuring your site variables).
 
 If you don't want to use the generated `settings.local.php` file, you will have to add in your `settings.php` (or any other settings file) the following snippet:
