@@ -132,12 +132,10 @@ class InitializeBuildScriptsCommand extends Command {
     }
 
     if (!$build_mode) {
-      $build_mode = $this->getIo()->ask(
-        'What is the build mode to use (install or update)?',
-        'install',
-        function ($build_mode) {
-          return $this->validateBuildMode($build_mode);
-        }
+      $build_mode = $this->getIo()->choice(
+        'What is the build mode to use?',
+        ['install', 'update'],
+        'install'
       );
       $input->setOption('build-mode', $build_mode);
     }
