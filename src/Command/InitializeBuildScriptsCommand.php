@@ -16,8 +16,6 @@ class InitializeBuildScriptsCommand extends Command {
 
   use ConfirmationTrait;
 
-  const REGEX_MACHINE_NAME = '/^[a-z0-9_]+$/';
-
   const SCRIPTS_FOLDER = '../scripts/combawa';
 
   /**
@@ -66,12 +64,6 @@ class InitializeBuildScriptsCommand extends Command {
         'The build module to use (install or update) if wanted.',
       )
       ->addOption(
-        'profile-name',
-        null,
-        InputOption::VALUE_OPTIONAL,
-        'The project (short) profile name (ex: hc).'
-      )
-      ->addOption(
         'overwrite-scripts',
         null,
         InputOption::VALUE_NONE,
@@ -89,11 +81,6 @@ class InitializeBuildScriptsCommand extends Command {
       ['Build mode', $build_mode],
     ];
 
-    if (!empty($input->getOption('profile-name'))) {
-      $profile_name = $this->validateMachineName(GenerateEnvironmentCommand::validateOptionalValueWhenRequested($input->getOption('profile-name'), 'profile-name'));
-      $recap_params[] = ['Profile name', $profile_name];
-    }
-
     if (is_file(self::SCRIPTS_FOLDER . '/' . $build_mode . '.sh')) {
       $recap_params[] = ['Overwrite scripts files', $overwrite_scripts ? 'Yes' : 'No'];
     }
@@ -108,7 +95,6 @@ class InitializeBuildScriptsCommand extends Command {
     }
 
     $this->generator->generate([
-      'profile_name' => $profile_name,
       'build_mode' => $build_mode,
       'overwrite_scripts' => $overwrite_scripts,
     ]);
@@ -140,27 +126,6 @@ class InitializeBuildScriptsCommand extends Command {
       $input->setOption('build-mode', $build_mode);
     }
 
-    if ($build_mode == 'install') {
-      try {
-        $profile_name = $input->getOption('profile-name') ? $this->validateMachineName($input->getOption('profile-name')) : null;
-      } catch (\Exception $error) {
-        $this->getIo()->error($error->getMessage());
-
-        return 1;
-      }
-
-      if (!$profile_name) {
-        $profile_name = $this->getIo()->ask(
-          'What is the machine name of your install profile?',
-          'new_project',
-          function ($profile_name) {
-            return $this->validateMachineName(GenerateEnvironmentCommand::validateOptionalValueWhenRequested($profile_name, 'profile-name'));
-          }
-        );
-        $input->setOption('profile-name', $profile_name);
-      }
-    }
-
     if (is_file(self::SCRIPTS_FOLDER . '/' . $build_mode . '.sh')) {
       try {
         $overwrite_scripts = $input->getOption('overwrite-scripts') ? (bool) $input->getOption('overwrite-scripts') : null;
@@ -182,29 +147,6 @@ class InitializeBuildScriptsCommand extends Command {
     $this->run_gen_env_command = $this->getIo()->confirm(
       'Next, we will need you to generate the environment file (.env). Do you want to do it right after saving the previous settings?',
       TRUE);
-  }
-
-  /**
-   * Validates a machine name.
-   *
-   * @param string $machine_name
-   *   The machine name.
-   * @return string
-   *   The machine name.
-   * @throws \InvalidArgumentException
-   */
-  protected function validateMachineName($machine_name) {
-    if (preg_match(static::REGEX_MACHINE_NAME, $machine_name)) {
-      return $machine_name;
-    }
-    else {
-      throw new \InvalidArgumentException(
-        sprintf(
-          'Machine name "%s" is invalid, it must contain only lowercase letters, numbers and underscores.',
-          $machine_name
-        )
-      );
-    }
   }
 
   /**
