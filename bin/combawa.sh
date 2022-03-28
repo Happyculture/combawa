@@ -103,6 +103,10 @@ do
     shift
   else
     case $key in
+      -h|--help)
+        usage
+        shift
+        ;;
       -y | --yes)
         _COMBAWA_BYPASS_CONFIRMATION=1
         ;;
@@ -154,10 +158,6 @@ do
 
         message_action "Reimport reference dump flag overriden:"
         message_override "$SOURCE_REIMPORT" "$COMBAWA_REIMPORT_REF_DUMP_FLAG"
-        shift
-        ;;
-      -h|--help)
-        usage
         shift
         ;;
       -f|--fetch-db-dump)

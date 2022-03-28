@@ -79,40 +79,42 @@ usage()
   bold=$(tput bold)
   normal=$(tput sgr0)
 
-  echo -e "Usage:"
-  echo -e "Long version: ./build.sh --env dev --mode install --backup 1 --fetch-db-dump"
-  echo -e "Short version: ./build.sh -e dev -m install -b 1 -u http://hc.fun -f"
+  echo -e "${bold}Usage:${normal}"
+  echo ''
+  echo -e "${bold}Long version:${normal} ./build.sh --env dev --mode install --backup 1 --fetch-db-dump 1 --reimport 1 --yes"
+  echo -e "${bold}Short version:${normal} ./build.sh -e dev -m install -b 1 -u http://hc.fun -f 1 -r 1 -y"
+  echo ''
+  echo -e "Some arguments can be omitted, the default value will be pulled from the generated .env file."
   echo ''
   echo -e "Available arguments are:"
   echo -e "${bold}\t--env, -e: Environment to build.${normal}"
   echo -e '\t\tAllowed values are: dev, testing, prod'
-  echo -e '\t\tDefault value: prod'
   echo ''
   echo -e "${bold}\t--mode, -m: Build mode${normal}"
   echo -e '\t\tAllowed values are: install, update'
-  echo -e '\t\tDefault value: update'
   echo ''
-  echo -e '\tIn addition to the build mode you may want to use those options to control the steps to execute:'
+  echo -e "${bold}\t--backup, -b: Generates a backup before building the project.${normal}"
+  echo -e '\t\tAllowed values are: 0: does not generate a backup, 1: generates a backup.'
+  echo ''
+  echo -e "${bold}\t--fetch-db-dump, -f: Fetch a fresh DB dump from the production site.${normal}"
+  echo -e '\t\tUsed when the reference dump should be updated.'
+  echo -e '\t\tAllowed values are: 0: does not fetch a copy of the reference DB dump, 1: fetches the reference DB dump.'
+  echo ''
+  echo -e "${bold}\t--reimport, -r: Reimport the site from the reference dump.${normal}"
+  echo -e '\t\tAllowed values are: 0: does not reimport the reference dump, 1: reimports the ref dump (drop and inject).'
+  echo ''
+  echo -e "${bold}\t--yes, -y: Bypass confirmation step.${normal}"
+  echo ''
+  echo -e '\t Additional arguments are available to control the steps to execute:'
+  echo ''
   echo -e "${bold}\t--no-predeploy:${normal} Do not process predeploy actions."
   echo -e "${bold}\t--no-postdeploy:${normal} Do not process postdeploy actions."
   echo -e "${bold}\t--only-predeploy:${normal} Only process predeploy actions."
   echo -e "${bold}\t--only-postdeploy:${normal} Only process postdeploy actions."
   echo ''
-  echo -e "${bold}\t--yes, -y: Bypass confirmation step.${normal}"
-  echo ''
-  echo -e "${bold}\t--backup, -b: Generates a backup before building the project.${normal}"
-  echo -e '\t\tAllowed values are: 0: does not generate a backup, 1: generates a backup.'
-  echo -e '\t\tDefault value: 1'
-  echo ''
-  echo -e "${bold}\t--fetch-db-dump, -f: Fetch a fresh DB dump from the production site.${normal}"
-  echo -e '\t\tUsed when the reference dump should be updated.'
-  echo ''
-  echo -e "${bold}\t--reimport, -r: Reimport the site from the reference dump.${normal}"
-  echo -e '\t\tAllowed values are: 0: does not reimport the reference dump, 1: reimports the ref dump (drop and inject).'
-  echo -e '\t\tDefault value: 0'
-  echo ''
   echo -e "${bold}\t--stop-after-reimport: Utilitary flag to stop building after reimporting the DB.${normal}"
-  echo -e '\t\tThis option is useful if you want to fetch your remote DB, import it and version its config.'
+  echo -e "\t\tThis option is useful if you want to fetch your remote DB, import it and version its config."
+  echo ''
   exit
 }
 
