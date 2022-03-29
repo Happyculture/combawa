@@ -2,8 +2,7 @@
 # Actions run when the script is in install mode.
 
 # Install the site.
-PROFILE_NAME=$(composer config extra.combawa.profile_name)
-$DRUSH site-install --sites-subdir=default --locale=fr --existing-config "${PROFILE_NAME:=minimal}"
+$DRUSH site-install --sites-subdir=default --locale=fr --existing-config minimal
 
 # Fix Drupal annoying need to change permissions.
 chmod u+w "$WEBROOT/sites/default"

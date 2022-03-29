@@ -25,10 +25,6 @@ class InitializeBuildScriptsGenerator extends Generator {
     $buildParameters['build_mode'] = $parameters['build_mode'];
     exec('/usr/bin/env composer config extra.combawa.build_mode ' . $parameters['build_mode']);
 
-    if (empty(exec('/usr/bin/env composer config extra.combawa.profile_name'))) {
-      exec('/usr/bin/env composer config extra.combawa.profile_name minimal');
-    }
-
     // Update the lock file.
     exec('/usr/bin/env composer update --lock');
     chdir($prevDir);
