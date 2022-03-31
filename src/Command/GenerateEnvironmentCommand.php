@@ -165,7 +165,7 @@ class GenerateEnvironmentCommand extends Command {
       'db_port' => $input->getOption('db-port'),
       'db_name' => $input->getOption('db-name'),
       'db_user' => $input->getOption('db-user'),
-      'db_password' => $input->getOption('db-password'),
+      'db_password' => escapeshellarg($input->getOption('db-password')),
       'backup_base' => 1,
       'reimport' => 0,
       'dump_fetch_update' => 0,
@@ -175,7 +175,7 @@ class GenerateEnvironmentCommand extends Command {
     ];
 
     // Improve attributes readibility.
-    $recap_db_password = empty($generateParams['db_password']) ? 'No password' : 'Your secret password';
+    $recap_db_password = empty($input->getOption('db-password')) ? 'No password' : 'Your secret password';
     $recap_backup_base = $generateParams['backup_base'] ? 'Yes' : 'No';
     $recap_write_settings = $generateParams['write_db_settings'] ? 'Yes' : 'No';
 
@@ -210,18 +210,16 @@ class GenerateEnvironmentCommand extends Command {
             $recap_params[] = ['Fetch command', $connection_string_recap];
           }
           else {
-            $scp_username = $input->getOption('scp-connection-username');
-            $scp_password = $input->getOption('scp-connection-password');
-            $scp_server = $input->getOption('scp-connection-servername');
-            $scp_port = $input->getOption('scp-connection-port');
-            $generateParams['dump_scp_user'] = $scp_username;
-            $generateParams['dump_scp_password'] = $scp_password;
-            $generateParams['dump_scp_servername'] = $scp_server;
-            $generateParams['dump_scp_port'] = $scp_port;
+            $generateParams['dump_scp_user'] = $input->getOption('scp-connection-username');
+            // Escape scp password string for storage.
+            $generateParams['dump_scp_password'] = escapeshellarg($input->getOption('scp-connection-password'));
+            $generateParams['dump_scp_servername'] = $input->getOption('scp-connection-servername');
+            $generateParams['dump_scp_port'] = $input->getOption('scp-connection-port');
             $connection_string_recap = 'scp ';
             if (!empty($generateParams['dump_scp_user'])) {
-              if (!empty($generateParams['dump_scp_password'])) {
-                $connection_string_recap .= $generateParams['dump_scp_user'] . ':' . $generateParams['dump_scp_password'] . '@';
+              if (!empty($input->getOption('scp-connection-password'))) {
+                // Get the non escaped password from source input for readability.
+                $connection_string_recap .= $generateParams['dump_scp_user'] . ':' . $input->getOption('scp-connection-password') . '@';
               }
               else {
                 $connection_string_recap .= $generateParams['dump_scp_user'] . '@';
