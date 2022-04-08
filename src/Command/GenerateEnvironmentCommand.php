@@ -259,7 +259,9 @@ class GenerateEnvironmentCommand extends Command {
     // result.
     $command = './vendor/bin/drupal ' . $input->getFirstArgument() . ' \\';
     foreach ($input->getOptions() as $key => $value) {
-      if (empty($value) || $key === 'uri') {
+      // We inherit from Symfony Console default options commands. We want to
+      // filter out some of them.
+      if (empty($value) || in_array($key, ['uri', 'env'])) {
         continue;
       }
       else if (in_array($key, ['backup-db', 'reimport', 'dump-fetch-update'])) {
