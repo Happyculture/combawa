@@ -240,6 +240,12 @@ class GenerateEnvironmentCommand extends Command {
           'dump_fetch_path_source' => $recap_fetch_path_source,
           'dump_fetch_path_dest' => $recap_fetch_path_dest,
         ];
+
+        $recap_db_reimport = $generateParams['reimport'] ? 'Yes' : 'No';
+        $recap_db_fetch = $generateParams['dump_fetch_update'] ? 'Yes' : 'No';
+
+        $recap_params[] = ['Always reimport DB before building?', $recap_db_reimport];
+        $recap_params[] = ['Always update ref DB before building?', $recap_db_fetch];
       }
     }
 
@@ -276,7 +282,7 @@ class GenerateEnvironmentCommand extends Command {
     }
     $command_fragment[] = '--no-interaction';
     $command = implode(" \\\n", $command_fragment);
-    
+
     $this->getIo()->simple('Next time you could just use:');
     $this->getIo()->comment($command);
   }
