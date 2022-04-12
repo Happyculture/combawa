@@ -166,7 +166,7 @@ class GenerateEnvironmentCommand extends Command {
       'db_name' => $input->getOption('db-name'),
       'db_user' => $input->getOption('db-user'),
       'db_password' => escapeshellarg($input->getOption('db-password')),
-      'backup_base' => 1,
+      'backup_base' => $input->getOption('backup-db'),
       'reimport' => 0,
       'dump_fetch_update' => 0,
       'fetch_source_path' => '',
@@ -322,23 +322,105 @@ class GenerateEnvironmentCommand extends Command {
       $input->setOption('environment-url', $environment_url);
     }
 
+
+
+    try {
+      $db_host = $input->getOption('db-host');
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$db_host) {
+      $db_host = $this->getIo()->ask(
+        'What is the hostname of your database server?',
+        array_key_exists('COMBAWA_DB_HOSTNAME', $envVars) ? $envVars['COMBAWA_DB_HOSTNAME'] : 'localhost'
+      );
+      $input->setOption('db-host', $db_host);
+    }
+
+    try {
+      $db_port = $input->getOption('db-port');
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$db_port) {
+      $db_port = $this->getIo()->ask(
+        'What is the port of your database server?',
+        array_key_exists('COMBAWA_DB_PORT', $envVars) ? $envVars['COMBAWA_DB_PORT'] : '3306'
+      );
+      $input->setOption('db-port', $db_port);
+    }
+
+    try {
+      $db_name = $input->getOption('db-name');
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$db_name) {
+      $db_name = $this->getIo()->ask(
+        'What is the name of your database?',
+        array_key_exists('COMBAWA_DB_DATABASE', $envVars) ? $envVars['COMBAWA_DB_DATABASE'] : 'drupal8'
+      );
+      $input->setOption('db-name', $db_name);
+    }
+
+    try {
+      $db_user = $input->getOption('db-user');
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$db_user) {
+      $db_user = $this->getIo()->ask(
+        'What is the user name of your database?',
+        array_key_exists('COMBAWA_DB_USER', $envVars) ? $envVars['COMBAWA_DB_USER'] : 'root'
+      );
+      $input->setOption('db-user', $db_user);
+    }
+
+    try {
+      $db_password = $input->getOption('db-password');
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$db_password) {
+      $db_password = $this->getIo()->askEmpty(
+        'What is the password of your database?',
+        array_key_exists('COMBAWA_DB_PASSWORD', $envVars) ? $envVars['COMBAWA_DB_PASSWORD'] : ''
+      );
+      $input->setOption('db-password', $db_password);
+    }
+
+    try {
+      $backup_db = $input->getOption('backup-db') ? (bool) $input->getOption('backup-db') : null;
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (!$backup_db) {
+      $backup_db = $this->getIo()->confirm(
+        'Do you want the database to be backed up before each build?',
+        array_key_exists('COMBAWA_DB_BACKUP_FLAG', $envVars) ? $envVars['COMBAWA_DB_BACKUP_FLAG'] : TRUE
+      );
+      $input->setOption('backup-db', $backup_db);
+    }
+
     if ($environment != 'prod') {
-      try {
-        $backup_db = $input->getOption('backup-db') ? (bool) $input->getOption('backup-db') : null;
-      } catch (\Exception $error) {
-        $this->getIo()->error($error->getMessage());
-
-        return 1;
-      }
-
-      if (!$backup_db) {
-        $backup_db = $this->getIo()->confirm(
-          'Do you want the database to be backed up before each build?',
-          array_key_exists('COMBAWA_DB_BACKUP_FLAG', $envVars) ? $envVars['COMBAWA_DB_BACKUP_FLAG'] : TRUE
-        );
-        $input->setOption('backup-db', $backup_db);
-      }
-
       $build_mode = exec('/usr/bin/env composer config extra.combawa.build_mode  -d ' . $this->drupalFinder->getComposerRoot());
       if ($build_mode == 'update') {
         try {
@@ -489,102 +571,6 @@ class GenerateEnvironmentCommand extends Command {
           $input->setOption('reimport', $reimport);
         }
       }
-    }
-
-    try {
-      $db_host = $input->getOption('db-host');
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
-
-      return 1;
-    }
-
-    if (!$db_host) {
-      $db_host = $this->getIo()->ask(
-        'What is the hostname of your database server?',
-        array_key_exists('COMBAWA_DB_HOSTNAME', $envVars) ? $envVars['COMBAWA_DB_HOSTNAME'] : 'localhost'
-      );
-      $input->setOption('db-host', $db_host);
-    }
-
-    try {
-      $db_port = $input->getOption('db-port');
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
-
-      return 1;
-    }
-
-    if (!$db_port) {
-      $db_port = $this->getIo()->ask(
-        'What is the port of your database server?',
-        array_key_exists('COMBAWA_DB_PORT', $envVars) ? $envVars['COMBAWA_DB_PORT'] : '3306'
-      );
-      $input->setOption('db-port', $db_port);
-    }
-
-    try {
-      $db_name = $input->getOption('db-name');
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
-
-      return 1;
-    }
-
-    if (!$db_name) {
-      $db_name = $this->getIo()->ask(
-        'What is the name of your database?',
-        array_key_exists('COMBAWA_DB_DATABASE', $envVars) ? $envVars['COMBAWA_DB_DATABASE'] : 'drupal8'
-      );
-      $input->setOption('db-name', $db_name);
-    }
-
-    try {
-      $db_user = $input->getOption('db-user');
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
-
-      return 1;
-    }
-
-    if (!$db_user) {
-      $db_user = $this->getIo()->ask(
-        'What is the user name of your database?',
-        array_key_exists('COMBAWA_DB_USER', $envVars) ? $envVars['COMBAWA_DB_USER'] : 'root'
-      );
-      $input->setOption('db-user', $db_user);
-    }
-
-    try {
-      $db_password = $input->getOption('db-password');
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
-
-      return 1;
-    }
-
-    if (!$db_password) {
-      $db_password = $this->getIo()->askEmpty(
-        'What is the password of your database?',
-        array_key_exists('COMBAWA_DB_PASSWORD', $envVars) ? $envVars['COMBAWA_DB_PASSWORD'] : ''
-      );
-      $input->setOption('db-password', $db_password);
-    }
-
-    try {
-      $backup_db = $input->getOption('backup-db') ? (bool) $input->getOption('backup-db') : null;
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
-
-      return 1;
-    }
-
-    if (!$backup_db) {
-      $backup_db = $this->getIo()->confirm(
-        'Do you want the database to be backed up before each build?',
-        array_key_exists('COMBAWA_DB_BACKUP_FLAG', $envVars) ? $envVars['COMBAWA_DB_BACKUP_FLAG'] : TRUE
-      );
-      $input->setOption('backup-db', $backup_db);
     }
 
     try {
