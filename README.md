@@ -175,7 +175,6 @@ Eg:
   --db-port 3306 \
   --db-name test_db \
   --db-user db_username \
-  --env prod \
   --no-interaction
 ```
 
