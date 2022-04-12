@@ -257,24 +257,26 @@ class GenerateEnvironmentCommand extends Command {
 
     // Display the command to run in non-interactive mode to get the same
     // result.
-    $command = './vendor/bin/drupal ' . $input->getFirstArgument() . ' \\';
+    $command_fragment = ['./vendor/bin/drupal ' . $input->getFirstArgument()];
     foreach ($input->getOptions() as $key => $value) {
       // We inherit from Symfony Console default options commands. We want to
       // filter out some of them.
-      if (empty($value) || in_array($key, ['uri', 'env'])) {
+      if (empty($value) || in_array($key, ['uri', 'env', 'no-interaction', 'write-db-settings'])) {
         continue;
       }
       else if (in_array($key, ['backup-db', 'reimport', 'dump-fetch-update'])) {
-        $command .= "\n" . '  --' . $key . ' \\';
+        $command_fragment[] = '--' . $key;
       }
       else {
         if (is_array($value)) {
           $value = implode(',', $value);
         }
-        $command .= "\n" . '  --' . $key . ' ' . $value . ' \\';
+        $command_fragment[] = '--' . $key . ' ' . $value;
       }
     }
-    $command .= "\n" . '  --no-interaction';
+    $command_fragment[] = '--no-interaction';
+    $command = implode(" \\\n", $command_fragment);
+    
     $this->getIo()->simple('Next time you could just use:');
     $this->getIo()->comment($command);
   }
