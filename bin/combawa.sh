@@ -74,14 +74,14 @@ echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
 echo -e ""
 
 # Check project settings are set.
-if [[ "" == "$(composer config extra.combawa.build_mode)" ]]; then
+if [[ "" == `php -r "echo json_decode(file_get_contents('./composer.json'))->extra->combawa->build_mode;"` ]]; then
   message_error "Base settings has not been defined yet."
   message_warning "You should run the following command to initialize it: 'drupal combawa:initialize-build-scripts'."
   exit -1
 fi
 
 # Set default variables.
-COMBAWA_BUILD_MODE=`composer config extra.combawa.build_mode`
+COMBAWA_BUILD_MODE=`php -r "echo json_decode(file_get_contents('./composer.json'))->extra->combawa->build_mode;"`
 COMBAWA_BUILD_ENV="prod"
 COMBAWA_DB_BACKUP_FLAG=1
 COMBAWA_REIMPORT_REF_DUMP_FLAG=0
