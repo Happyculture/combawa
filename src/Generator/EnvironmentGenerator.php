@@ -80,7 +80,7 @@ class EnvironmentGenerator extends Generator {
    * @param array $parameters
    */
   public function generate(array $parameters) {
-    $drupalRoot = $parameters['app_root'];
+    $webroot = $parameters['webroot'];
 
     $this->renderFile(
       $this->env_build_mode_template,
@@ -88,7 +88,7 @@ class EnvironmentGenerator extends Generator {
       $parameters
     );
 
-    if (!$this->getFs()->exists($drupalRoot . '/sites/default/settings.local.php') && $parameters['write_db_settings'] == 1) {
+    if (!$this->getFs()->exists($webroot . '/sites/default/settings.local.php') && $parameters['write_db_settings'] == 1) {
       $this->renderFile(
         'combawa-env/settings.local.php.twig',
         'sites/default/settings.local.php',
@@ -107,14 +107,14 @@ class EnvironmentGenerator extends Generator {
 
     // Uncomment settings.local.php inclusion in the settings.php file.
     $filename = 'sites/default/settings.php';
-    if ($this->getFs()->exists($drupalRoot . '/' . $filename)) {
+    if ($this->getFs()->exists($webroot . '/' . $filename)) {
       // Only uncomment the include line as we are sure to have a
       // settings.local.php file.
-      $data = file_get_contents($drupalRoot . '/' . $filename);
+      $data = file_get_contents($webroot . '/' . $filename);
       $data = str_replace("#   include \$app_root . '/' . \$site_path . '/settings.local.php';", "  include \$app_root . '/' . \$site_path . '/settings.local.php';", $data);
       file_put_contents($drupalRoot . '/' . $filename, $data);
 
-      $this->getFs()->chmod($drupalRoot . '/sites/default/settings.php', 0666);
+      $this->getFs()->chmod($webroot . '/sites/default/settings.php', 0666);
       $this->fileQueue->addFile($filename);
       $this->countCodeLines->addCountCodeLines(1);
     }
