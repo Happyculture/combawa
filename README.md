@@ -180,6 +180,8 @@ Eg:
 
 See the integrated help using `drupal help combawa:generate-environment` for arguments values.
 
+Please note that the command will NOT generate the settings.local.php if it already exists to avoid data loss. If you any valid reason, you need to override the existing file (eg: in a Continous Integration context), you can do so by passing the extra argument `--force-settings-generation`
+
 ### Script templates generator
 
 Command `drupal combawa:initialize-build-scripts`:
