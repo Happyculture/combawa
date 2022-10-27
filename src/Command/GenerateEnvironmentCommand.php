@@ -146,6 +146,12 @@ class GenerateEnvironmentCommand extends Command {
         null,
         InputOption::VALUE_REQUIRED,
         'Flag to write the DB settings code.'
+      )
+      ->addOption(
+        'force-settings-generation',
+        null,
+        InputOption::VALUE_NONE,
+        'Forces settings.local.php file generation.'
       );
   }
 
@@ -169,6 +175,7 @@ class GenerateEnvironmentCommand extends Command {
       'backup_base' => $input->getOption('backup-db'),
       'reimport' => 0,
       'dump_fetch_update' => 0,
+      'force_settings_generation' => $input->getOption('force-settings-generation'),
       'fetch_source_path' => '',
       'fetch_dest_path' => 'reference_dump.sql.gz',
       'write_db_settings' => $input->getOption('write-db-settings'),
