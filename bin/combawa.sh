@@ -90,6 +90,9 @@ COMBAWA_DB_FETCH_FLAG=0
 if [ -f "$COMBAWA_ROOT/.env" ]; then
   source $COMBAWA_ROOT/.env
 fi
+if [ -f "$COMBAWA_ROOT/.env.local" ]; then
+  source $COMBAWA_ROOT/.env.local
+fi
 
 # Make drush a variable to use the one shipped with the repository.
 DRUSH="$COMBAWA_ROOT/vendor/bin/drush -y"
