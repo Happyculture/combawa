@@ -81,7 +81,7 @@ if [[ "" == `php -r "echo json_decode(file_get_contents('./composer.json'))->ext
 fi
 
 # Set default variables.
-COMBAWA_BUILD_MODE=`php -r "echo json_decode(file_get_contents('./composer.json'))->extra->combawa->build_mode;"`
+COMBAWA_BUILD_MODE="update"
 COMBAWA_BUILD_ENV="prod"
 COMBAWA_DB_BACKUP_FLAG=1
 COMBAWA_REIMPORT_REF_DUMP_FLAG=0
