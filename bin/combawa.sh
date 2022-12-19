@@ -79,7 +79,13 @@ COMBAWA_BUILD_ENV="prod"
 COMBAWA_DB_BACKUP_FLAG=1
 COMBAWA_REIMPORT_REF_DUMP_FLAG=0
 COMBAWA_DB_FETCH_FLAG=0
+
 # Load local overrides.
+# Load build mode override from Composer.json file if defined.
+_BUILD_MODE_OVERRIDE=`php -r "echo json_decode(file_get_contents('./composer.json'))->extra->combawa->build_mode;"`
+if [[ ! -z _BUILD_MODE_OVERRIDE ]]; then
+  COMBAWA_BUILD_MODE=$_BUILD_MODE_OVERRIDE
+fi
 if [ -f "$COMBAWA_ROOT/.env" ]; then
   source $COMBAWA_ROOT/.env
 fi
