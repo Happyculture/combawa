@@ -5,17 +5,6 @@ section_separator
 #################################
 
 # Check predeploy action script.
-message_step "Verifying environment configuration."
-if [ ! -f "$COMBAWA_ROOT/.env" ]; then
-  notify_fatal "There is no .env file at the moment or its not readable." "You should run the following command to initialize it: 'drupal combawa:generate-environment'."
-fi
-message_confirm "Environment file... OK!"
-
-#################################
-section_separator
-#################################
-
-# Check predeploy action script.
 message_step "Verifying predeploy action script."
 if [ ! -f "$COMBAWA_SCRIPTS_DIR/predeploy_actions.sh" ]; then
   notify_fatal "There is no predeploy actions script at the moment or its not readable." "You should run the following command to initialize it: 'drupal combawa:generate-project'."
