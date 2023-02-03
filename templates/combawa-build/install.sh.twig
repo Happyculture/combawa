@@ -8,6 +8,9 @@ $DRUSH site-install --sites-subdir=default --locale=fr --existing-config minimal
 $DRUSH cr
 $DRUSH config:import
 
+# Add administrator role to the user #1.
+$DRUSH user:role:add administrator admin
+
 # Fix Drupal annoying need to change permissions.
 chmod u+w "$WEBROOT/sites/default"
 chmod u+w "$WEBROOT/sites/default/settings.php"
