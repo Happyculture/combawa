@@ -8,9 +8,13 @@ case $COMBAWA_BUILD_ENV in
     $DRUSH locale:check
     $DRUSH locale:update
 
-    # Example post install task running only on dev environments.
-    # $DRUSH en MYPROJECT_NAME_content_install
-    # $DRUSH pm-uninstall better_normalizers serialization hal default_content MYPROJECT_NAME_content_install
+    # Import deployment and test related content.
+    # $DRUSH en MYPROJECT_NAME_content_deploy
+    # $DRUSH en MYPROJECT_NAME_content_test
+
+    # Use config import to disable modules that should not be enabled in this
+    # environment.
+    #$DRUSH config:import
 
     # Rebuild search indexes.
     # $DRUSH sapi-r
@@ -27,6 +31,14 @@ case $COMBAWA_BUILD_ENV in
     $DRUSH locale:check
     $DRUSH locale:update
 
+    # Import deployment and test related content.
+    # $DRUSH en MYPROJECT_NAME_content_deploy
+    # $DRUSH en MYPROJECT_NAME_content_test
+
+    # Use config import to disable modules that should not be enabled in this
+    # environment.
+    #$DRUSH config:import
+
     # Rebuild search indexes.
     # $DRUSH sapi-r
     # $DRUSH sapi-i
@@ -38,6 +50,13 @@ case $COMBAWA_BUILD_ENV in
     # Update translations.
     $DRUSH locale:check
     $DRUSH locale:update
+
+    # Import deployment related content.
+    # $DRUSH en MYPROJECT_NAME_content_deploy
+
+    # Use config import to disable modules that should not be enabled in this
+    # environment.
+    #$DRUSH config:import
 
     # Rebuild permissions
     # $DRUSH php-eval 'node_access_rebuild();'
