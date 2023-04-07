@@ -91,7 +91,7 @@ In order to do that, you need to install the Combawa wrapper (https://github.com
 
 Combawa is the script that will ease your project reinstallation when you want to test your freshly baked feature.
 
-It's designed with an IC context in mind for the local station.
+It's designed with an CI context in mind for the local station.
 When you will start using Combawa, you will initiate a build scenario (we suggest the production scenario) to set default values to the internal options (should my script backup the site before building? Retrieve a fresh reference dump from production...)
 You can build the project from an installation profile, from existing config or from a reference dump directly retrieved from your production server. 
 
