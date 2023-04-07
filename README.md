@@ -12,7 +12,7 @@ Combawa is a bash script that helps you **build** your Drupal projects.
 
 It's compatible with Drupal 7, 8, 9 and 10 and is meant to be used by developers and CI applications.
 
-You are encouraged to use Combawa as a daily companion to reinstall/update your local installation.
+You are encouraged to use Combawa as a daily companion to reinstall/update your local installation or CI environment.
 
 Because Combawa is very cool, you can use a Drupal console command to setup the required environment variables. See below for details.
 
