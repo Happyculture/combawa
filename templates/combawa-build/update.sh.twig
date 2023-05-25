@@ -4,10 +4,6 @@
 # Flush drush cache to identify new commands such as rr.
 $DRUSH cc drush
 
-# Enable the maintenance mode.
-$DRUSH sset system.maintenance_mode 1
-$DRUSH cr
-
 # Run the DB updates.
 $DRUSH updb --no-post-updates
 $DRUSH cr
@@ -18,7 +14,3 @@ $DRUSH cr
 
 # Run the post updates.
 $DRUSH updb
-
-# Remove the maintenance page.
-$DRUSH sset system.maintenance_mode 0
-$DRUSH cr

@@ -65,3 +65,7 @@ case $COMBAWA_BUILD_ENV in
     notify_fatal "Unknown environment: $COMBAWA_BUILD_ENV. Please check your name."
 esac
 
+# Disable the maintenance mode.
+if [[ $COMBAWA_BUILD_MODE == "update" ]]; then
+  $DRUSH sset system.maintenance_mode 0
+fi

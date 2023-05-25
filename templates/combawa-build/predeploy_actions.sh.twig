@@ -19,6 +19,11 @@
 {#  }#}
 {#fi#}
 
+# Enable the maintenance mode.
+if [[ $COMBAWA_BUILD_MODE == "update" ]]; then
+  $DRUSH sset system.maintenance_mode 1
+fi
+
 case $COMBAWA_BUILD_ENV in
   dev)
     ;;
