@@ -68,6 +68,12 @@ class InitializeBuildScriptsCommand extends Command {
         null,
         InputOption::VALUE_NONE,
         'Overwrite existing scripts files.'
+      )
+      ->addOption(
+        'generate-env',
+        null,
+        InputOption::VALUE_OPTIONAL,
+        'Generate environment file.'
       );
   }
 
@@ -144,9 +150,22 @@ class InitializeBuildScriptsCommand extends Command {
       }
     }
 
-    $this->run_gen_env_command = $this->getIo()->confirm(
-      'Next, we will need you to generate the environment file (.env). Do you want to do it right after saving the previous settings?',
-      TRUE);
+    try {
+      $generate_env = $input->getOption('generate-env');
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+
+      return 1;
+    }
+
+    if (null === $generate_env) {
+      $this->run_gen_env_command = $this->getIo()->confirm(
+        'Next, we will need you to generate the environment file (.env). Do you want to do it right after saving the previous settings?'
+      );
+    }
+    else {
+      $this->run_gen_env_command = (bool) $generate_env;
+    }
   }
 
   /**
