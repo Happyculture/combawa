@@ -88,7 +88,7 @@ class EnvironmentGenerator extends Generator {
       $parameters
     );
 
-    if ($parameters['force_settings_generation'] || (!$this->getFs()->exists($webroot . '/sites/default/settings.local.php') && $parameters['write_db_settings'] == 1)) {
+    if ($parameters['force_settings_generation'] || (!$this->getFs()->exists($webroot . '/sites/default/settings.local.php') && $parameters['write_db_settings'] === TRUE)) {
       $this->renderFile(
         'combawa-env/settings.local.php.twig',
         'sites/default/settings.local.php',

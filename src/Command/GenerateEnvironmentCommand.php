@@ -144,7 +144,7 @@ class GenerateEnvironmentCommand extends Command {
       ->addOption(
         'write-db-settings',
         null,
-        InputOption::VALUE_REQUIRED,
+        InputOption::VALUE_OPTIONAL,
         'Flag to write the DB settings code.'
       )
       ->addOption(
@@ -178,7 +178,7 @@ class GenerateEnvironmentCommand extends Command {
       'force_settings_generation' => $input->getOption('force-settings-generation'),
       'fetch_source_path' => '',
       'fetch_dest_path' => 'reference_dump.sql.gz',
-      'write_db_settings' => $input->getOption('write-db-settings'),
+      'write_db_settings' => (bool) $input->getOption('write-db-settings'),
     ];
 
     // Improve attributes readibility.
@@ -594,10 +594,9 @@ class GenerateEnvironmentCommand extends Command {
       return 1;
     }
 
-    if (!$db_write) {
+    if (null === $db_write) {
       $db_write = $this->getIo()->confirm(
-        'Do you want Combawa to create a settings.local.php file that will ease your DB connection? You can do it yourself later on, the code to copy/paste will be prompted in the next step.',
-        TRUE
+        'Do you want Combawa to create a settings.local.php file that will ease your DB connection? You can do it yourself later on, the code to copy/paste will be prompted in the next step.'
       );
       $input->setOption('write-db-settings', $db_write);
     }
