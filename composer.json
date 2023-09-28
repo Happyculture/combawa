@@ -2,19 +2,25 @@
     "name": "happyculture/combawa",
     "description": "Projects builder",
     "bin": ["bin/combawa.sh"],
-    "type": "drupal-console-library",
+    "type": "library",
     "licence": "GPL-3.0-or-later",
     "autoload": {
         "files": ["load.environment.php"],
-        "psr-4": {"Drupal\\Console\\Combawa\\": "src"}
+        "psr-4": {"Combawa\\": "src"}
     },
     "require": {
-        "drupal/console-extend-plugin": "^0.9.2",
-        "drush/drush": "^10 || ^11",
-        "drupal/console": "^1.9",
+        "drush/drush": "^12",
         "vlucas/phpdotenv": "^5.0"
+    },
+    "conflict": {
+        "drush/drush": "<11.0"
     },
     "suggest": {
         "happyculture/combawa-wrapper": "Lets you run combawa from anywhere without naming explicitely vendor/bin/combawa.sh."
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
     }
 }
