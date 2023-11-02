@@ -2,7 +2,7 @@
 COMBAWA_BUILD_ENV={{ environment }}
 
 # Backup base before build.
-COMBAWA_DB_BACKUP_FLAG={{ backup_base }}
+COMBAWA_DB_BACKUP_FLAG={{ backup_db }}
 
 {% if environment != 'prod' %}
 # Reinstall site before building.
@@ -15,16 +15,16 @@ COMBAWA_DB_FETCH_FLAG={{ dump_fetch_update }}
 # Command to update the reference dump.
 COMBAWA_DB_FETCH_METHOD={{ dump_fetch_method }}
 {% if dump_fetch_method == 'scp' %}
-{% if dump_scp_config_name is defined and dump_scp_config_name is not empty %}
-COMBAWA_DB_FETCH_SCP_CONFIG_NAME="{{ dump_scp_config_name }}"
+{% if dump_fetch_scp_config_name is not empty %}
+COMBAWA_DB_FETCH_SCP_CONFIG_NAME="{{ dump_fetch_scp_config_name }}"
 {% else %}
-COMBAWA_DB_FETCH_SCP_USER={{ dump_scp_user }}
-COMBAWA_DB_FETCH_SCP_PASSWORD={{ dump_scp_password }}
-COMBAWA_DB_FETCH_SCP_SERVER="{{ dump_scp_servername }}"
-COMBAWA_DB_FETCH_SCP_PORT={{ dump_scp_port }}
+COMBAWA_DB_FETCH_SCP_USER={{ dump_fetch_scp_user }}
+COMBAWA_DB_FETCH_SCP_PASSWORD={{ dump_fetch_scp_password }}
+COMBAWA_DB_FETCH_SCP_SERVER="{{ dump_fetch_scp_host }}"
+COMBAWA_DB_FETCH_SCP_PORT={{ dump_fetch_scp_port }}
 {% endif %}
 {% endif %}
-COMBAWA_DB_FETCH_PATH_SOURCE="{{ dump_fetch_path_source }}"
+COMBAWA_DB_FETCH_PATH_SOURCE="{{ dump_fetch_source_path }}"
 {% endif %}
 
 # Internal path from the repo root pointing to the public document root.
