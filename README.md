@@ -148,6 +148,13 @@ Here is the list of available arguments:
 * `--no-postdeploy`: Do not execute the postdeploy script.
 * `--stop-after-reimport`: Flag to stop building after reimporting the DB. Useful to version config from prod. 
 
+## Environment files
+
+You can generate or manually create environment files to inject Combawa required variables and extra environment infos.
+The `.env` file(s) are expected to be located at the repository root level.
+
+We leverage Symfony Dotenv component so the `.env` file may be overriden by `.env.local`, `.env.$APP_ENV.local` or `.env.$APP_ENV` if defined.
+
 ## <a name="drupal-console-commands"></a>Drupal console commands
 
 ### Environment generator

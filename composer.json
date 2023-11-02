@@ -10,7 +10,7 @@
     },
     "require": {
         "drush/drush": "^12",
-        "vlucas/phpdotenv": "^5.0"
+        "symfony/dotenv": "^6.3"
     },
     "conflict": {
         "drush/drush": "<11.0"

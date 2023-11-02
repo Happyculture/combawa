@@ -1,20 +1,15 @@
 <?php
 
-/**
- * This file is included very early. See autoload.files in composer.json and
- * https://getcomposer.org/doc/04-schema.md#files
- */
+use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\Dotenv\Exception\PathException;
 
-use Dotenv\Dotenv;
-use Dotenv\Exception\InvalidPathException;
-
-/**
- * Load repo root .env file.
- */
-$dotenv = Dotenv::createUnsafeMutable(__DIR__ . '/../../../', ['.env', '.env.local'], FALSE);
+$dotenv = new Dotenv();
 try {
-  $dotenv->load();
+  // This file is located in our dependency (vendor/happyculture/combawa) so we have to climb up the arborescence
+  // to load the environment files expected to be at the root level or our project repository.
+  // Load .env, .env.local, and .env.$APP_ENV.local or .env.$APP_ENV if defined.
+  $dotenv->loadEnv(__DIR__ . '/../../../.env');
 }
-catch (InvalidPathException $e) {
+catch (PathException $exception) {
   // Do nothing. Production environments rarely use .env files.
 }
