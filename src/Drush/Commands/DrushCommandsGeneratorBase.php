@@ -243,8 +243,10 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
    *
    * @param string $build_mode
    *   The build mode.
+   *
    * @return string
    *   The build mode.
+   *
    * @throws \InvalidArgumentException
    */
   public static function validateBuildMode($build_mode): string {
