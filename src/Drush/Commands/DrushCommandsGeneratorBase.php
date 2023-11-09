@@ -89,7 +89,13 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
     $vars = Utils::processVars($vars);
 
     // Show collected data.
-    $this->outputVarsSummary($vars);
+    $summary = $this->getVarsSummary($vars);
+    if (!empty($summary)) {
+      $this->io()->newLine(1);
+      $this->io()->title('Settings summary');
+      $output = array_chunk($summary, 1, TRUE);
+      $this->io()->definitionList(...$output);
+    }
 
     $proceed = $this->io()->confirm('Are you sure you want to proceed?');
     if (!$proceed) {
@@ -144,12 +150,12 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
    *
    * @param array $vars
    *   The vars used to generate the files.
+   *
+   * @return array
+   *   The vars summary array keyed by human readable variable name.
    */
-  protected function outputVarsSummary(array $vars): void {
-    $this->io()->newLine();
-    $this->io()->title('Settings summary');
-    $output = array_chunk($vars, 1, TRUE);
-    $this->io()->definitionList(...$output);
+  protected function getVarsSummary(array $vars): array {
+    return $vars;
   }
 
   /**

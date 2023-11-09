@@ -100,7 +100,7 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
   /**
    * {@inheritdoc}
    */
-  protected function outputVarsSummary(array $vars): void {
+  protected function getVarsSummary(array $vars): array {
     $summary = [
       'Build mode' => $vars['build_mode'],
     ];
@@ -108,11 +108,7 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
     if ($this->fileSystem->exists($scriptsDir . '/' . $vars['build_mode'] . '.sh')) {
       $summary['Overwrite scripts files'] = $vars['overwrite_scripts'] ? 'Yes' : 'No';
     }
-
-    $this->io()->newLine(1);
-    $this->io()->title('Settings summary');
-    $output = array_chunk($summary, 1, TRUE);
-    $this->io()->definitionList(...$output);
+    return $summary;
   }
 
   /**
