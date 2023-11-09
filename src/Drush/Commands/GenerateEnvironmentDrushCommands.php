@@ -151,7 +151,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
    */
   protected function interview(array &$vars): void {
     if (!isset($vars['build_mode'])) {
-      $composerData = Json::decode(file_get_contents($this->drupalFinder->getComposerRoot() . '/composer.json'));
+      $composerData = Json::decode(file_get_contents($this->drupalFinder()->getComposerRoot() . '/composer.json'));
       $defaultValue = $composerData['extra']['combawa']['build_mode'] ?? 'install';
       $choices = ['install', 'update'];
       $choice = $this->io()->choice(
@@ -174,7 +174,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
     }
 
     if (!isset($vars['webroot'])) {
-      $detectedDefaultValue = ltrim(substr($this->drupalFinder->getDrupalRoot(), strlen($this->drupalFinder->getComposerRoot())), DIRECTORY_SEPARATOR);
+      $detectedDefaultValue = ltrim(substr($this->drupalFinder()->getDrupalRoot(), strlen($this->drupalFinder()->getComposerRoot())), DIRECTORY_SEPARATOR);
       $defaultValue = $_SERVER['COMBAWA_WEBROOT_PATH'] ?? $detectedDefaultValue;
       $vars['webroot'] = $this->io()->ask(
         'In which directory is your Drupal webroot located?',
@@ -428,13 +428,13 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
         }
         // Expected: scp <SOURCE>:<SOURCE_PATH> <DEST_PATH>.
         $fetch_command .= ':' . $vars['dump_fetch_source_path'];
-        $fetch_command .= ' ' . $this->drupalFinder->getComposerRoot() . '/' . static::FETCH_DEST_PATH;
+        $fetch_command .= ' ' . $this->drupalFinder()->getComposerRoot() . '/' . static::FETCH_DEST_PATH;
       }
       elseif ($vars['dump_fetch_method'] === 'cp') {
         // Expected: cp <SOURCE_PATH> <DEST_PATH>.
         $fetch_command = 'cp';
         $fetch_command .= ' ' . $vars['dump_fetch_source_path'];
-        $fetch_command .= ' ' . $this->drupalFinder->getComposerRoot() . '/' . static::FETCH_DEST_PATH;
+        $fetch_command .= ' ' . $this->drupalFinder()->getComposerRoot() . '/' . static::FETCH_DEST_PATH;
       }
       $summary['Fetch command'] = $fetch_command;
       $summary['Always reimport DB before building?'] = $vars['reimport'] ? 'Yes' : 'No';
@@ -464,7 +464,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
 
     // Uncomment settings.local.php inclusion in the settings.php file.
     $filename = 'sites/default/settings.php';
-    $filepath = $this->drupalFinder->getDrupalRoot() . '/' . $filename;
+    $filepath = $this->drupalFinder()->getDrupalRoot() . '/' . $filename;
     if ($this->fileSystem->exists($filepath)) {
       // Only uncomment the include line as we are sure to have a
       // settings.local.php file.
