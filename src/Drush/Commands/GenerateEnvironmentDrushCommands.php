@@ -398,7 +398,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
   /**
    * {@inheritdoc}
    */
-  protected function outputVarsSummary(array $vars): void {
+  protected function getVarsSummary(array $vars): array {
     $summary = [
       'Build mode' => $vars['build_mode'],
       'Environment' => $vars['environment'],
@@ -440,11 +440,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
       $summary['Always reimport DB before building?'] = $vars['reimport'] ? 'Yes' : 'No';
       $summary['Always update ref DB before building?'] = $vars['dump_fetch_update'] ? 'Yes' : 'No';
     }
-
-    $this->io()->newLine(1);
-    $this->io()->title('Settings summary');
-    $output = array_chunk($summary, 1, TRUE);
-    $this->io()->definitionList(...$output);
+    return $summary;
   }
 
   /**
