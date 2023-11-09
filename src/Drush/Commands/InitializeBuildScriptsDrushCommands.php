@@ -64,7 +64,7 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
    */
   protected function interview(array &$vars): void {
     if (!isset($vars['build_mode'])) {
-      $composerData = Json::decode(file_get_contents($this->drupalFinder->getComposerRoot() . '/composer.json'));
+      $composerData = Json::decode(file_get_contents($this->drupalFinder()->getComposerRoot() . '/composer.json'));
       $defaultValue = $composerData['extra']['combawa']['build_mode'] ?? 'install';
       $choices = ['install', 'update'];
       $choice = $this->io()->choice(
@@ -75,7 +75,7 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
       $vars['build_mode'] = $choices[$choice];
     }
 
-    $scriptsDir = $this->drupalFinder->getComposerRoot() . '/scripts/combawa';
+    $scriptsDir = $this->drupalFinder()->getComposerRoot() . '/scripts/combawa';
     if (
       $this->fileSystem->exists($scriptsDir . '/' . $vars['build_mode'] . '.sh') &&
       !isset($vars['overwrite_scripts'])
@@ -104,7 +104,7 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
     $summary = [
       'Build mode' => $vars['build_mode'],
     ];
-    $scriptsDir = $this->drupalFinder->getComposerRoot() . '/scripts/combawa';
+    $scriptsDir = $this->drupalFinder()->getComposerRoot() . '/scripts/combawa';
     if ($this->fileSystem->exists($scriptsDir . '/' . $vars['build_mode'] . '.sh')) {
       $summary['Overwrite scripts files'] = $vars['overwrite_scripts'] ? 'Yes' : 'No';
     }
@@ -120,7 +120,7 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
    */
   protected function preGenerate(array &$vars): void {
     $prevDir = getcwd();
-    chdir($this->drupalFinder->getComposerRoot());
+    chdir($this->drupalFinder()->getComposerRoot());
 
     // Update the build mode.
     $process = $this->processManager()
@@ -167,7 +167,7 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
    * {@inheritDoc}
    */
   protected function collectAssets(AssetCollection $assets, array $vars): void {
-    $scriptsDir = $this->drupalFinder->getComposerRoot() . '/scripts/combawa';
+    $scriptsDir = $this->drupalFinder()->getComposerRoot() . '/scripts/combawa';
     if (
       !empty($vars['overwrite_scripts']) ||
       !$this->fileSystem->exists($scriptsDir . '/' . $vars['build_mode'] . '.sh')

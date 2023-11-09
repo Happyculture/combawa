@@ -12,8 +12,8 @@ use DrupalCodeGenerator\Helper\Renderer\TwigRenderer;
 use DrupalCodeGenerator\InputOutput\IO;
 use DrupalCodeGenerator\Twig\TwigEnvironment;
 use DrupalCodeGenerator\Utils;
-use DrupalFinder\DrupalFinder;
 use Drush\Commands\DrushCommands;
+use Drush\DrupalFinder\DrushDrupalFinder;
 use Drush\Log\Logger;
 use Psr\Container\ContainerInterface as DrushContainer;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -30,15 +30,20 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
   const TEMPLATES_PATH = __DIR__ . '/../../../templates';
 
   /**
+   * The DrupalFinder utility.
+   *
+   * @var \Drush\DrupalFinder\DrushDrupalFinder
+   */
+  protected DrushDrupalFinder $drupalFinder;
+
+  /**
    * Command constructor.
    */
   public function __construct(
-    protected readonly DrupalFinder $drupalFinder,
     protected readonly Filesystem $fileSystem,
     protected readonly TwigRenderer $renderer,
   ) {
     parent::__construct();
-    $this->drupalFinder->locateRoot(__DIR__);
     $this->renderer->setLogger(new Logger($this->output()));
     $this->renderer->registerTemplatePath(static::TEMPLATES_PATH);
   }
@@ -48,10 +53,22 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
    */
   public static function createEarly(DrushContainer $drush_container): static {
     return new static(
-      new DrupalFinder(),
       new Filesystem(),
       new TwigRenderer(new TwigEnvironment(new TemplateLoader())),
     );
+  }
+
+  /**
+   * DrupalFinder utility getter.
+   *
+   * @return \Drush\DrupalFinder\DrushDrupalFinder
+   *   The DrupalFinder utility.
+   */
+  public function drupalFinder(): DrushDrupalFinder {
+    if (!isset($this->drupalFinder)) {
+      $this->drupalFinder = $this->processManager()->getDrupalFinder();
+    }
+    return $this->drupalFinder;
   }
 
   /**
@@ -192,7 +209,7 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
       $dumper = new FileSystemDumper($this->fileSystem);
     }
     $dumper->io($this->dcgIo());
-    return $dumper->dump($assets, $this->drupalFinder->getDrupalRoot());
+    return $dumper->dump($assets, $this->drupalFinder()->getDrupalRoot());
   }
 
   /**
