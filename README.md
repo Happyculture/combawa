@@ -10,7 +10,8 @@
 # <a name="combawa"></a>Combawa
 Combawa is a bash script that helps you **build** your Drupal projects.
 
-It's compatible with Drupal 7, 8, 9 and 10 and is meant to be used by developers and CI applications.
+It's compatible with Drupal 7, 8, 9 and is meant to be used by developers and CI applications.
+Drupal 10 compatibility is a WIP (See #70).
 
 You are encouraged to use Combawa as a daily companion to reinstall/update your local installation or CI environment.
 
