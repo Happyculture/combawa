@@ -49,7 +49,9 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
   }
 
   /**
-   * Command creator.
+   * Command creator called by Drush before bootstrapping Drupal.
+   *
+   * @see https://www.drush.org/12.x/dependency-injection/#createearly-method
    */
   public static function createEarly(DrushContainer $drush_container): static {
     return new static(

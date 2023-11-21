@@ -19,7 +19,7 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
   const TEMPLATES_PATH = __DIR__ . '/../../../templates/combawa-build';
 
   /**
-   * Generate environment command.
+   * Initialize build scripts command.
    */
   #[CLI\Command(name: 'combawa:initialize-build-scripts', aliases: ['ibs'])]
   #[CLI\Option(
@@ -38,7 +38,7 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
     name: 'dry-run',
     description: 'Output the generated code but do not save it to file system.')]
   #[CLI\Usage(name: 'drush combawa:initialize-build-scripts', description: 'Run with wizard')]
-  public function generateEnvironment(array $options = [
+  public function initializeBuildScripts(array $options = [
     'build-mode' => self::REQ,
     'overwrite-scripts' => self::OPT,
     'generate-env' => self::OPT,
