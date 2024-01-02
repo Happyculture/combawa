@@ -10,7 +10,7 @@
 # <a name="combawa"></a>Combawa
 Combawa is a bash script that helps you **build** your Drupal projects.
 
-It's compatible with Drupal 7, 8, 9 and 10 and is meant to be used by developers and CI applications.
+It's compatible with Drupal 10 and is meant to be used by developers and CI applications. (See other branches for lower Drupal versions).
 
 You are encouraged to use Combawa as a daily companion to reinstall/update your local installation or CI environment.
 
@@ -18,16 +18,6 @@ Because Combawa is very cool, you can use a Drupal console command to setup the 
 
 ## <a name="installation"></a>Installation
 
-- Add the following config to your `composer.json` file:
-```
-  "extra": {
-    "installer-paths": {
-      "vendor/{$vendor}/{$name}": [
-        "type:drupal-console-library"
-      ]
-    }
-  }
-```
 - `composer require happyculture/combawa`
 - Use `drupal combawa:initialize-build-scripts` to initiate the project build files from a template (actions run when the Drupal site is (re)installed or updated).
 - If you are in `install` mode using an install profile different than `minimal`, you should update the `scripts/combawa/install.sh` file to replace the profile name in the `$DRUSH site-install` command.
@@ -49,30 +39,6 @@ $databases['default']['default'] = [
   'driver' => 'mysql',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
 ];
-
-```
-
-**Drupal 7 users**
-
-You must also add DB credentials environment variables to your Apache configuration.
-Add the following lines within your `VirtualHost` to do so :
-
-```
-<VirtualHost *:80>
-  # [...] Other directives.
-  
-  # Combawa variables configuration.
-  SetEnv COMBAWA_DB_HOSTNAME <DB_HOSTNAME>
-  SetEnv COMBAWA_DB_PORT <DB_PORT>
-  SetEnv COMBAWA_DB_DATABASE <DB_NAME>
-  SetEnv COMBAWA_DB_USER <DB_USERNAME>
-  SetEnv COMBAWA_DB_PASSWORD <DB_PASSWORD>
-  
-  # [...] Other directives.
-  
-</VirtualHost>
-```
-This is due to the fact that there is no native autoload for Drupal 7.
 
 ### Recommended
 
