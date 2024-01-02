@@ -263,7 +263,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
 
       if ($vars['dump_fetch_method'] === 'scp') {
         if (!isset($vars['dump_use_ssh_config_name'])) {
-          $defaultValue = TRUE;
+          $defaultValue = FALSE;
           $vars['dump_use_ssh_config_name'] = $this->io()->confirm(
             '[SCP] Do you have an SSH config name from your ~/.ssh/config to use to retrieve the dump?',
             $defaultValue,
