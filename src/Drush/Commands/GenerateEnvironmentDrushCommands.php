@@ -53,9 +53,6 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
     name: 'scp-connection-username',
     description: 'SCP connection username.')]
   #[CLI\Option(
-    name: 'scp-connection-password',
-    description: 'SCP connection password.')]
-  #[CLI\Option(
     name: 'scp-connection-servername',
     description: 'SCP connection server name.')]
   #[CLI\Option(
@@ -101,7 +98,6 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
     'dump-retrieval-tool' => self::REQ,
     'scp-config-name' => self::REQ,
     'scp-connection-username' => self::REQ,
-    'scp-connection-password' => self::REQ,
     'scp-connection-servername' => self::REQ,
     'scp-connection-port' => self::REQ,
     'fetch-source-path' => self::REQ,
@@ -131,7 +127,6 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
       'dump_fetch_method' => $options['dump-retrieval-tool'],
       'dump_fetch_scp_config_name' => $options['scp-config-name'],
       'dump_fetch_scp_user' => $options['scp-connection-username'],
-      'dump_fetch_scp_password' => $options['scp-connection-password'],
       'dump_fetch_scp_host' => $options['scp-connection-servername'],
       'dump_fetch_scp_port' => $options['scp-connection-port'],
       'dump_fetch_source_path' => $options['fetch-source-path'],
@@ -287,7 +282,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
         }
         else {
           // SCP credentials.
-          foreach (['host', 'port', 'user', 'password'] as $key) {
+          foreach (['host', 'port', 'user'] as $key) {
             $varName = 'dump_fetch_scp_' . $key;
             $defaultValueKey = match($key) {
               'host' => 'COMBAWA_DB_FETCH_SCP_SERVER',
@@ -305,7 +300,6 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
               'host' => '[SCP] What is the connection server name or IP?',
               'port' => '[SCP] What is the connection server port?',
               'user' => '[SCP] What is the connection user name?',
-              'password' => '[SCP] What is the connection password?',
             };
             $validator = match($key) {
               'host' => new Chained(
@@ -314,7 +308,6 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
               ),
               'port' => new Required(),
               'user' => new Required(),
-              'password' => NULL,
             };
             if (!isset($vars[$varName])) {
               $defaultValue = $_SERVER[$defaultValueKey] ?? $defaultValueValue;
@@ -423,7 +416,6 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
           $fetch_command = 'scp';
           $fetch_command .= !empty($vars['dump_fetch_scp_port']) ? ' -P ' . $vars['dump_fetch_scp_port'] : '';
           $fetch_command .= ' ' . $vars['dump_fetch_scp_user'];
-          $fetch_command .= !empty($vars['dump_fetch_scp_password']) ? ':' . $vars['dump_fetch_scp_password'] : '';
           $fetch_command .= '@' . $vars['dump_fetch_scp_host'];
         }
         // Expected: scp <SOURCE>:<SOURCE_PATH> <DEST_PATH>.
