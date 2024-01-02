@@ -154,9 +154,11 @@ Eg:
   --no-interaction
 ```
 
-See the integrated help using `drupal help combawa:generate-environment` for arguments values.
+See the integrated help using `drush combawa:generate-environment --help` for arguments values.
 
-Please note that the command will NOT generate the settings.local.php if it already exists to avoid data loss. If you any valid reason, you need to override the existing file (eg: in a Continous Integration context), you can do so by passing the extra argument `--force-settings-generation`
+Please note that the command will NOT generate the settings.local.php if it already exists to avoid data loss. If you any valid reason, you need to override the existing file (eg: in a Continous Integration context), you can do so by passing the extra argument `--force-settings-generation`.
+
+Please also be aware that the `.env` file content will be different if you are in `install` or `update` mode. It means that you should retrigger the command when you switch from `install` to `update` to fill the extra required information (to fetch the DB dumps mostly).
 
 ### Script templates generator
 
