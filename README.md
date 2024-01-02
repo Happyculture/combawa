@@ -39,6 +39,7 @@ $databases['default']['default'] = [
   'driver' => 'mysql',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
 ];
+```
 
 ### Recommended
 
