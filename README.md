@@ -135,12 +135,14 @@ By default the command is interactive. If you want to use it through CLI, you ca
 Eg:
 
 ```
- ./vendor/bin/drupal combawa:generate-environment \
+ ./vendor/bin/drush combawa:generate-environment \
+  --build-mode update \
   --environment dev \
   --environment-url https://mydevsite.coop \
   --backup-db \
   --dump-fetch-update \
   --dump-retrieval-tool scp \
+  --scp-connection-username=username \
   --scp-connection-servername myserver.org \
   --scp-connection-port 22 \
   --fetch-source-path /home/dumps-source/my_dump.sql.gz \
