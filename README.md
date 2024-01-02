@@ -179,12 +179,7 @@ You are now in the state where the database has been imported. Run `drush config
 
 ## <a name="troubleshooting"></a>Troubleshooting
 
-If you encounter the following error:
-
-```
-  [InvalidArgumentException]                              
-  Package type "drupal-console-library" is not supported 
-```
+This version is obviously bug free! If you identify an issue, please open an issue.
 
 Add this line to the `composer.json` file to specify the package location in the `extra` > `installer-paths` section.
 
