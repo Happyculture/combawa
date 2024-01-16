@@ -3,7 +3,7 @@
 * **[Combawa](#combawa)**
 * **[Installation](#installation)**
 * **[Usage](#usage)**
-* **[Drupal console commands](#drupal-console-commands)**
+* **[Drush commands](#drush-commands)**
 * **[Advanced usages](#advanced)**
 * **[Troubleshooting](#troubleshooting)**
 
@@ -14,14 +14,14 @@ It's compatible with Drupal 10 and is meant to be used by developers and CI appl
 
 You are encouraged to use Combawa as a daily companion to reinstall/update your local installation or CI environment.
 
-Because Combawa is very cool, you can use a Drupal console command to setup the required environment variables. See below for details.
+Because Combawa is very cool, you can use a Drush command to setup the required environment variables. See below for details.
 
 ## <a name="installation"></a>Installation
 
 - `composer require happyculture/combawa`
-- Use `drupal combawa:initialize-build-scripts` to initiate the project build files from a template (actions run when the Drupal site is (re)installed or updated).
+- Use `drush combawa:initialize-build-scripts` to initiate the project build files from a template (actions run when the Drupal site is (re)installed or updated).
 - If you are in `install` mode using an install profile different than `minimal`, you should update the `scripts/combawa/install.sh` file to replace the profile name in the `$DRUSH site-install` command.
-- Use `drupal combawa:generate-environment` to setup your environment (configuring your site variables).
+- Use `drush combawa:generate-environment` to setup your environment (configuring your site variables).
 
 If you don't want to use the generated `settings.local.php` file, you will have to add in your `settings.php` (or any other settings file) the following snippet:
 
@@ -122,11 +122,11 @@ The `.env` file(s) are expected to be located at the repository root level.
 
 We leverage Symfony Dotenv component so the `.env` file may be overriden by `.env.local`, `.env.$APP_ENV.local` or `.env.$APP_ENV` if defined.
 
-## <a name="drupal-console-commands"></a>Drupal console commands
+## <a name="drush-commands"></a>Drush commands
 
 ### Environment generator
 
-Command `drupal combawa:generate-environment`:
+Command `drush combawa:generate-environment`:
 
 Used once per environment, this command creates two files: 
 - `.env`: Stores local values for the build script.
@@ -162,7 +162,7 @@ Please also be aware that the `.env` file content will be different if you are i
 
 ### Script templates generator
 
-Command `drupal combawa:initialize-build-scripts`:
+Command `drush combawa:initialize-build-scripts`:
 
 This command generates the build scripts used by Combawa to install/update the project from templates. Once those files are generated, you can customize them to your needs and probably want to version them.
 
@@ -180,7 +180,3 @@ You are now in the state where the database has been imported. Run `drush config
 ## <a name="troubleshooting"></a>Troubleshooting
 
 This version is obviously bug free! If you identify an issue, please open an issue.
-
-Add this line to the `composer.json` file to specify the package location in the `extra` > `installer-paths` section.
-
-`"vendor/{$vendor}/{$name}": ["type:drupal-console-library"]`
