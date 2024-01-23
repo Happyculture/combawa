@@ -4,13 +4,11 @@
 # Flush drush cache to identify new commands such as rr.
 $DRUSH cc drush
 
-# Run the DB updates.
-$DRUSH updb --no-post-updates
-$DRUSH cr
-
-# Import the configuration.
-$DRUSH cim
-$DRUSH cr
-
-# Run the post updates.
-$DRUSH updb
+# Run drush deploy. It runs:
+# - hook_update_N
+# - hook_post_update_NAME
+# - cache:rebuild
+# - config:import
+# - cache:rebuild
+# - hook_deploy_NAME
+$DRUSH deploy
