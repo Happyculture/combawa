@@ -30,11 +30,11 @@ If you don't want to use the generated `settings.local.php` file, you will have 
 
 // Environment variables are defined in the .env file at the project root.
 $databases['default']['default'] = [
-  'host' => $_SERVER['COMBAWA_DB_HOSTNAME'],
-  'port' => $_SERVER['COMBAWA_DB_PORT'],
-  'database' => $_SERVER['COMBAWA_DB_DATABASE'],
-  'password' => $_SERVER['COMBAWA_DB_PASSWORD'],
-  'username' => $_SERVER['COMBAWA_DB_USER'],
+  'host' => $_ENV['COMBAWA_DB_HOSTNAME'],
+  'port' => $_ENV['COMBAWA_DB_PORT'],
+  'database' => $_ENV['COMBAWA_DB_DATABASE'],
+  'password' => $_ENV['COMBAWA_DB_PASSWORD'],
+  'username' => $_ENV['COMBAWA_DB_USER'],
   'prefix' => '',
   'driver' => 'mysql',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',

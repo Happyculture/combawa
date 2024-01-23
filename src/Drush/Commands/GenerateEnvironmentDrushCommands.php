@@ -158,7 +158,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
     }
 
     if (!isset($vars['environment'])) {
-      $defaultValue = $_SERVER['COMBAWA_BUILD_ENV'] ?? 'prod';
+      $defaultValue = $_ENV['COMBAWA_BUILD_ENV'] ?? 'prod';
       $choices = ['dev', 'testing', 'prod'];
       $choice = $this->io()->choice(
         'Which kind of environment is it?',
@@ -170,7 +170,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
 
     if (!isset($vars['webroot'])) {
       $detectedDefaultValue = ltrim(substr($this->drupalFinder()->getDrupalRoot(), strlen($this->drupalFinder()->getComposerRoot())), DIRECTORY_SEPARATOR);
-      $defaultValue = $_SERVER['COMBAWA_WEBROOT_PATH'] ?? $detectedDefaultValue;
+      $defaultValue = $_ENV['COMBAWA_WEBROOT_PATH'] ?? $detectedDefaultValue;
       $vars['webroot'] = $this->io()->ask(
         'In which directory is your Drupal webroot located?',
         $defaultValue,
@@ -178,7 +178,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
     }
 
     if (!isset($vars['environment_url'])) {
-      $defaultValue = $_SERVER['DRUSH_OPTIONS_URI'] ?? 'https://' . $vars['environment'] . '.happyculture.coop';
+      $defaultValue = $_ENV['DRUSH_OPTIONS_URI'] ?? 'https://' . $vars['environment'] . '.happyculture.coop';
       $vars['environment_url'] = $this->io()->ask(
         'What is the URL of the project for the ' . $vars['environment'] . ' environment?',
         $defaultValue,
@@ -224,7 +224,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
         'password' => NULL,
       };
       if (!isset($vars[$varName])) {
-        $defaultValue = $_SERVER[$defaultValueKey] ?? $defaultValueValue;
+        $defaultValue = $_ENV[$defaultValueKey] ?? $defaultValueValue;
         $vars[$varName] = $this->io()->ask(
           $question,
           $defaultValue,
@@ -234,7 +234,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
     }
 
     if (!isset($vars['backup_db'])) {
-      $defaultValue = $_SERVER['COMBAWA_DB_BACKUP_FLAG'] ?? TRUE;
+      $defaultValue = $_ENV['COMBAWA_DB_BACKUP_FLAG'] ?? TRUE;
       $vars['backup_db'] = $this->io()->confirm(
         'Do you want the database to be backed up before each build?',
         $defaultValue,
@@ -243,7 +243,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
 
     if ($vars['environment'] !== 'prod' && $vars['build_mode'] === 'update') {
       if (!isset($vars['dump_fetch_update'])) {
-        $defaultValue = $_SERVER['COMBAWA_DB_FETCH_FLAG'] ?? TRUE;
+        $defaultValue = $_ENV['COMBAWA_DB_FETCH_FLAG'] ?? TRUE;
         $vars['dump_fetch_update'] = $this->io()->confirm(
           'Do you want to update the reference dump before each build?',
           $defaultValue,
@@ -251,7 +251,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
       }
 
       if (!isset($vars['dump_fetch_method'])) {
-        $defaultValue = $_SERVER['COMBAWA_DB_RETRIEVAL_TOOL'] ?? 'scp';
+        $defaultValue = $_ENV['COMBAWA_DB_RETRIEVAL_TOOL'] ?? 'scp';
         $choices = ['cp', 'scp'];
         $choice = $this->io()->choice(
           'When updated, what is the tool used to retrieve the reference dump?',
@@ -272,7 +272,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
 
         if ($vars['dump_use_ssh_config_name'] === TRUE) {
           if (!isset($vars['dump_fetch_scp_config_name'])) {
-            $defaultValue = $_SERVER['COMBAWA_DB_FETCH_SCP_CONFIG_NAME'] ?? 'my_remote';
+            $defaultValue = $_ENV['COMBAWA_DB_FETCH_SCP_CONFIG_NAME'] ?? 'my_remote';
             $vars['dump_fetch_scp_config_name'] = $this->io()->ask(
               '[SCP] What is the name of you config entry in your ~/.ssh/config file?',
               $defaultValue,
@@ -310,7 +310,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
               'user' => new Required(),
             };
             if (!isset($vars[$varName])) {
-              $defaultValue = $_SERVER[$defaultValueKey] ?? $defaultValueValue;
+              $defaultValue = $_ENV[$defaultValueKey] ?? $defaultValueValue;
               $vars[$varName] = $this->io()->ask(
                 $question,
                 $defaultValue,
@@ -322,7 +322,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
       }
 
       if (!isset($vars['dump_fetch_source_path'])) {
-        $defaultValue = $_SERVER['COMBAWA_DB_FETCH_PATH_SOURCE'] ?? '/home/dumps-source/my_dump.sql.gz';
+        $defaultValue = $_ENV['COMBAWA_DB_FETCH_PATH_SOURCE'] ?? '/home/dumps-source/my_dump.sql.gz';
         $vars['dump_fetch_source_path'] = $this->io()->ask(
           'What is the source path of the reference dump to copy (only Gzipped file supported at the moment)?',
           $defaultValue,
@@ -334,7 +334,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
       }
 
       if (!isset($vars['reimport'])) {
-        $defaultValue = $_SERVER['COMBAWA_REIMPORT_REF_DUMP_FLAG'] ?? FALSE;
+        $defaultValue = $_ENV['COMBAWA_REIMPORT_REF_DUMP_FLAG'] ?? FALSE;
         $vars['reimport'] = $this->io()->confirm(
           'Do you want the site to be reimported from the reference dump on each build?',
           $defaultValue,
