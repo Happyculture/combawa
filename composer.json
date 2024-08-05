@@ -9,7 +9,7 @@
         "psr-4": {"Combawa\\": "src"}
     },
     "require": {
-        "drush/drush": "^12",
+        "drush/drush": "^12 || ^13",
         "symfony/dotenv": "^6.3"
     },
     "conflict": {
