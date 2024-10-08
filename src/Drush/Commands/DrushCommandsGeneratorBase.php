@@ -83,11 +83,13 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
     // Extract generation data from options.
     $vars = $this->extractOptions($options);
 
+    // Ensure all preset vars are correct.
+    $this->validateVars($vars);
+
     // Ask questions to complete existing data.
     $this->interview($vars);
 
-    // Ensure all vars are correct.
-    $this->validateVars($vars);
+    // Process vars to get a clean extraction.
     $vars = Utils::processVars($vars);
 
     // Show collected data.
