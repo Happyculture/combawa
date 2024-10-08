@@ -272,7 +272,7 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
    * @return ?string
    * The error if there is one.
    */
-  public static function validateBuildMode($build_mode): ?string {
+  public function validateBuildMode($build_mode): ?string {
     if (!in_array($build_mode, ['install', 'update'])) {
       return sprintf(
         'Build mode "%s" is invalid, it must either be install or update.',

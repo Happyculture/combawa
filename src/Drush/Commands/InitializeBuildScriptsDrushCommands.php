@@ -89,8 +89,14 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
    * {@inheritdoc}
    */
   protected function validateVars(array $vars): void {
+    $errors = [];
     if (isset($vars['build_mode'])) {
-      static::validateBuildMode($vars['build_mode']);
+      $errors[] = $this->validateBuildMode($vars['build_mode']);
+    }
+
+    $errors = array_filter($errors);
+    if (!empty($errors)) {
+      throw new \InvalidArgumentException(implode("\n", $errors));
     }
   }
 

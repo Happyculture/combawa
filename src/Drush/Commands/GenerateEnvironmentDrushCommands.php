@@ -177,7 +177,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
         'What is the URL of the project for the ' . $vars['environment'] . ' environment?',
         $defaultValue,
         required: TRUE,
-        validate: static::validateUrl(...),
+        validate: $this->validateUrl(...),
       );
     }
 
@@ -213,7 +213,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
         'password' => FALSE,
       };
       $validator = match($key) {
-        'host' => static::validateDomainOrIpFormat(...),
+        'host' => $this->validateDomainOrIpFormat(...),
         'port' => NULL,
         'name' => NULL,
         'user' => NULL,
@@ -295,7 +295,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
               'user' => '[SCP] What is the connection user name?',
             };
             $validator = match($key) {
-              'host' => static::validateDomainOrIpFormat(...),
+              'host' => $this->validateDomainOrIpFormat(...),
               'port' => NULL,
               'user' => NULL,
             };
@@ -318,7 +318,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
           'What is the source path of the reference dump to copy (only Gzipped file supported at the moment)?',
           $defaultValue,
           required: TRUE,
-          validate: static::validateDumpExtension(...),
+          validate: $this->validateDumpExtension(...),
         );
       }
 
@@ -344,36 +344,38 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
    * {@inheritdoc}
    */
   protected function validateVars(array $vars): void {
+    $errors = [];
     if (isset($vars['build_mode'])) {
-      static::validateBuildMode($vars['build_mode']);
-    }
-
-    if (isset($vars['build_mode']) && !in_array($vars['build_mode'], ['install', 'update'])) {
-      throw new \UnexpectedValueException('Build mode must be either install or update.');
+      $errors[] = $this->validateBuildMode($vars['build_mode']);
     }
 
     if (isset($vars['environment']) && !in_array($vars['environment'], ['dev', 'testing', 'prod'])) {
-      throw new \UnexpectedValueException('Environment must be either dev, testing or prod.');
+      $errors[] = 'Environment must be either dev, testing or prod.';
     }
 
     if (isset($vars['environment_url'])) {
-      static::validateUrl($vars['environment_url']);
+      $errors[] = $this->validateUrl($vars['environment_url']);
     }
 
     if (isset($vars['db_host'])) {
-      static::validateDomainOrIpFormat($vars['db_host']);
+      $errors[] = $this->validateDomainOrIpFormat($vars['db_host']);
     }
 
     if (isset($vars['dump_fetch_method']) && !in_array($vars['dump_fetch_method'], ['cp', 'scp'])) {
-      throw new \UnexpectedValueException('Fetch method must be either cp or scp.');
+      $errors[] = 'Fetch method must be either cp or scp.';
     }
 
     if (isset($vars['dump_fetch_scp_host'])) {
-      static::validateDomainOrIpFormat($vars['dump_fetch_scp_host']);
+      $errors[] = $this->validateDomainOrIpFormat($vars['dump_fetch_scp_host']);
     }
 
     if (isset($vars['dump_fetch_source_path'])) {
-      static::validateDumpExtension($vars['dump_fetch_source_path']);
+      $errors[] = $this->validateDumpExtension($vars['dump_fetch_source_path']);
+    }
+
+    $errors = array_filter($errors);
+    if (!empty($errors)) {
+      throw new \InvalidArgumentException(implode("\n", $errors));
     }
   }
 
@@ -482,7 +484,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
    * @return ?string
    *   The error if there is one.
    */
-  public static function validateUrl($url): ?string {
+  public function validateUrl($url): ?string {
     $parts = parse_url($url);
     if ($parts === FALSE) {
       return sprintf(
@@ -508,7 +510,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
    * @return ?string
    * The error if there is one.
    */
-  public static function validateDomainOrIpFormat($connection_str): ?string {
+  public function validateDomainOrIpFormat($connection_str): ?string {
     if (
       // Format an IP address.
       !preg_match('/^[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}$/', $connection_str) &&
@@ -529,7 +531,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
    * @return ?string
    *   The error if there is one.
    */
-  public static function validateDumpExtension(string $path): ?string {
+  public function validateDumpExtension(string $path): ?string {
     $supported = ['gz'];
     if (!in_array(pathinfo($path, PATHINFO_EXTENSION), $supported)) {
       return sprintf(
