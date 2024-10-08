@@ -154,7 +154,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
         $choices,
         $defaultValue,
       );
-      $vars['build_mode'] = $choices[$choice];
+      $vars['build_mode'] = $choices[$choice] ?? $choice;
     }
 
     if (!isset($vars['environment'])) {
@@ -165,7 +165,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
         $choices,
         $defaultValue,
       );
-      $vars['environment'] = $choices[$choice];
+      $vars['environment'] = $choices[$choice] ?? $choice;
     }
 
     if (!isset($vars['webroot'])) {
@@ -182,10 +182,8 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
       $vars['environment_url'] = $this->io()->ask(
         'What is the URL of the project for the ' . $vars['environment'] . ' environment?',
         $defaultValue,
-        new Chained(
-          new Required(),
-          static fn (string $value): string => static::validateUrl($value),
-        ),
+        required: TRUE,
+        validate: static::validateUrl(...),
       );
     }
 
@@ -213,14 +211,18 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
         'user' => 'What is the name of your database user?',
         'password' => 'What is the password of your database user?',
       };
+      $required = match($key) {
+        'host' => TRUE,
+        'port' => TRUE,
+        'name' => TRUE,
+        'user' => TRUE,
+        'password' => FALSE,
+      };
       $validator = match($key) {
-        'host' => new Chained(
-          new Required(),
-          static fn (string $value): string => static::validateDomainOrIpFormat($value),
-        ),
-        'port' => new Required(),
-        'name' => new Required(),
-        'user' => new Required(),
+        'host' => static::validateDomainOrIpFormat(...),
+        'port' => NULL,
+        'name' => NULL,
+        'user' => NULL,
         'password' => NULL,
       };
       if (!isset($vars[$varName])) {
@@ -228,7 +230,8 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
         $vars[$varName] = $this->io()->ask(
           $question,
           $defaultValue,
-          $validator,
+          required: $required,
+          validate: $validator,
         );
       }
     }
@@ -258,7 +261,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
           $choices,
           $defaultValue,
         );
-        $vars['dump_fetch_method'] = $choices[$choice];
+        $vars['dump_fetch_method'] = $choices[$choice] ?? $choice;
       }
 
       if ($vars['dump_fetch_method'] === 'scp') {
@@ -276,7 +279,7 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
             $vars['dump_fetch_scp_config_name'] = $this->io()->ask(
               '[SCP] What is the name of you config entry in your ~/.ssh/config file?',
               $defaultValue,
-              new Required(),
+              required: TRUE,
             );
           }
         }
@@ -288,13 +291,11 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
               'host' => 'COMBAWA_DB_FETCH_SCP_SERVER',
               'port' => 'COMBAWA_DB_FETCH_SCP_SERVER',
               'user' => 'COMBAWA_DB_FETCH_SCP_USER',
-              'password' => 'COMBAWA_DB_FETCH_SCP_PASSWORD',
             };
             $defaultValueValue = match($key) {
               'host' => '',
               'port' => 22,
               'user' => '',
-              'password' => '',
             };
             $question = match($key) {
               'host' => '[SCP] What is the connection server name or IP?',
@@ -302,19 +303,17 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
               'user' => '[SCP] What is the connection user name?',
             };
             $validator = match($key) {
-              'host' => new Chained(
-                new Required(),
-                static fn (string $value): string => static::validateDomainOrIpFormat($value),
-              ),
-              'port' => new Required(),
-              'user' => new Required(),
+              'host' => static::validateDomainOrIpFormat(...),
+              'port' => NULL,
+              'user' => NULL,
             };
             if (!isset($vars[$varName])) {
               $defaultValue = $_ENV[$defaultValueKey] ?? $defaultValueValue;
               $vars[$varName] = $this->io()->ask(
                 $question,
                 $defaultValue,
-                $validator,
+                required: TRUE,
+                validate: $validator,
               );
             }
           }
@@ -326,10 +325,8 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
         $vars['dump_fetch_source_path'] = $this->io()->ask(
           'What is the source path of the reference dump to copy (only Gzipped file supported at the moment)?',
           $defaultValue,
-          new Chained(
-            new Required(),
-            static fn (string $value): string => static::validateDumpExtension($value),
-          ),
+          required: TRUE,
+          validate: static::validateDumpExtension(...),
         );
       }
 
@@ -490,30 +487,24 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
    * @param string $url
    *   The url to validate.
    *
-   * @return string
-   *   The validated url.
-   *
-   * @throws \UnexpectedValueException
+   * @return ?string
+   *   The error if there is one.
    */
-  public static function validateUrl($url): string {
+  public static function validateUrl($url): ?string {
     $parts = parse_url($url);
     if ($parts === FALSE) {
-      throw new \UnexpectedValueException(
-        sprintf(
-          '"%s" is a malformed url.',
-          $url
-        )
+      return sprintf(
+        '"%s" is a malformed url.',
+        $url
       );
     }
     elseif (empty($parts['scheme']) || empty($parts['host'])) {
-      throw new \UnexpectedValueException(
-        sprintf(
-          'Please specify a full URL with scheme and host instead of "%s".',
-          $url
-        )
+      return sprintf(
+        'Please specify a full URL with scheme and host instead of "%s".',
+        $url
       );
     }
-    return $url;
+    return NULL;
   }
 
   /**
@@ -522,21 +513,19 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
    * @param string $connection_str
    *   The domain or IP address to validate.
    *
-   * @return string
-   *   The validated domain or IP address.
-   *
-   * @throws \UnexpectedValueException
+   * @return ?string
+   * The error if there is one.
    */
-  public static function validateDomainOrIpFormat($connection_str): string {
-    // Format an IP address.
-    if (preg_match('/^[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}$/', $connection_str)) {
-      return $connection_str;
+  public static function validateDomainOrIpFormat($connection_str): ?string {
+    if (
+      // Format an IP address.
+      !preg_match('/^[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}$/', $connection_str) &&
+      // Or a domain.
+      !preg_match('/^[a-zA-Z0-9](?:[-\w]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[-\w]*[a-zA-Z0-9])?)*$/', $connection_str)
+    ) {
+      return sprintf('The connection string "%s" does not look like a valid domain or IP address.', $connection_str);
     }
-    // Or a domain.
-    elseif (preg_match('/^[a-zA-Z0-9](?:[-\w]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[-\w]*[a-zA-Z0-9])?)*$/', $connection_str)) {
-      return $connection_str;
-    }
-    throw new \UnexpectedValueException(sprintf('The connection string "%s" does not look like a valid domain or IP address.', $connection_str));
+    return NULL;
   }
 
   /**
@@ -545,24 +534,18 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
    * @param string $path
    *   The file path to validate.
    *
-   * @return string
-   *   The validated file path.
-   *
-   * @throws \UnexpectedValueException
+   * @return ?string
+   *   The error if there is one.
    */
-  public static function validateDumpExtension(string $path): string {
-    switch (pathinfo($path, PATHINFO_EXTENSION)) {
-      case 'gz':
-        return $path;
-
-      default:
-        throw new \UnexpectedValueException(
-          sprintf(
-            'The file extension "%s" is not supported (only Gzipped files).',
-            $path
-          )
-        );
+  public static function validateDumpExtension(string $path): ?string {
+    $supported = ['gz'];
+    if (!in_array(pathinfo($path, PATHINFO_EXTENSION), $supported)) {
+      return sprintf(
+        'The file extension "%s" is not supported (only Gzipped files).',
+        $path
+      );
     }
+    return NULL;
   }
 
 }

@@ -72,7 +72,7 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
         $choices,
         $defaultValue,
       );
-      $vars['build_mode'] = $choices[$choice];
+      $vars['build_mode'] = $choices[$choice] ?? $choice;
     }
 
     $scriptsDir = $this->drupalFinder()->getComposerRoot() . '/scripts/combawa';
@@ -80,10 +80,9 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
       $this->fileSystem->exists($scriptsDir . '/' . $vars['build_mode'] . '.sh') &&
       !isset($vars['overwrite_scripts'])
     ) {
-      $defaultValue = FALSE;
       $vars['overwrite_scripts'] = $this->io()->confirm(
         'Do you want to overwrite your existing scripts located in the scripts/combawa directory?',
-        $defaultValue,
+        FALSE,
       );
     }
   }

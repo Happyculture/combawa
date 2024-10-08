@@ -9,11 +9,8 @@
         "psr-4": {"Combawa\\": "src"}
     },
     "require": {
-        "drush/drush": "^12 || ^13",
+        "drush/drush": "^13",
         "symfony/dotenv": "^6.3"
-    },
-    "conflict": {
-        "drush/drush": "<11.0"
     },
     "suggest": {
         "happyculture/combawa-wrapper": "Lets you run combawa from anywhere without naming explicitely vendor/bin/combawa.sh."
