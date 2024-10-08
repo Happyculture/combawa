@@ -10,7 +10,7 @@
     },
     "require": {
         "drush/drush": "^13",
-        "symfony/dotenv": "^6.3"
+        "symfony/dotenv": "^6 || ^7"
     },
     "suggest": {
         "happyculture/combawa-wrapper": "Lets you run combawa from anywhere without naming explicitely vendor/bin/combawa.sh."
