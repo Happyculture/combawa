@@ -4,8 +4,6 @@ namespace Combawa\Drush\Commands;
 
 use Drupal\Component\Serialization\Json;
 use DrupalCodeGenerator\Asset\AssetCollection;
-use DrupalCodeGenerator\Validator\Chained;
-use DrupalCodeGenerator\Validator\Required;
 use Drush\Attributes as CLI;
 
 /**
@@ -148,24 +146,20 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
     if (!isset($vars['build_mode'])) {
       $composerData = Json::decode(file_get_contents($this->drupalFinder()->getComposerRoot() . '/composer.json'));
       $defaultValue = $composerData['extra']['combawa']['build_mode'] ?? 'install';
-      $choices = ['install', 'update'];
-      $choice = $this->io()->choice(
+      $vars['build_mode'] = $this->io()->select(
         'What is your current build mode?',
-        $choices,
+        ['install', 'update'],
         $defaultValue,
       );
-      $vars['build_mode'] = $choices[$choice] ?? $choice;
     }
 
     if (!isset($vars['environment'])) {
       $defaultValue = $_ENV['COMBAWA_BUILD_ENV'] ?? 'prod';
-      $choices = ['dev', 'testing', 'prod'];
-      $choice = $this->io()->choice(
+      $vars['environment'] = $this->io()->select(
         'Which kind of environment is it?',
-        $choices,
+        ['dev', 'testing', 'prod'],
         $defaultValue,
       );
-      $vars['environment'] = $choices[$choice] ?? $choice;
     }
 
     if (!isset($vars['webroot'])) {
@@ -255,13 +249,11 @@ class GenerateEnvironmentDrushCommands extends DrushCommandsGeneratorBase {
 
       if (!isset($vars['dump_fetch_method'])) {
         $defaultValue = $_ENV['COMBAWA_DB_RETRIEVAL_TOOL'] ?? 'scp';
-        $choices = ['cp', 'scp'];
-        $choice = $this->io()->choice(
+        $vars['dump_fetch_method'] = $this->io()->select(
           'When updated, what is the tool used to retrieve the reference dump?',
-          $choices,
+          ['cp', 'scp'],
           $defaultValue,
         );
-        $vars['dump_fetch_method'] = $choices[$choice] ?? $choice;
       }
 
       if ($vars['dump_fetch_method'] === 'scp') {

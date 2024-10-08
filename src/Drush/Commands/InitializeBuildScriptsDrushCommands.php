@@ -66,13 +66,11 @@ class InitializeBuildScriptsDrushCommands extends DrushCommandsGeneratorBase imp
     if (!isset($vars['build_mode'])) {
       $composerData = Json::decode(file_get_contents($this->drupalFinder()->getComposerRoot() . '/composer.json'));
       $defaultValue = $composerData['extra']['combawa']['build_mode'] ?? 'install';
-      $choices = ['install', 'update'];
-      $choice = $this->io()->choice(
+      $vars['build_mode'] = $this->io()->select(
         'What is the build mode to use?',
-        $choices,
+        ['install', 'update'],
         $defaultValue,
       );
-      $vars['build_mode'] = $choices[$choice] ?? $choice;
     }
 
     $scriptsDir = $this->drupalFinder()->getComposerRoot() . '/scripts/combawa';
