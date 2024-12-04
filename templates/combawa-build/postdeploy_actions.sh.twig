@@ -23,6 +23,12 @@ case $COMBAWA_BUILD_ENV in
     # Rebuild permissions
     # $DRUSH php-eval 'node_access_rebuild();'
 
+    # Enable development settings.
+    $DRUSH sset twig_debug TRUE
+    $DRUSH sset twig_autoreload TRUE
+    $DRUSH sset twig_cache_disable TRUE
+    $DRUSH sset disable_rendered_output_cache_bins TRUE
+
     # Connect.
     $DRUSH uli
     ;;
