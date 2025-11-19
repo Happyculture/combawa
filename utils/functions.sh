@@ -253,9 +253,9 @@ load_dump()
     message_confirm "Done!"
     message_action "DB Import in progress..."
     if hash pv 2>/dev/null; then
-      pv --progress -tea "$_DUMP_PATH" | $DRUSH sqlc
+      pv --progress -tea "$_DUMP_PATH" | $($DRUSH sql:connect)
     else
-      $DRUSH sqlc < "$_DUMP_PATH"
+      cat "$_DUMP_PATH" | $($DRUSH sql:connect)
     fi
     message_confirm "Done!"
     message_action "Removing temporary sql file..."
